@@ -156,6 +156,8 @@ def configure_directories():
         print("Destination directory updated successfully.")
     else:
         print("Keeping the current destination directory.")
+        
+    input("Press Enter to return to the main menu...")  # Wait for user input
 
 def main():
     # Play start sound
