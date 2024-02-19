@@ -181,48 +181,48 @@ def main():
         # Clear the screen
         subprocess.run("clear", shell=True)
 
-    # Dark orange color code
-    dark_orange = "\033[38;5;202m"
-    reset_color = "\033[0m"
+        # Dark orange color code
+        dark_orange = "\033[38;5;202m"
+        reset_color = "\033[0m"
 
-    # Banner with ASCII art centered and bordered
-    banner_text = f"""\
-{dark_orange}+{'-' * 84}+{reset_color}
-{dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
-{dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
-{dark_orange}|{'██╗     ██╗██╗  ██╗██╗██╗     '.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'██║     ██║╚██╗██╔╝██║██║     '.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'██║     ██║ ╚███╔╝ ██║██║     '.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'██║     ██║ ██╔██╗ ██║██║     '.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'███████╗██║██╔╝ ██╗██║███████╗'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{reset_color}{'Drive Sanitizer Script'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{reset_color}{'Created by Samuel Presgraves, Security Engineer'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{reset_color}{'LIXIL HQ, Digital Group, Security & IAM Team'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{reset_color}{'Version 1.1, Feb 2024'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}+{'-' * 84}+{reset_color}
-    """
-    
-        # Print centered banner
-        print(banner_text)
+        # Banner with ASCII art centered and bordered
+        banner_text = f"""\
+    {dark_orange}+{'-' * 84}+{reset_color}
+    {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
+    {dark_orange}|{'██╗     ██╗██╗  ██╗██╗██╗     '.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{'██║     ██║╚██╗██╔╝██║██║     '.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{'██║     ██║ ╚███╔╝ ██║██║     '.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{'██║     ██║ ██╔██╗ ██║██║     '.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{'███████╗██║██╔╝ ██╗██║███████╗'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{'╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{'Drive Sanitizer Script'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{'Created by Samuel Presgraves, Security Engineer'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{'LIXIL HQ, Digital Group, Security & IAM Team'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{'Version 1.1, Feb 2024'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}+{'-' * 84}+{reset_color}
+        """
+        
+            # Print centered banner
+            print(banner_text)
 
-        # Display menu
-        display_menu()
+            # Display menu
+            display_menu()
 
-        choice = input("Enter your choice (1/2/C/I/Q): ").upper()
-        if choice == '1':
-            bleach_mode()
-        elif choice == '2':
-            wash_drive()
-        elif choice == 'C':
-            configure_directories()
-        elif choice == 'I':
-            install_prerequisites()
-        elif choice == 'Q':
-            print("Quitting script...")
-            exit()
-        else:
-            print("Invalid choice. Please enter 1, 2, C, I, or Q.")
+            choice = input("Enter your choice (1/2/C/I/Q): ").upper()
+            if choice == '1':
+                bleach_mode()
+            elif choice == '2':
+                wash_drive()
+            elif choice == 'C':
+                configure_directories()
+            elif choice == 'I':
+                install_prerequisites()
+            elif choice == 'Q':
+                print("Quitting script...")
+                exit()
+            else:
+                print("Invalid choice. Please enter 1, 2, C, I, or Q.")
 
 if __name__ == "__main__":
     main()
