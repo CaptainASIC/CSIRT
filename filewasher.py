@@ -48,7 +48,7 @@ def bleach_mode():
     print("File copy completed.")
 
     # Extract the number of files copied and total file size
-    rsync_output = subprocess.run(f"rsync --stats {source_dir}/ {destination_dir}", shell=True, capture_output=True, text=True)
+    rsync_output = rsync_result.stdout
     print("Second rsync output:", rsync_output.stdout)
     stats = rsync_output.stdout.splitlines()
     copied_files = int([line.split()[5] for line in stats if 'Number of regular files transferred' in line][0])
