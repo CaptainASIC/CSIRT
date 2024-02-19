@@ -36,11 +36,11 @@ def bleach_mode():
     # Read extensions from the reference file
     extensions_file = script_dir / "extensions.bsd"
     with open(extensions_file) as f:
-        extensions = [f"--include={line.strip()}" for line in f]
+        extensions = [f'"--include={line.strip()}"' for line in f]
 
     # Perform the file copy using rsync
     source_dir = "/media/cleaner/Windows/Users"
-    rsync_command = f"rsync -av --stats {' '.join(extensions)} --exclude='*.*' --exclude='desktop.ini' --exclude='/administrator/' --exclude='/Default/' --excluded='/Public/' {source_dir}/ {destination_dir}"
+    rsync_command = f'rsync -av --stats {" ".join(extensions)} --exclude="*.*" --exclude="desktop.ini" --exclude="/administrator/" --exclude="/Default/" --exclude="/Public/" {source_dir}/ {destination_dir}'
     print("Rsync command:", rsync_command)
     rsync_result = subprocess.run(rsync_command, shell=True, capture_output=True, text=True)
     print("Rsync output:", rsync_result.stdout)
