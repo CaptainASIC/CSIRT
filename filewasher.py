@@ -72,6 +72,7 @@ def bleach_mode():
     midi_file = script_dir / "snd/ffvii.mp3"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
+    input("Press Enter to return to the main menu...")  # Wait for user input
 
 # Function to clean the drive
 def wash_drive():
@@ -88,13 +89,13 @@ def wash_drive():
     folder_path = "/media/cleaner/My Passport"
     print("Running ClamAV scan on the folder and its subfolders...")
     subprocess.run(["clamscan", "-r", folder_path])
-    print("Scan Complete")
-    input("Press Enter to return to the main menu...")  # Wait for user input
-
+    
     # Finish
     midi_file = script_dir / "snd/ffvii.mp3"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
+    print("Scan Complete")
+    input("Press Enter to return to the main menu...")  # Wait for user input
 
 # Function to install prerequisites
 def install_prerequisites():
