@@ -67,7 +67,6 @@ def bleach_mode():
     input("Press Enter to return to the main menu...")  # Wait for user input
 
 def pre_soak():
-    config = load_config()
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
     # Delete prohibited files
     delete_prohibited_files(destination_dir , "prohibited.bsd")
@@ -117,14 +116,10 @@ def install_prerequisites():
     # Wait for user input before returning to the main menu
     input("Press Enter to return to the main menu...")
 
-def load_config():
-    config = configparser.ConfigParser()
-    config.read(script_dir / 'config.ini')
-    return config
-
 def configure_directories():
     # Read current configuration
-    config = load_config()
+    config = configparser.ConfigParser()
+    config.read(script_dir / 'config.ini')
 
     source_dir = config.get('Directories', 'SourceDirectory', fallback='/media/cleaner/Windows/Users')
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
@@ -155,11 +150,19 @@ def configure_directories():
 
     input("Press Enter to return to the main menu...")  # Wait for user input
 
+def fold():
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
+    for root, dirs, files in os.walk(destination_dir):
+        for d in dirs:
+            d_path = os.path.join(root, d)
+            os.chmod(d_path, 0o555)  # Make the directory read-only
+
 def display_menu():
     print("Menu:")
     print("1. Bleach Mode: Move data from a dirty drive")
     print("2. Pre-soak: Delete Prohibited Files & Empty Directories")
     print("3. Wash: Scan Bleached Drive with ClamAV")
+    print("4. Fold: Write Protect Destination Folders")
     print("C. Configure Directories")
     print("I. Install Prerequisites")
     print("Q. Quit Script")
@@ -231,7 +234,7 @@ def main():
     {dark_orange}|{reset_color}{'Drive Sanitizer Script'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'Created by Samuel Presgraves, Security Engineer'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'LIXIL HQ, Digital Group, Security & IAM Team'.center(84)}{dark_orange}|{reset_color}
-    {dark_orange}|{reset_color}{'Version 1.1, Feb 2024'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{'Version 1.2, Feb 2024'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
         """
 
@@ -241,13 +244,15 @@ def main():
         # Display menu
         display_menu()
 
-        choice = input("Enter your choice (1/2/C/I/Q): ").upper()
+        choice = input("Enter your choice (1/2/3/4/C/I/Q): ").upper()
         if choice == '1':
             bleach_mode()
         elif choice == '2':
             pre_soak()
         elif choice == '3':
             wash_drive()
+        elif choice == '4':
+            fold()
         elif choice == 'C':
             configure_directories()
         elif choice == 'I':
@@ -256,7 +261,7 @@ def main():
             print("Quitting script...")
             exit()
         else:
-            print("Invalid choice. Please enter 1, 2, C, I, or Q.")
+            print("Invalid choice. Please enter 1, 2, 3, 4, C, I, or Q.")
 
 if __name__ == "__main__":
     main()
