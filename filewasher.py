@@ -39,7 +39,8 @@ def bleach_mode():
 
     # Perform the file copy using rsync
     source_dir = "/media/cleaner/Windows/Users"
-    copy_files(source_dir, destination_dir, extensions)
+    rsync_command = f"rsync --stats {' '.join(extensions)} {source_dir}/ {destination_dir}"
+    subprocess.run(rsync_command, shell=True)
 
     print("File copy completed.")
 
