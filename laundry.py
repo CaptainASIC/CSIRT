@@ -72,7 +72,7 @@ def pre_soak(config):
     delete_prohibited_files(destination_dir , "prohibited.bsd")
 
     # Clean up empty directories in the destination directory
-    clean_empty_directories(destination_dir)
+   # clean_empty_directories(destination_dir)
     # Finish
     midi_file = script_dir / "snd/ffvii.mp3"
     pygame.mixer.music.load(str(midi_file))
