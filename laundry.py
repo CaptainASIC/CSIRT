@@ -5,6 +5,7 @@ from pathlib import Path
 import time
 import pygame
 import configparser
+import fnmatch
 
 # Get the directory where the script is located
 script_dir = Path(__file__).resolve().parent
@@ -191,32 +192,38 @@ def convert_seconds(sec):
     return f"{days} days, {hours:02}:{minutes:02}:{seconds:02}"
 
 def delete_prohibited_files(destination_dir, prohibited_file):
-    # Delete prohibited files and empty directories recursively
-    print("Deleting prohibited files and empty directories...")
+    # Delete prohibited files recursively
+    print("Deleting prohibited files...")
     num_deleted_files = 0
+    for root, dirs, files in os.walk(destination_dir):
+        for file in files:
+            file_path = os.path.join(root, file)
+            if file_in_prohibited_list(file_path, prohibited_file):
+                print(f"Deleting: {file_path}")
+                os.remove(file_path)
+                num_deleted_files += 1
+
+    # Delete empty directories recursively
+    print("Cleaning up empty directories...")
+    num_deleted_dirs = 0
+    for root, dirs, files in os.walk(destination_dir, topdown=False):
+        for dir in dirs:
+            dir_path = os.path.join(root, dir)
+            if not os.listdir(dir_path):
+                print(f"Deleting empty directory: {dir_path}")
+                os.rmdir(dir_path)
+                num_deleted_dirs += 1
+
+    print(f"Number of files deleted: {num_deleted_files}")
+    print(f"Number of empty directories deleted: {num_deleted_dirs}")
+
+def file_in_prohibited_list(file_path, prohibited_file):
     with open(prohibited_file) as f:
-        for file in f:
-            file = file.strip()
-            if file:
-                file_path = os.path.join(destination_dir, file)
-                print("Deleting:", file_path)  # Print the path being deleted
-                if os.path.exists(file_path):
-                    if os.path.isfile(file_path):  # Check if it's a file
-                        os.remove(file_path)
-                        num_deleted_files += 1
-                    elif os.path.isdir(file_path):  # If it's a directory, delete its content recursively
-                        for root, dirs, files in os.walk(file_path, topdown=False):
-                            for f in files:
-                                os.remove(os.path.join(root, f))
-                                num_deleted_files += 1
-                            try:
-                                os.rmdir(root)
-                                num_deleted_files += 1
-                            except OSError:
-                                pass  # Ignore the error if the directory is not empty
-
-    print(f"Number of files and directories deleted: {num_deleted_files}")
-
+        for pattern in f:
+            pattern = pattern.strip()
+            if pattern and fnmatch.fnmatch(os.path.basename(file_path), pattern):
+                return True
+    return False
 
 
 def clean_empty_directories(destination_dir):
