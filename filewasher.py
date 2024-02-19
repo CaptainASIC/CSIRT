@@ -161,6 +161,22 @@ def convert_seconds(sec):
     seconds = sec % 60
     return f"{days} days, {hours:02}:{minutes:02}:{seconds:02}"
 
+def delete_prohibited_files(destination_dir, prohibited_file):
+    # Delete prohibited files
+    print("Deleting prohibited files...")
+    with open(prohibited_file) as f:
+        for file in f:
+            file = file.strip()
+            if file:
+                file_path = os.path.join(destination_dir, file)
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+
+def clean_empty_directories(destination_dir):
+    # Clean up empty directories in the destination directory
+    print(f"Cleaning up empty directories in {destination_dir}...")
+    subprocess.run(["find", destination_dir, "-empty", "-type", "d", "-delete"])
+
 def main():
     # Play start sound
     play_start_sound()
