@@ -13,7 +13,7 @@ pygame.mixer.init()
 
 # Function to play start sound
 def play_start_sound():
-    pygame.mixer.music.load("snd/start.mp3")
+    pygame.mixer.music.load("../snd/start.mp3")
     pygame.mixer.music.play()
 
 # Function to convert bytes to a human-readable format
@@ -156,7 +156,7 @@ def configure_directories():
         print("Destination directory updated successfully.")
     else:
         print("Keeping the current destination directory.")
-        
+
     input("Press Enter to return to the main menu...")  # Wait for user input
 
 def main():
