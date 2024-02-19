@@ -179,13 +179,16 @@ def main():
     subprocess.run("clear", shell=True)
 
     # Banner with ASCII art centered and bordered
+    dark_orange = "\033[38;5;202m"
+    reset = "\033[0m"
+    print(f"""{dark_orange}
     banner_text = f"""\
                           ██╗     ██╗██╗  ██╗██╗██╗     
                           ██║     ██║╚██╗██╔╝██║██║     
                           ██║     ██║ ╚███╔╝ ██║██║     
                           ██║     ██║ ██╔██╗ ██║██║     
                           ███████╗██║██╔╝ ██╗██║███████╗
-                          ╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝
+                          ╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝{reset}
                               Drive Sanitizer Script                          
                   Created by Samuel Presgraves, Security Engineer
                    LIXIL HQ, Digital Group, Security & IAM Team
