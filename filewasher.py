@@ -48,7 +48,7 @@ def bleach_mode():
     print("File copy completed.")
 
     # Delete prohibited files
-    delete_prohibited_files(destination_dir, script_dir / "prohibited.bsd")
+    delete_prohibited_files(destination_dir / "prohibited.bsd")
 
     # Clean up empty directories in the destination directory
     clean_empty_directories(destination_dir)
