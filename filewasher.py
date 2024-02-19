@@ -69,7 +69,7 @@ def bleach_mode():
     print("Total time taken:", convert_seconds(int(elapsed_time)))
 
     # Finish
-    midi_file = script_dir / "snd/ffvii.midi"
+    midi_file = script_dir / "snd/ffvii.mp3"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
 
@@ -92,7 +92,7 @@ def wash_drive():
     input("Press Enter to return to the main menu...")  # Wait for user input
 
     # Finish
-    midi_file = script_dir / "snd/ffvii.midi"
+    midi_file = script_dir / "snd/ffvii.mp3"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
 
