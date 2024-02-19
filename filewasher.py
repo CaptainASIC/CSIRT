@@ -26,7 +26,7 @@ def bleach_mode():
         print("Error: Destination directory name is required.")
         return
 
-    destination_dir = f'"/media/cleaner/My Passport/{destination_name}"'
+    destination_dir = f'"/media/cleaner/Passport/{destination_name}"'
 
     # Record start time
     start_time = time.time()
@@ -87,7 +87,7 @@ def wash_drive():
     subprocess.run(["sudo", "service", "clamav-freshclam", "start"])
 
     # Run ClamAV scan on the specified folder and its subfolders
-    folder_path = "/media/cleaner/My Passport"
+    folder_path = "/media/cleaner/Passport"
     print("Running ClamAV scan on the folder and its subfolders...")
     subprocess.run(["clamscan", "-r", folder_path])
     
@@ -117,7 +117,7 @@ def configure_directories():
     config.read(script_dir / 'config.ini')
 
     source_dir = config.get('Directories', 'SourceDirectory', fallback='/media/cleaner/Windows/Users')
-    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/My Passport')
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
 
     print(f"Current source directory: {source_dir}")
     change_source_dir = input("Do you want to change the source directory? (y/n): ").lower()
@@ -178,7 +178,7 @@ def main():
     if not os.path.exists(script_dir / 'config.ini'):
         # Create default configuration
         config = configparser.ConfigParser()
-        config['Directories'] = {'SourceDirectory': '/media/cleaner/Windows/Users', 'DestinationDirectory': '/media/cleaner/My Passport'}
+        config['Directories'] = {'SourceDirectory': '/media/cleaner/Windows/Users', 'DestinationDirectory': '/media/cleaner/Passport'}
         with open(script_dir / 'config.ini', 'w') as configfile:
             config.write(configfile)
 
