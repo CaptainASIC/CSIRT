@@ -88,14 +88,13 @@ def wash_drive():
     folder_path = "/media/cleaner/My Passport"
     print("Running ClamAV scan on the folder and its subfolders...")
     subprocess.run(["clamscan", "-r", folder_path])
+    print("Scan Complete")
+    input("Press Enter to return to the main menu...")  # Wait for user input
 
     # Finish
     midi_file = script_dir / "snd/ffvii.midi"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
-    print("Scan Complete")
-    input("Press Enter to return to the main menu...")  # Wait for user input
-    return  # Return to the main menu
 
 # Function to install prerequisites
 def install_prerequisites():
@@ -104,12 +103,9 @@ def install_prerequisites():
     result = subprocess.run(["sudo", "apt", "install", "-y", "clamav"], capture_output=True, text=True)
     if result.returncode == 0:
         print("Prerequisites Installed")
-        return True
     else:
         print("Error installing prerequisites.")
-        return False
 
-# Function to configure directories
 def configure_directories():
     # Read current configuration
     config = configparser.ConfigParser()
@@ -143,9 +139,7 @@ def configure_directories():
         print("Keeping the current destination directory.")
 
     input("Press Enter to return to the main menu...")  # Wait for user input
-    return  # Return to the main menu
 
-# Function to display menu
 def display_menu():
     print("Menu:")
     print("1. Bleach Mode: Move data from a dirty drive.")
@@ -154,7 +148,6 @@ def display_menu():
     print("I. Install Prerequisites")
     print("Q. Quit Script")
 
-# Function to convert bytes to a human-readable format
 def convert_bytes(bytes):
     if bytes < 1024:
         return f"{bytes} bytes"
@@ -165,7 +158,6 @@ def convert_bytes(bytes):
     else:
         return f"{bytes / 1024**3} GB"
 
-# Function to convert seconds to a human-readable format
 def convert_seconds(sec):
     days = sec // 86400
     hours = (sec // 3600) % 24
@@ -185,8 +177,9 @@ def main():
         with open(script_dir / 'config.ini', 'w') as configfile:
             config.write(configfile)
 
-    # Clear the screen
-    subprocess.run("clear", shell=True)
+    while True:
+        # Clear the screen
+        subprocess.run("clear", shell=True)
 
     # Dark orange color code
     dark_orange = "\033[38;5;202m"
@@ -210,28 +203,26 @@ def main():
 {dark_orange}+{'-' * 84}+{reset_color}
     """
     
-    # Print centered banner
-    print(banner_text)
+        # Print centered banner
+        print(banner_text)
 
-    # Display menu
-    display_menu()
+        # Display menu
+        display_menu()
 
-    choice = input("Enter your choice (1/2/C/I/Q): ").upper()
-    if choice == '1':
-        bleach_mode()
-    elif choice == '2':
-        wash_drive()
-    elif choice == 'C':
-        configure_directories()
-    elif choice == 'I':
-        if install_prerequisites():
-            input("Press Enter to return to the main menu...")  # Wait for user input
-            return
-    elif choice == 'Q':
-        print("Quitting script...")
-        exit()
-    else:
-        print("Invalid choice. Please enter 1, 2, C, I, or Q.")
+        choice = input("Enter your choice (1/2/C/I/Q): ").upper()
+        if choice == '1':
+            bleach_mode()
+        elif choice == '2':
+            wash_drive()
+        elif choice == 'C':
+            configure_directories()
+        elif choice == 'I':
+            install_prerequisites()
+        elif choice == 'Q':
+            print("Quitting script...")
+            exit()
+        else:
+            print("Invalid choice. Please enter 1, 2, C, I, or Q.")
 
 if __name__ == "__main__":
     main()
