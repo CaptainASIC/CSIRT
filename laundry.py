@@ -213,7 +213,7 @@ def delete_prohibited_files(destination_dir, prohibited_file):
             if not os.listdir(dir_path):
                 print(f"Deleting empty directory: {dir_path}")
                 try:
-                    os.rmdir(shlex.quote(dir_path))
+                    os.rmdir(dir_path)
                     num_deleted_dirs += 1
                 except NotADirectoryError:
                     print(f"Error: {dir_path} is not a directory.")
