@@ -191,8 +191,8 @@ def convert_seconds(sec):
     return f"{days} days, {hours:02}:{minutes:02}:{seconds:02}"
 
 def delete_prohibited_files(destination_dir, prohibited_file):
-    # Delete prohibited files recursively
-    print("Deleting prohibited files...")
+    # Delete prohibited files and empty directories recursively
+    print("Deleting prohibited files and empty directories...")
     num_deleted_files = 0
     with open(prohibited_file) as f:
         for file in f:
@@ -208,10 +208,14 @@ def delete_prohibited_files(destination_dir, prohibited_file):
                             for f in files:
                                 os.remove(os.path.join(root, f))
                                 num_deleted_files += 1
-                            os.rmdir(root)
-                            num_deleted_files += 1
+                            try:
+                                os.rmdir(root)
+                                num_deleted_files += 1
+                            except OSError:
+                                pass  # Ignore the error if the directory is not empty
 
-    print(f"Number of files deleted: {num_deleted_files}")
+    print(f"Number of files and directories deleted: {num_deleted_files}")
+
 
 
 def clean_empty_directories(destination_dir):
