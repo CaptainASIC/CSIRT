@@ -26,7 +26,8 @@ def bleach_mode():
         print("Error: Destination directory name is required.")
         return
 
-    destination_dir = f'"/media/cleaner/Passport/{destination_name}"'
+    destination_dir = f'/media/cleaner/Passport/{destination_name}'
+    print("Destination directory:", destination_dir)
 
     # Record start time
     start_time = time.time()
@@ -40,12 +41,15 @@ def bleach_mode():
     # Perform the file copy using rsync
     source_dir = "/media/cleaner/Windows/Users"
     rsync_command = f"rsync --stats {' '.join(extensions)} {source_dir}/ {destination_dir}"
-    subprocess.run(rsync_command, shell=True)
+    print("Rsync command:", rsync_command)
+    rsync_result = subprocess.run(rsync_command, shell=True, capture_output=True, text=True)
+    print("Rsync output:", rsync_result.stdout)
 
     print("File copy completed.")
 
     # Extract the number of files copied and total file size
     rsync_output = subprocess.run(f"rsync --stats {source_dir}/ {destination_dir}", shell=True, capture_output=True, text=True)
+    print("Second rsync output:", rsync_output.stdout)
     stats = rsync_output.stdout.splitlines()
     copied_files = int([line.split()[5] for line in stats if 'Number of regular files transferred' in line][0])
     total_size = int([line.split()[5] for line in stats if 'Total transferred file size' in line][0])
