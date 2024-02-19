@@ -14,7 +14,7 @@ pygame.mixer.init()
 
 # Function to play start sound
 def play_start_sound():
-    sound_file = script_dir / "start.mp3"
+    sound_file = script_dir / "snd/start.mp3"
     pygame.mixer.music.load(str(sound_file))
     pygame.mixer.music.play()
 
@@ -69,7 +69,7 @@ def bleach_mode():
     print("Total time taken:", convert_seconds(int(elapsed_time)))
 
     # Finish
-    midi_file = script_dir / "ffvii.midi"
+    midi_file = script_dir / "snd/ffvii.midi"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
 
@@ -90,7 +90,7 @@ def wash_drive():
     subprocess.run(["clamscan", "-r", folder_path])
 
     # Finish
-    midi_file = script_dir / "ffvii.midi"
+    midi_file = script_dir / "snd/ffvii.midi"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
 
