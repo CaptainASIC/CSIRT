@@ -66,6 +66,20 @@ def bleach_mode():
     pygame.mixer.music.play()
     input("Press Enter to return to the main menu...")  # Wait for user input
 
+def pre_soak():
+    # Delete prohibited files
+    delete_prohibited_files(destination_dir , "prohibited.bsd")
+
+    # Clean up empty directories in the destination directory
+    clean_empty_directories(destination_dir)
+    # Finish
+    midi_file = script_dir / "snd/ffvii.mp3"
+    pygame.mixer.music.load(str(midi_file))
+    pygame.mixer.music.play()
+    print("Pre-soak completed.")
+    input("Press Enter to return to the main menu...")  # Wait for user input
+
+
 # Function to clean the drive
 def wash_drive():
     # Stop clamav-freshclam service
@@ -138,11 +152,13 @@ def configure_directories():
 
 def display_menu():
     print("Menu:")
-    print("1. Bleach Mode: Move data from a dirty drive.")
-    print("2. Wash: Scan Bleached Drive with ClamAV")
+    print("1. Bleach Mode: Move data from a dirty drive")
+    print("2. Pre-soak: Delete Prohibited Files & Empty Directories")
+    print("3. Wash: Scan Bleached Drive with ClamAV")
     print("C. Configure Directories")
     print("I. Install Prerequisites")
     print("Q. Quit Script")
+
 
 def convert_bytes(bytes):
     if bytes < 1024:
@@ -225,6 +241,8 @@ def main():
         if choice == '1':
             bleach_mode()
         elif choice == '2':
+            pre_soak()
+        elif choice == '3':
             wash_drive()
         elif choice == 'C':
             configure_directories()
