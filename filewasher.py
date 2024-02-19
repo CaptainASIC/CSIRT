@@ -99,21 +99,15 @@ def wash_drive():
 
 # Function to install prerequisites
 def install_prerequisites():
-    while True:
-        print("Installing prerequisites...")
-        subprocess.run(["sudo", "apt", "update"])
-        subprocess.run(["sudo", "apt", "install", "-y", "clamav"])
+    print("Installing prerequisites...")
+    subprocess.run(["sudo", "apt", "update"])
+    result = subprocess.run(["sudo", "apt", "install", "-y", "clamav"], capture_output=True, text=True)
+    if result.returncode == 0:
         print("Prerequisites Installed")
-        
-        choice = input("Press Enter to return to the main menu, or 'Q' to quit: ").upper()
-        if choice == 'Q':
-            print("Quitting script...")
-            exit()
-        elif choice == '':
-            return
-        else:
-            print("Invalid choice. Please press Enter or 'Q'.")
-
+        return True
+    else:
+        print("Error installing prerequisites.")
+        return False
 
 # Function to configure directories
 def configure_directories():
@@ -191,56 +185,31 @@ def main():
         with open(script_dir / 'config.ini', 'w') as configfile:
             config.write(configfile)
 
-    # Clear the screen
-    subprocess.run("clear", shell=True)
-
-    # Dark orange color code
-    dark_orange = "\033[38;5;202m"
-    reset_color = "\033[0m"
-
-    # Banner with ASCII art centered and bordered
-    banner_text = f"""\
-{dark_orange}+{'-' * 84}+{reset_color}
-{dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
-{dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
-{dark_orange}|{'██╗     ██╗██╗  ██╗██╗██╗     '.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'██║     ██║╚██╗██╔╝██║██║     '.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'██║     ██║ ╚███╔╝ ██║██║     '.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'██║     ██║ ██╔██╗ ██║██║     '.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'███████╗██║██╔╝ ██╗██║███████╗'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{reset_color}{'Drive Sanitizer Script'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{reset_color}{'Created by Samuel Presgraves, Security Engineer'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{reset_color}{'LIXIL HQ, Digital Group, Security & IAM Team'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{reset_color}{'Version 1.1, Feb 2024'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}+{'-' * 84}+{reset_color}
-    """
-    
-    # Print centered banner
-    print(banner_text)
-
-    # Display menu
-    display_menu()
-
     while True:
+        # Clear the screen
+        subprocess.run("clear", shell=True)
+
+        # Print centered banner
+        print(banner_text)
+
+        # Display menu
+        display_menu()
+
         choice = input("Enter your choice (1/2/C/I/Q): ").upper()
         if choice == '1':
             bleach_mode()
-            break
         elif choice == '2':
             wash_drive()
-            break
         elif choice == 'C':
             configure_directories()
-            break
         elif choice == 'I':
-            install_prerequisites()
-            break
+            if install_prerequisites():
+                input("Press Enter to return to the main menu...")  # Wait for user input
         elif choice == 'Q':
             print("Quitting script...")
             exit()
         else:
             print("Invalid choice. Please enter 1, 2, C, I, or Q.")
-
+            
 if __name__ == "__main__":
     main()
