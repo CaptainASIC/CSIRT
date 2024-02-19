@@ -47,13 +47,20 @@ def bleach_mode():
 
     print("File copy completed.")
 
+    # Extract the number of files copied and total file size
+    rsync_output = subprocess.run(f"rsync --stats {source_dir}/ {destination_dir}", shell=True, capture_output=True, text=True)
+    print("Second rsync output:", rsync_output.stdout)
+    stats = rsync_output.stdout.splitlines()
+    copied_files = int([line.split()[5] for line in stats if 'Number of regular files transferred' in line][0])
+    total_size = int([line.split()[5] for line in stats if 'Total transferred file size' in line][0])
+
+    print(f"Number of files copied: {copied_files}")
+    print("Total file size:", convert_bytes(total_size))
+
     # Delete prohibited files
-    print("Deleting prohibited files...")
-    prohibited_file = script_dir / "prohibited.bsd"
-    delete_prohibited_files(destination_dir, prohibited_file)
+    delete_prohibited_files(destination_dir, script_dir / "prohibited.bsd")
 
     # Clean up empty directories in the destination directory
-    print(f"Cleaning up empty directories in {destination_dir}...")
     clean_empty_directories(destination_dir)
 
     # Calculate elapsed time
