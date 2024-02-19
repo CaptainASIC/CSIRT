@@ -204,13 +204,11 @@ def delete_prohibited_files(destination_dir, prohibited_file):
                         os.remove(file_path)
                         num_deleted_files += 1
                     elif os.path.isdir(file_path):  # If it's a directory, delete its content recursively
-                        for root, dirs, files in os.walk(file_path):
+                        for root, dirs, files in os.walk(file_path, topdown=False):
                             for f in files:
                                 os.remove(os.path.join(root, f))
                                 num_deleted_files += 1
-                        # Check if the directory is empty after deleting its content
-                        if not os.listdir(file_path):
-                            os.rmdir(file_path)
+                            os.rmdir(root)
                             num_deleted_files += 1
 
     print(f"Number of files deleted: {num_deleted_files}")
