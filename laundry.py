@@ -199,6 +199,7 @@ def delete_prohibited_files(destination_dir, prohibited_file):
             file = file.strip()
             if file:
                 file_path = os.path.join(destination_dir, file)
+                print("Deleting:", file_path)  # Print the path being deleted
                 if os.path.exists(file_path):
                     if os.path.isfile(file_path):  # Check if it's a file
                         os.remove(file_path)
