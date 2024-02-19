@@ -88,6 +88,8 @@ def wash_drive():
     folder_path = "/media/cleaner/My Passport"
     print("Running ClamAV scan on the folder and its subfolders...")
     subprocess.run(["clamscan", "-r", folder_path])
+    print("Scan Complete")
+    input("Press Enter to return to the main menu...")  # Wait for user input
 
     # Finish
     midi_file = script_dir / "snd/ffvii.midi"
@@ -99,6 +101,8 @@ def install_prerequisites():
     print("Installing prerequisites...")
     subprocess.run(["sudo", "apt", "update"])
     subprocess.run(["sudo", "apt", "install", "-y", "clamav"])
+    print("Prerequisites Installed")
+    input("Press Enter to return to the main menu...")  # Wait for user input
 
 # Function to configure directories
 def configure_directories():
