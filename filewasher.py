@@ -67,6 +67,7 @@ def bleach_mode():
     input("Press Enter to return to the main menu...")  # Wait for user input
 
 def pre_soak():
+    config = load_config()
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
     # Delete prohibited files
     delete_prohibited_files(destination_dir , "prohibited.bsd")
@@ -79,7 +80,6 @@ def pre_soak():
     pygame.mixer.music.play()
     print("Pre-soak completed.")
     input("Press Enter to return to the main menu...")  # Wait for user input
-
 
 # Function to clean the drive
 def wash_drive():
@@ -117,10 +117,14 @@ def install_prerequisites():
     # Wait for user input before returning to the main menu
     input("Press Enter to return to the main menu...")
 
-def configure_directories():
-    # Read current configuration
+def load_config():
     config = configparser.ConfigParser()
     config.read(script_dir / 'config.ini')
+    return config
+
+def configure_directories():
+    # Read current configuration
+    config = load_config()
 
     source_dir = config.get('Directories', 'SourceDirectory', fallback='/media/cleaner/Windows/Users')
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
@@ -159,7 +163,6 @@ def display_menu():
     print("C. Configure Directories")
     print("I. Install Prerequisites")
     print("Q. Quit Script")
-
 
 def convert_bytes(bytes):
     if bytes < 1024:
