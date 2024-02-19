@@ -187,12 +187,12 @@ def main():
 {dark_orange}+{'-' * 84}+{reset_color}
 {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
 {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
-{dark_orange}|{'                          ██╗     ██╗██╗  ██╗██╗██╗     '.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'                          ██║     ██║╚██╗██╔╝██║██║     '.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'                          ██║     ██║ ╚███╔╝ ██║██║     '.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'                          ██║     ██║ ██╔██╗ ██║██║     '.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'                          ███████╗██║██╔╝ ██╗██║███████╗'.center(84)}{dark_orange}|{reset_color}
-{dark_orange}|{'                          ╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝'.center(84)}{dark_orange}|{reset_color}
+{dark_orange}|{'██╗     ██╗██╗  ██╗██╗██╗     '.center(84)}{dark_orange}|{reset_color}
+{dark_orange}|{'██║     ██║╚██╗██╔╝██║██║     '.center(84)}{dark_orange}|{reset_color}
+{dark_orange}|{'██║     ██║ ╚███╔╝ ██║██║     '.center(84)}{dark_orange}|{reset_color}
+{dark_orange}|{'██║     ██║ ██╔██╗ ██║██║     '.center(84)}{dark_orange}|{reset_color}
+{dark_orange}|{'███████╗██║██╔╝ ██╗██║███████╗'.center(84)}{dark_orange}|{reset_color}
+{dark_orange}|{'╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝'.center(84)}{dark_orange}|{reset_color}
 {dark_orange}|{reset_color}{'Drive Sanitizer Script'.center(84)}{dark_orange}|{reset_color}
 {dark_orange}|{reset_color}{'Created by Samuel Presgraves, Security Engineer'.center(84)}{dark_orange}|{reset_color}
 {dark_orange}|{reset_color}{'LIXIL HQ, Digital Group, Security & IAM Team'.center(84)}{dark_orange}|{reset_color}
