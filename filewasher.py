@@ -88,13 +88,14 @@ def wash_drive():
     folder_path = "/media/cleaner/My Passport"
     print("Running ClamAV scan on the folder and its subfolders...")
     subprocess.run(["clamscan", "-r", folder_path])
-    print("Scan Complete")
-    input("Press Enter to return to the main menu...")  # Wait for user input
 
     # Finish
     midi_file = script_dir / "snd/ffvii.midi"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
+    print("Scan Complete")
+    input("Press Enter to return to the main menu...")  # Wait for user input
+    return  # Return to the main menu
 
 # Function to install prerequisites
 def install_prerequisites():
@@ -103,6 +104,7 @@ def install_prerequisites():
     subprocess.run(["sudo", "apt", "install", "-y", "clamav"])
     print("Prerequisites Installed")
     input("Press Enter to return to the main menu...")  # Wait for user input
+    return  # Return to the main menu
 
 # Function to configure directories
 def configure_directories():
@@ -138,6 +140,7 @@ def configure_directories():
         print("Keeping the current destination directory.")
 
     input("Press Enter to return to the main menu...")  # Wait for user input
+    return  # Return to the main menu
 
 # Function to display menu
 def display_menu():
