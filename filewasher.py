@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import os
 import shutil
 import subprocess
@@ -8,41 +6,17 @@ import time
 import pygame
 import configparser
 
+# Get the directory where the script is located
+script_dir = Path(__file__).resolve().parent
+
 # Initialize pygame audio mixer
 pygame.mixer.init()
 
 # Function to play start sound
 def play_start_sound():
-    pygame.mixer.music.load("../snd/start.mp3")
+    sound_file = script_dir / "start.mp3"
+    pygame.mixer.music.load(str(sound_file))
     pygame.mixer.music.play()
-
-# Function to convert bytes to a human-readable format
-def convert_bytes(bytes):
-    if bytes < 1024:
-        return f"{bytes} bytes"
-    elif bytes < 1024**2:
-        return f"{bytes / 1024} KB"
-    elif bytes < 1024**3:
-        return f"{bytes / 1024**2} MB"
-    else:
-        return f"{bytes / 1024**3} GB"
-
-# Function to convert seconds to a human-readable format
-def convert_seconds(sec):
-    days = sec // 86400
-    hours = (sec // 3600) % 24
-    minutes = (sec // 60) % 60
-    seconds = sec % 60
-    return f"{days} days, {hours:02}:{minutes:02}:{seconds:02}"
-
-# Function to display menu
-def display_menu():
-    print("Menu:")
-    print("1. Bleach Mode: Move data from a dirty drive.")
-    print("2. Wash: Scan Bleached Drive with ClamAV")
-    print("C. Configure Directories")
-    print("I. Install Prerequisites")
-    print("Q. Quit Script")
 
 # Function to wash the drive
 def bleach_mode():
@@ -59,7 +33,7 @@ def bleach_mode():
     print("Starting file copy...")
 
     # Read extensions from the reference file
-    extensions_file = "extensions.bsd"
+    extensions_file = script_dir / "extensions.bsd"
     with open(extensions_file) as f:
         extensions = [f"--include '*{line.strip()}'" for line in f]
 
@@ -80,7 +54,7 @@ def bleach_mode():
 
     # Delete prohibited files
     print("Deleting prohibited files...")
-    prohibited_file = "prohibited.bsd"
+    prohibited_file = script_dir / "prohibited.bsd"
     delete_prohibited_files(destination_dir, prohibited_file)
 
     # Clean up empty directories in the destination directory
@@ -95,7 +69,8 @@ def bleach_mode():
     print("Total time taken:", convert_seconds(int(elapsed_time)))
 
     # Finish
-    pygame.mixer.music.load("snd/ffvii.midi")
+    midi_file = script_dir / "ffvii.midi"
+    pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
 
 # Function to clean the drive
@@ -115,7 +90,8 @@ def wash_drive():
     subprocess.run(["clamscan", "-r", folder_path])
 
     # Finish
-    pygame.mixer.music.load("snd/ffvii.midi")
+    midi_file = script_dir / "ffvii.midi"
+    pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
 
 # Function to install prerequisites
@@ -128,7 +104,7 @@ def install_prerequisites():
 def configure_directories():
     # Read current configuration
     config = configparser.ConfigParser()
-    config.read('config.ini')
+    config.read(script_dir / 'config.ini')
 
     source_dir = config.get('Directories', 'SourceDirectory', fallback='/media/cleaner/Windows/Users')
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/My Passport')
@@ -139,7 +115,7 @@ def configure_directories():
     if change_source_dir == 'y':
         new_source_dir = input("Enter the new source directory: ")
         config.set('Directories', 'SourceDirectory', new_source_dir)
-        with open('config.ini', 'w') as configfile:
+        with open(script_dir / 'config.ini', 'w') as configfile:
             config.write(configfile)
         print("Source directory updated successfully.")
     else:
@@ -151,7 +127,7 @@ def configure_directories():
     if change_dest_dir == 'y':
         new_dest_dir = input("Enter the new destination directory: ")
         config.set('Directories', 'DestinationDirectory', new_dest_dir)
-        with open('config.ini', 'w') as configfile:
+        with open(script_dir / 'config.ini', 'w') as configfile:
             config.write(configfile)
         print("Destination directory updated successfully.")
     else:
@@ -159,36 +135,69 @@ def configure_directories():
 
     input("Press Enter to return to the main menu...")  # Wait for user input
 
+# Function to display menu
+def display_menu():
+    print("Menu:")
+    print("1. Bleach Mode: Move data from a dirty drive.")
+    print("2. Wash: Scan Bleached Drive with ClamAV")
+    print("C. Configure Directories")
+    print("I. Install Prerequisites")
+    print("Q. Quit Script")
+
+# Function to convert bytes to a human-readable format
+def convert_bytes(bytes):
+    if bytes < 1024:
+        return f"{bytes} bytes"
+    elif bytes < 1024**2:
+        return f"{bytes / 1024} KB"
+    elif bytes < 1024**3:
+        return f"{bytes / 1024**2} MB"
+    else:
+        return f"{bytes / 1024**3} GB"
+
+# Function to convert seconds to a human-readable format
+def convert_seconds(sec):
+    days = sec // 86400
+    hours = (sec // 3600) % 24
+    minutes = (sec // 60) % 60
+    seconds = sec % 60
+    return f"{days} days, {hours:02}:{minutes:02}:{seconds:02}"
+
 def main():
     # Play start sound
     play_start_sound()
 
     # Load configuration
-    if not os.path.exists('config.ini'):
+    if not os.path.exists(script_dir / 'config.ini'):
         # Create default configuration
         config = configparser.ConfigParser()
         config['Directories'] = {'SourceDirectory': '/media/cleaner/Windows/Users', 'DestinationDirectory': '/media/cleaner/My Passport'}
-        with open('config.ini', 'w') as configfile:
+        with open(script_dir / 'config.ini', 'w') as configfile:
             config.write(configfile)
 
     # Clear the screen
     subprocess.run("clear", shell=True)
 
-    # Splash image with ASCII art in slightly darker orange
-    dark_orange = "\033[38;5;202m"
-    reset = "\033[0m"
-    print(f"""{dark_orange}
+    # Banner with ASCII art centered and bordered
+    banner_text = f"""\
                           ██╗     ██╗██╗  ██╗██╗██╗     
                           ██║     ██║╚██╗██╔╝██║██║     
                           ██║     ██║ ╚███╔╝ ██║██║     
                           ██║     ██║ ██╔██╗ ██║██║     
                           ███████╗██║██╔╝ ██╗██║███████╗
-                          ╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝{reset}
+                          ╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝
                               Drive Sanitizer Script                          
                   Created by Samuel Presgraves, Security Engineer
                    LIXIL HQ, Digital Group, Security & IAM Team
                               Version 1.1, Feb 2024
-    """)
+    """
+    banner_width = max(len(line) for line in banner_text.split('\n'))
+    border_line = '+' + '-' * (banner_width + 2) + '+'
+    banner_lines = [f"| {line.ljust(banner_width)} |" for line in banner_text.split('\n')]
+    centered_banner = '\n'.join([border_line] + banner_lines + [border_line])
+
+    # Print centered banner
+    print(centered_banner)
 
     # Display menu
     display_menu()
