@@ -150,19 +150,24 @@ def configure_directories():
 
     input("Press Enter to return to the main menu...")  # Wait for user input
 
-def fold():
+def dry():
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
     for root, dirs, files in os.walk(destination_dir):
         for d in dirs:
             d_path = os.path.join(root, d)
             os.chmod(d_path, 0o555)  # Make the directory read-only
 
+def upload_to_gdrive():
+    # Define the function to upload to GDrive here
+    pass
+
 def display_menu():
     print("Menu:")
     print("1. Bleach Mode: Move data from a dirty drive")
     print("2. Pre-soak: Delete Prohibited Files & Empty Directories")
     print("3. Wash: Scan Bleached Drive with ClamAV")
-    print("4. Fold: Write Protect Destination Folders")
+    print("4. Dry: Write Protect Destination Folders")
+    print("5. Fold: Upload to GDrive")
     print("C. Configure Directories")
     print("I. Install Prerequisites")
     print("Q. Quit Script")
@@ -187,6 +192,7 @@ def convert_seconds(sec):
 def delete_prohibited_files(destination_dir, prohibited_file):
     # Delete prohibited files
     print("Deleting prohibited files...")
+    num_deleted_files = 0
     with open(prohibited_file) as f:
         for file in f:
             file = file.strip()
@@ -194,6 +200,10 @@ def delete_prohibited_files(destination_dir, prohibited_file):
                 file_path = os.path.join(destination_dir, file)
                 if os.path.exists(file_path):
                     os.remove(file_path)
+                    num_deleted_files += 1
+
+    print(f"Number of files deleted: {num_deleted_files}")
+
 
 def clean_empty_directories(destination_dir):
     # Clean up empty directories in the destination directory
@@ -244,7 +254,7 @@ def main():
         # Display menu
         display_menu()
 
-        choice = input("Enter your choice (1/2/3/4/C/I/Q): ").upper()
+        choice = input("Enter your choice (1/2/3/4/5/C/I/Q): ").upper()
         if choice == '1':
             bleach_mode()
         elif choice == '2':
@@ -252,7 +262,9 @@ def main():
         elif choice == '3':
             wash_drive()
         elif choice == '4':
-            fold()
+            dry()
+        elif choice == '5':
+            upload_to_gdrive()
         elif choice == 'C':
             configure_directories()
         elif choice == 'I':
@@ -261,7 +273,7 @@ def main():
             print("Quitting script...")
             exit()
         else:
-            print("Invalid choice. Please enter 1, 2, 3, 4, C, I, or Q.")
+            print("Invalid choice. Please enter 1, 2, 3, 4, 5, C, I, or Q.")
 
 if __name__ == "__main__":
     main()
