@@ -226,7 +226,7 @@ def main():
     elif choice == 'I':
         if install_prerequisites():
             input("Press Enter to return to the main menu...")  # Wait for user input
-       
+            return
     elif choice == 'Q':
         print("Quitting script...")
         exit()
