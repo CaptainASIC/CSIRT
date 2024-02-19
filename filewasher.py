@@ -99,12 +99,21 @@ def wash_drive():
 
 # Function to install prerequisites
 def install_prerequisites():
-    print("Installing prerequisites...")
-    subprocess.run(["sudo", "apt", "update"])
-    subprocess.run(["sudo", "apt", "install", "-y", "clamav"])
-    print("Prerequisites Installed")
-    input("Press Enter to return to the main menu...")  # Wait for user input
-    return  # Return to the main menu
+    while True:
+        print("Installing prerequisites...")
+        subprocess.run(["sudo", "apt", "update"])
+        subprocess.run(["sudo", "apt", "install", "-y", "clamav"])
+        print("Prerequisites Installed")
+        
+        choice = input("Press Enter to return to the main menu, or 'Q' to quit: ").upper()
+        if choice == 'Q':
+            print("Quitting script...")
+            exit()
+        elif choice == '':
+            return
+        else:
+            print("Invalid choice. Please press Enter or 'Q'.")
+
 
 # Function to configure directories
 def configure_directories():
