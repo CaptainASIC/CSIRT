@@ -36,7 +36,7 @@ def bleach_mode():
     # Read extensions from the reference file
     extensions_file = script_dir / "extensions.bsd"
     with open(extensions_file) as f:
-        extensions = [f"--include '={line.strip()}'" for line in f]
+        extensions = [f"--include='{line.strip()}'" for line in f]
 
     # Perform the file copy using rsync
     source_dir = "/media/cleaner/Windows/Users"
