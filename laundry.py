@@ -66,7 +66,7 @@ def bleach_mode():
     pygame.mixer.music.play()
     input("Press Enter to return to the main menu...")  # Wait for user input
 
-def pre_soak():
+def pre_soak(config):
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
     # Delete prohibited files
     delete_prohibited_files(destination_dir , "prohibited.bsd")
