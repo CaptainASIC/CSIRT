@@ -150,12 +150,13 @@ def configure_directories():
 
     input("Press Enter to return to the main menu...")  # Wait for user input
 
-def dry():
+def dry(config):
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
     for root, dirs, files in os.walk(destination_dir):
         for d in dirs:
             d_path = os.path.join(root, d)
             os.chmod(d_path, 0o555)  # Make the directory read-only
+
 
 def upload_to_gdrive():
     # Define the function to upload to GDrive here
@@ -224,7 +225,7 @@ def main():
     else:
         config = configparser.ConfigParser()
         config.read(script_dir / 'config.ini')
-        
+
     while True:
         # Clear the screen
         subprocess.run("clear", shell=True)
@@ -261,11 +262,11 @@ def main():
         if choice == '1':
             bleach_mode()
         elif choice == '2':
-            pre_soak()
+            pre_soak(config)  # Pass config object to pre_soak function
         elif choice == '3':
             wash_drive()
         elif choice == '4':
-            dry()
+            dry(config)  # Pass config object to dry function
         elif choice == '5':
             upload_to_gdrive()
         elif choice == 'C':
