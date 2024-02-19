@@ -194,6 +194,9 @@ def main():
 {dark_orange}|{reset_color}{'                          ██║     ██║ ██╔██╗ ██║██║     '.ljust(74)}{dark_orange}|{reset_color}
 {dark_orange}|{reset_color}{'                          ███████╗██║██╔╝ ██╗██║███████╗'.ljust(74)}{dark_orange}|{reset_color}
 {dark_orange}|{reset_color}{'                          ╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝'.ljust(74)}{dark_orange}|{reset_color}
+{dark_orange}|{reset_color}{'                              Drive Sanitizer Script'.center(76)}{dark_orange}|{reset_color}
+{dark_orange}|{reset_color}{'                              Created by Samuel Presgraves, Security Engineer'.center(76)}{dark_orange}|{reset_color}
+{dark_orange}|{reset_color}{'                              LIXIL HQ, Digital Group, Security & IAM Team'.center(76)}{dark_orange}|{reset_color}
 {dark_orange}|{reset_color}{'                              Version 1.1, Feb 2024'.center(76)}{dark_orange}|{reset_color}
 {dark_orange}+{'-' * 74}+{reset_color}
     """
