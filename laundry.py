@@ -221,7 +221,10 @@ def main():
         config['Directories'] = {'SourceDirectory': '/media/cleaner/Windows/Users', 'DestinationDirectory': '/media/cleaner/Passport'}
         with open(script_dir / 'config.ini', 'w') as configfile:
             config.write(configfile)
-
+    else:
+        config = configparser.ConfigParser()
+        config.read(script_dir / 'config.ini')
+        
     while True:
         # Clear the screen
         subprocess.run("clear", shell=True)
