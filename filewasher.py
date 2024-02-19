@@ -178,29 +178,28 @@ def main():
     # Clear the screen
     subprocess.run("clear", shell=True)
 
-    # Banner with ASCII art centered and bordered
+    # Dark orange color code
     dark_orange = "\033[38;5;202m"
-    reset = "\033[0m"
-    print(f"""{dark_orange}
-    banner_text = f"""\
-                          ██╗     ██╗██╗  ██╗██╗██╗     
-                          ██║     ██║╚██╗██╔╝██║██║     
-                          ██║     ██║ ╚███╔╝ ██║██║     
-                          ██║     ██║ ██╔██╗ ██║██║     
-                          ███████╗██║██╔╝ ██╗██║███████╗
-                          ╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝{reset}
-                              Drive Sanitizer Script                          
-                  Created by Samuel Presgraves, Security Engineer
-                   LIXIL HQ, Digital Group, Security & IAM Team
-                              Version 1.1, Feb 2024
-    """
-    banner_width = max(len(line) for line in banner_text.split('\n'))
-    border_line = '+' + '-' * (banner_width + 2) + '+'
-    banner_lines = [f"| {line.ljust(banner_width)} |" for line in banner_text.split('\n')]
-    centered_banner = '\n'.join([border_line] + banner_lines + [border_line])
+    reset_color = "\033[0m"
 
+    # Banner with ASCII art centered and bordered
+    banner_text = f"""\
+{dark_orange}+{'-' * 74}+{reset_color}
+{dark_orange}|{reset_color}{' ' * 74}{dark_orange}|{reset_color}
+{dark_orange}|{reset_color} {' '*25}Drive Sanitizer Script{' '*25} {dark_orange}|{reset_color}
+{dark_orange}|{reset_color}{' ' * 74}{dark_orange}|{reset_color}
+{dark_orange}|{reset_color}{'                          ██╗     ██╗██╗  ██╗██╗██╗     '.ljust(74)}{dark_orange}|{reset_color}
+{dark_orange}|{reset_color}{'                          ██║     ██║╚██╗██╔╝██║██║     '.ljust(74)}{dark_orange}|{reset_color}
+{dark_orange}|{reset_color}{'                          ██║     ██║ ╚███╔╝ ██║██║     '.ljust(74)}{dark_orange}|{reset_color}
+{dark_orange}|{reset_color}{'                          ██║     ██║ ██╔██╗ ██║██║     '.ljust(74)}{dark_orange}|{reset_color}
+{dark_orange}|{reset_color}{'                          ███████╗██║██╔╝ ██╗██║███████╗'.ljust(74)}{dark_orange}|{reset_color}
+{dark_orange}|{reset_color}{'                          ╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝'.ljust(74)}{dark_orange}|{reset_color}
+{dark_orange}|{reset_color}{'                              Version 1.1, Feb 2024'.center(76)}{dark_orange}|{reset_color}
+{dark_orange}+{'-' * 74}+{reset_color}
+    """
+    
     # Print centered banner
-    print(centered_banner)
+    print(banner_text)
 
     # Display menu
     display_menu()
