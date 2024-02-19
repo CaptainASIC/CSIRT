@@ -6,6 +6,7 @@ import time
 import pygame
 import configparser
 import fnmatch
+import shlex
 
 # Get the directory where the script is located
 script_dir = Path(__file__).resolve().parent
@@ -211,8 +212,11 @@ def delete_prohibited_files(destination_dir, prohibited_file):
             dir_path = os.path.join(root, dir)
             if not os.listdir(dir_path):
                 print(f"Deleting empty directory: {dir_path}")
-                os.rmdir(dir_path)
-                num_deleted_dirs += 1
+                try:
+                    os.rmdir(shlex.quote(dir_path))
+                    num_deleted_dirs += 1
+                except NotADirectoryError:
+                    print(f"Error: {dir_path} is not a directory.")
 
     print(f"Number of files deleted: {num_deleted_files}")
     print(f"Number of empty directories deleted: {num_deleted_dirs}")
