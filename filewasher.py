@@ -106,6 +106,9 @@ def install_prerequisites():
     else:
         print("Error installing prerequisites.")
 
+    # Wait for user input before returning to the main menu
+    input("Press Enter to return to the main menu...")
+
 def configure_directories():
     # Read current configuration
     config = configparser.ConfigParser()
@@ -202,27 +205,27 @@ def main():
     {dark_orange}|{reset_color}{'Version 1.1, Feb 2024'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
         """
-        
-            # Print centered banner
-            print(banner_text)
 
-            # Display menu
-            display_menu()
+        # Print centered banner
+        print(banner_text)
 
-            choice = input("Enter your choice (1/2/C/I/Q): ").upper()
-            if choice == '1':
-                bleach_mode()
-            elif choice == '2':
-                wash_drive()
-            elif choice == 'C':
-                configure_directories()
-            elif choice == 'I':
-                install_prerequisites()
-            elif choice == 'Q':
-                print("Quitting script...")
-                exit()
-            else:
-                print("Invalid choice. Please enter 1, 2, C, I, or Q.")
+        # Display menu
+        display_menu()
+
+        choice = input("Enter your choice (1/2/C/I/Q): ").upper()
+        if choice == '1':
+            bleach_mode()
+        elif choice == '2':
+            wash_drive()
+        elif choice == 'C':
+            configure_directories()
+        elif choice == 'I':
+            install_prerequisites()
+        elif choice == 'Q':
+            print("Quitting script...")
+            exit()
+        else:
+            print("Invalid choice. Please enter 1, 2, C, I, or Q.")
 
 if __name__ == "__main__":
     main()
