@@ -26,7 +26,7 @@ def bleach_mode():
         print("Error: Destination directory name is required.")
         return
 
-    destination_dir = f"/media/cleaner/My Passport/{destination_name}"
+    destination_dir = f'"/media/cleaner/My Passport/{destination_name}"'
 
     # Record start time
     start_time = time.time()
