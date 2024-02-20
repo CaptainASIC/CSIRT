@@ -284,15 +284,10 @@ def main():
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
     \n
-    {dark_red}+{'-' * 56}+
-    |{'Source Directory:'.ljust(56)}|
-    |{source_dir.ljust(56)}|
-    +{'-' * 56}+{reset_color}
-    \n
-    {green}+{'-' * 56}+
-    |{'Destination Directory:'.ljust(56)}|
-    |{destination_dir.ljust(56)}|
-    +{'-' * 56}+{reset_color}
+    {dark_red}+{'-' * 40}+{'-' * 40}+{reset_color}
+    {dark_red}|{'Source Directory:'.ljust(40)}|{green}|{'Destination Directory:'.ljust(40)}|{reset_color}
+    {dark_red}|{source_dir.ljust(40)}|{green}|{destination_dir.ljust(40)}|{reset_color}
+    {dark_red}+{'-' * 40}+{'-' * 40}+{reset_color}
         """
 
         # Print centered banner
