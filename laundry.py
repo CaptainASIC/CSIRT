@@ -55,7 +55,7 @@ def bleach_mode():
     delete_prohibited_files(destination_dir , "prohibited.list")
 
     # Clean up empty directories in the destination directory
-    clean_empty_directories(destination_dir)
+    #clean_empty_directories(destination_dir)
 
     # Calculate elapsed time
     end_time = time.time()
@@ -247,21 +247,21 @@ def delete_prohibited_files(destination_dir, prohibited_file):
                 num_deleted_files += 1
 
     # Delete empty directories recursively
-    print("Cleaning up empty directories...")
-    num_deleted_dirs = 0
-    for root, dirs, files in os.walk(destination_dir, topdown=False):
-        for dir in dirs:
-            dir_path = os.path.join(root, dir)
-            if not os.listdir(dir_path):
+#    print("Cleaning up empty directories...")
+#    num_deleted_dirs = 0
+#    for root, dirs, files in os.walk(destination_dir, topdown=False):
+#        for dir in dirs:
+#            dir_path = os.path.join(root, dir)
+#            if not os.listdir(dir_path):
                 #debug#print(f"Deleting empty directory: {dir_path}")
-                try:
-                    os.rmdir(dir_path)
-                    num_deleted_dirs += 1
-                except NotADirectoryError:
-                    print(f"Error: {dir_path} is not a directory.")
+#                try:
+#                    os.rmdir(dir_path)
+#                    num_deleted_dirs += 1
+#                except NotADirectoryError:
+#                    print(f"Error: {dir_path} is not a directory.")
 
-    print(f"Number of files deleted: {num_deleted_files}")
-    print(f"Number of empty directories deleted: {num_deleted_dirs}")
+#    print(f"Number of files deleted: {num_deleted_files}")
+#    print(f"Number of empty directories deleted: {num_deleted_dirs}")
 
 def file_in_prohibited_list(file_path, prohibited_file):
     with open(prohibited_file) as f:
@@ -272,10 +272,10 @@ def file_in_prohibited_list(file_path, prohibited_file):
     return False
 
 
-def clean_empty_directories(destination_dir):
+#def clean_empty_directories(destination_dir):
     # Clean up empty directories in the destination directory
-    print(f"Cleaning up empty directories in {destination_dir}...")
-    subprocess.run(["find", destination_dir, "-empty", "-type", "d", "-delete"])
+#    print(f"Cleaning up empty directories in {destination_dir}...")
+#    subprocess.run(["find", destination_dir, "-empty", "-type", "d", "-delete"])
 
 def main():
     # Play start sound
