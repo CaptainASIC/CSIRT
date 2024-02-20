@@ -38,7 +38,7 @@ def bleach_mode():
     print("Starting file copy...")
 
     # Read extensions from the reference file
-    extensions_file = script_dir / "extensions.bsd"
+    extensions_file = script_dir / "extensions.list"
     with open(extensions_file) as f:
         extensions = [f'"--include={line.strip()}"' for line in f]
 
@@ -52,7 +52,7 @@ def bleach_mode():
     print("File copy completed.")
 
     # Delete prohibited files
-    delete_prohibited_files(destination_dir , "prohibited.bsd")
+    delete_prohibited_files(destination_dir , "prohibited.list")
 
     # Clean up empty directories in the destination directory
     clean_empty_directories(destination_dir)
@@ -73,7 +73,7 @@ def bleach_mode():
 def pre_soak(config):
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
     # Delete prohibited files
-    delete_prohibited_files(destination_dir , "prohibited.bsd")
+    delete_prohibited_files(destination_dir , "prohibited.list")
 
     # Clean up empty directories in the destination directory
    # clean_empty_directories(destination_dir)
