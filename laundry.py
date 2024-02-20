@@ -258,7 +258,7 @@ def delete_prohibited_files(destination_dir, prohibited_file):
                     os.rmdir(dir_path)
                     num_deleted_dirs += 1
                 except NotADirectoryError:
-                    #debug#print(f"Error: {dir_path} is not a directory.")
+                    print(f"Error: {dir_path} is not a directory.")
 
     print(f"Number of files deleted: {num_deleted_files}")
     print(f"Number of empty directories deleted: {num_deleted_dirs}")
