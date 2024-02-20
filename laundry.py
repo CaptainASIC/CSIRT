@@ -250,6 +250,9 @@ def main():
         config = configparser.ConfigParser()
         config.read(script_dir / 'config.ini')
 
+    # Fetch source directory from config
+    source_dir = config.get('Directories', 'SourceDirectory', fallback='/media/cleaner/Windows/Users')
+
     while True:
         # Clear the screen
         subprocess.run("clear", shell=True)
