@@ -252,6 +252,7 @@ def main():
 
     # Fetch source directory from config
     source_dir = config.get('Directories', 'SourceDirectory', fallback='/media/cleaner/Windows/Users')
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
 
     while True:
         # Clear the screen
@@ -260,7 +261,7 @@ def main():
         # Color codes
         dark_orange = "\033[38;5;202m"
         dark_red = "\033[38;5;160m"
-        green = "\033[38;5;40m"
+        green = "\033[38;5;40m]"
         reset_color = "\033[0m"
 
         # Banner with ASCII art centered and bordered
@@ -283,15 +284,15 @@ def main():
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
     \n
-    {dark_red}+{'-' * 64}+
-    |{'Source Directory:'.ljust(64)}|
-    |{source_dir.center(64)}|
-    +{'-' * 64}+{reset_color}
+    {dark_red}+{'-' * 56}+
+    |{'Source Directory:'.ljust(56)}|
+    |{source_dir.ljust(56)}|
+    +{'-' * 56}+{reset_color}
     \n
-    {green}+{'-' * 64}+
-    |{'Destination Directory:'.ljust(64)}|
-    |{source_dir.center(64)}|
-    +{'-' * 64}+{reset_color}
+    {green}+{'-' * 56}+
+    |{'Destination Directory:'.ljust(56)}|
+    |{destination_dir.ljust(56)}|
+    +{'-' * 56}+{reset_color}
         """
 
         # Print centered banner
