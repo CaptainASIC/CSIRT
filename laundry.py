@@ -254,8 +254,9 @@ def main():
         # Clear the screen
         subprocess.run("clear", shell=True)
 
-        # Dark orange color code
+        # Color codes
         dark_orange = "\033[38;5;202m"
+        dark_red = "\033[38;5;160m"
         reset_color = "\033[0m"
 
         # Banner with ASCII art centered and bordered
@@ -269,11 +270,21 @@ def main():
     {dark_orange}|{'██║     ██║ ██╔██╗ ██║██║     '.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{'███████╗██║██╔╝ ██╗██║███████╗'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{'╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'Drive Sanitizer Script'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'Created by Samuel Presgraves, Security Engineer'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'LIXIL HQ, Digital Group, Security & IAM Team'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'Version 1.2, Feb 2024'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
+    \n
+    \n
+    \n
+    {dark_red}+{'-' * 84}+{reset_color}
+    {dark_red}|{reset_color}{'Source Directory:'source_dir.center(84)}{dark_red}|{reset_color}
+    {dark_red}+{'-' * 84}+{reset_color}
+
         """
 
         # Print centered banner
