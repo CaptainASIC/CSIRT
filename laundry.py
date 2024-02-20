@@ -283,9 +283,10 @@ def main():
     {dark_orange}+{'-' * 84}+{reset_color}
     \n
     \n
-    {dark_red}+{'-' * 84}+{reset_color}
-    {dark_red}|{reset_color}{'Source Directory:'source_dir.center(84)}{dark_red}|{reset_color}
-    {dark_red}+{'-' * 84}+{reset_color}
+    {dark_red}+{'-' * 84}+
+    |{'Source Directory:'.center(84)}|
+    |{reset_color}{source_dir.center(84)}|
+    +{'-' * 84}+{reset_color}
 
         """
 
