@@ -284,10 +284,10 @@ def main():
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
     \n
-    {dark_red}+{'-' * 32}[{reset_color}+{reset_color}{green}{'-' * 32}+{reset_color}
-    {dark_red}|{'Source Directory:'.ljust(32)}[{reset_color}|{reset_color}{green}{'Destination Directory:'.ljust(32)}|{reset_color}
-    {dark_red}|{source_dir.ljust(32)}[{reset_color}|{reset_color}{green}{destination_dir.ljust(32)}|{reset_color}
-    {dark_red}+{'-' * 32}[{reset_color}+{reset_color}{green}{'-' * 32}+{reset_color}
+            {dark_red}+{'-' * 32}[{reset_color}+{reset_color}{green}{'-' * 32}+{reset_color}
+            {dark_red}|{'Source Directory:'.ljust(32)}[{reset_color}|{reset_color}{green}{'Destination Directory:'.ljust(32)}|{reset_color}
+            {dark_red}|{source_dir.ljust(32)}[{reset_color}|{reset_color}{green}{destination_dir.ljust(32)}|{reset_color}
+            {dark_red}+{'-' * 32}[{reset_color}+{reset_color}{green}{'-' * 32}+{reset_color}
 
         """
 
