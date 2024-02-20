@@ -260,6 +260,7 @@ def main():
         # Color codes
         dark_orange = "\033[38;5;202m"
         dark_red = "\033[38;5;160m"
+        green = "\033[38;5;40m"
         reset_color = "\033[0m"
 
         # Banner with ASCII art centered and bordered
@@ -282,12 +283,15 @@ def main():
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
     \n
+    {dark_red}+{'-' * 64}+
+    |{'Source Directory:'.ljust(64)}|
+    |{source_dir.center(64)}|
+    +{'-' * 64}+{reset_color}
     \n
-    {dark_red}+{'-' * 84}+
-    |{'Source Directory:'.center(84)}|
-    |{reset_color}{source_dir.center(84)}|
-    +{'-' * 84}+{reset_color}
-
+    {green}+{'-' * 64}+
+    |{'Destination Directory:'.ljust(64)}|
+    |{source_dir.center(64)}|
+    +{'-' * 64}+{reset_color}
         """
 
         # Print centered banner
