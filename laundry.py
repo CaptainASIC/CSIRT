@@ -142,7 +142,7 @@ def download_and_install_gdrive():
 
     # Verify installation
     print("Verifying installation...")
-    subprocess.run(["sudo", "gdrive", "about"])
+    subprocess.run(["gdrive", "account", "add"])
 
     print("gdrive installed successfully.")
 
