@@ -45,7 +45,7 @@ def bleach_mode():
     # Perform the file copy using rsync
     source_dir = "/media/cleaner/Windows/Users"
     rsync_command = f'rsync -av --stats {" ".join(extensions)} --exclude="*.*" --exclude="desktop.ini" --exclude="/administrator/" --exclude="/Default/" --exclude="/Public/" {source_dir}/ {destination_dir}'
-    print("Rsync command:", rsync_command)
+    #debug# print("Rsync command:", rsync_command)
     rsync_result = subprocess.run(rsync_command, shell=True, capture_output=True, text=True)
     print("Rsync output:", rsync_result.stdout)
 
@@ -242,7 +242,7 @@ def delete_prohibited_files(destination_dir, prohibited_file):
         for file in files:
             file_path = os.path.join(root, file)
             if file_in_prohibited_list(file_path, prohibited_file):
-                print(f"Deleting: {file_path}")
+                #debug#print(f"Deleting: {file_path}")
                 os.remove(file_path)
                 num_deleted_files += 1
 
@@ -253,12 +253,12 @@ def delete_prohibited_files(destination_dir, prohibited_file):
         for dir in dirs:
             dir_path = os.path.join(root, dir)
             if not os.listdir(dir_path):
-                print(f"Deleting empty directory: {dir_path}")
+                #debug#print(f"Deleting empty directory: {dir_path}")
                 try:
                     os.rmdir(dir_path)
                     num_deleted_dirs += 1
                 except NotADirectoryError:
-                    print(f"Error: {dir_path} is not a directory.")
+                    #debug#print(f"Error: {dir_path} is not a directory.")
 
     print(f"Number of files deleted: {num_deleted_files}")
     print(f"Number of empty directories deleted: {num_deleted_dirs}")
