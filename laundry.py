@@ -127,13 +127,13 @@ def download_and_install_gdrive():
     with tarfile.open(download_path, "r:gz") as tar:
         tar.extractall(path=extract_dir)
 
-    # Move gdrive to /usr/local/bin
+    # Move gdrive to /usr/local/bin using sudo
     print("Moving gdrive to /usr/local/bin...")
-    gdrive_executable = os.path.join(extract_dir, "gdrive")
-    shutil.move(gdrive_executable, "/usr/local/bin")
+    subprocess.run(["sudo", "mv", os.path.join(extract_dir, "gdrive"), "/usr/local/bin"])
 
-    # Change permissions
-    os.chmod("/usr/local/bin/gdrive", 0o755)
+    # Change permissions using sudo
+    print("Changing permissions...")
+    subprocess.run(["sudo", "chmod", "755", "/usr/local/bin/gdrive"])
 
     # Clean up
     print("Cleaning up...")
@@ -142,7 +142,7 @@ def download_and_install_gdrive():
 
     # Verify installation
     print("Verifying installation...")
-    subprocess.run(["/usr/local/bin/gdrive", "about"])
+    subprocess.run(["sudo", "gdrive", "about"])
 
     print("gdrive installed successfully.")
 
