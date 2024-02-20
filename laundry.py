@@ -7,6 +7,8 @@ import pygame
 import configparser
 import fnmatch
 import shlex
+import urllib.request
+import tarfile
 
 # Get the directory where the script is located
 script_dir = Path(__file__).resolve().parent
@@ -105,9 +107,45 @@ def wash_drive():
     print("Scan Complete")
     input("Press Enter to return to the main menu...")  # Wait for user input
 
+def download_and_install_gdrive():
+    # Download gdrive
+    download_url = "https://github.com/prasmussen/gdrive/releases/download/2.1.1/gdrive_2.1.1_linux_amd64.tar.gz"
+    download_path = "/tmp/gdrive.tar.gz"
+    extract_dir = "/tmp/gdrive"
+
+    print("Downloading gdrive...")
+    urllib.request.urlretrieve(download_url, download_path)
+
+    # Extract gdrive
+    print("Extracting gdrive...")
+    with tarfile.open(download_path, "r:gz") as tar:
+        tar.extractall(path=extract_dir)
+
+    # Move gdrive to bin directory
+    print("Moving gdrive to bin directory...")
+    gdrive_executable = os.path.join(extract_dir, "gdrive")
+    bin_dir = os.path.join(os.path.dirname(__file__), "bin")
+    os.makedirs(bin_dir, exist_ok=True)
+    shutil.move(gdrive_executable, bin_dir)
+
+    # Change permissions
+    os.chmod(os.path.join(bin_dir, "gdrive"), 0o755)
+
+    # Clean up
+    print("Cleaning up...")
+    os.remove(download_path)
+    shutil.rmtree(extract_dir)
+
+    # Verify installation
+    print("Verifying installation...")
+    subprocess.run(["./bin/gdrive", "about"])
+
+    print("gdrive installed successfully.")
+
 # Function to install prerequisites
 def install_prerequisites():
     print("Installing prerequisites...")
+    download_and_install_gdrive()
     subprocess.run(["sudo", "apt", "update"])
     result = subprocess.run(["sudo", "apt", "install", "-y", "clamav"], capture_output=True, text=True)
     if result.returncode == 0:
