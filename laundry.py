@@ -53,7 +53,7 @@ def bleach_mode():
     source_dir = "/media/cleaner/Windows/Users"
     rsync_command = f'rsync -av --stats {" ".join(extensions)} --exclude="*.*" --exclude="desktop.ini" --exclude="/administrator/" --exclude="/Default/" --exclude="/Public/" {source_dir}/ {destination_dir}'
     #debug# print("Rsync command:", rsync_command)
-    rsync_result = subprocess.run(rsync_command, shell=True, capture_output=True, text=True, stdout=log_file, stderr=subprocess.STDOUT)
+    rsync_result = subprocess.run(rsync_command, shell=True, text=True, stdout=log_file, stderr=subprocess.STDOUT)
     #print("Rsync output:", rsync_result.stdout)
 
     print("File copy completed.")
