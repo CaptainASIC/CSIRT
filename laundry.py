@@ -56,9 +56,6 @@ def bleach_mode():
     rsync_result = subprocess.run(rsync_command, shell=True, capture_output=True, text=True, stdout=log_file, stderr=subprocess.STDOUT)
     #print("Rsync output:", rsync_result.stdout)
 
-    # Close the log file
-    log_file.close()
-
     print("File copy completed.")
 
     # Delete prohibited files
@@ -73,6 +70,12 @@ def bleach_mode():
 
     # Output the elapsed time
     print("Total time taken:", convert_seconds(int(elapsed_time)))
+
+    # Write total time taken to the log file
+    log_file.write(f"\nTotal time taken: {convert_seconds(int(elapsed_time))}")
+
+    # Close the log file
+    log_file.close()
 
     # Finish
     midi_file = script_dir / "snd/ffvii.mp3"
