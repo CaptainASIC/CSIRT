@@ -24,13 +24,19 @@ def play_start_sound():
 
 # Function to wash the drive
 def bleach_mode():
+    # Read configuration
+    config = configparser.ConfigParser()
+    config.read(script_dir / 'config.ini')
+    source_dir = config.get('Directories', 'SourceDirectory', fallback='/media/cleaner/Windows/Users')
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
+
     # Construct the full destination directory path
     destination_name = input("Enter the User's Real Name as Last.First: ")
     if not destination_name:
         print("Error: Destination directory name is required.")
         return
 
-    destination_dir = f'/media/cleaner/Passport/{destination_name}'
+    destination_dir = f'{destination_dir}/{destination_name}'
     print("Destination directory:", destination_dir)
 
     # Use destination_name as the log filename
@@ -50,7 +56,6 @@ def bleach_mode():
         extensions = [f'"--include={line.strip()}"' for line in f]
 
     # Perform the file copy using rsync
-    source_dir = "/media/cleaner/Windows/Users"
     rsync_command = f'rsync -av --stats {" ".join(extensions)} --exclude="*.*" --exclude="desktop.ini" --exclude="/administrator/" --exclude="/Default/" --exclude="/Public/" {source_dir}/ {destination_dir}'
     #debug# print("Rsync command:", rsync_command)
     rsync_result = subprocess.run(rsync_command, shell=True, text=True, stdout=log_file, stderr=subprocess.STDOUT)
