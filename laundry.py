@@ -33,6 +33,13 @@ def bleach_mode():
     destination_dir = f'/media/cleaner/Passport/{destination_name}'
     print("Destination directory:", destination_dir)
 
+    # Use destination_name as the log filename
+    log_filename = f"bleach_{destination_name.lower().replace(' ', '_')}.log"
+
+    # Create the log file
+    log_path = script_dir / "log" / log_filename
+    log_file = open(log_path, "w")
+
     # Record start time
     start_time = time.time()
     print("Starting file copy...")
@@ -46,8 +53,11 @@ def bleach_mode():
     source_dir = "/media/cleaner/Windows/Users"
     rsync_command = f'rsync -av --stats {" ".join(extensions)} --exclude="*.*" --exclude="desktop.ini" --exclude="/administrator/" --exclude="/Default/" --exclude="/Public/" {source_dir}/ {destination_dir}'
     #debug# print("Rsync command:", rsync_command)
-    rsync_result = subprocess.run(rsync_command, shell=True, capture_output=True, text=True)
-    print("Rsync output:", rsync_result.stdout)
+    rsync_result = subprocess.run(rsync_command, shell=True, capture_output=True, text=True, stdout=log_file, stderr=subprocess.STDOUT)
+    #print("Rsync output:", rsync_result.stdout)
+
+    # Close the log file
+    log_file.close()
 
     print("File copy completed.")
 
