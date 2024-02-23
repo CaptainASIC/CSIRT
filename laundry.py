@@ -10,6 +10,7 @@ import shlex
 import urllib.request
 import tarfile
 import datetime
+import stat
 
 # Get the directory where the script is located
 script_dir = Path(__file__).resolve().parent
