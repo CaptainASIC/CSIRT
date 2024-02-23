@@ -222,6 +222,10 @@ def dry(config):
 
 
 def upload_to_gdrive():
+    # Read current configuration
+    config = configparser.ConfigParser()
+    config.read(script_dir / 'config.ini')
+    
     # Get the current date and time for the log filename
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
     current_datetime = datetime.datetime.now()
