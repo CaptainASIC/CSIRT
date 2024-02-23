@@ -245,12 +245,18 @@ def upload_to_gdrive():
     log_path = script_dir / "log" / log_filename
 
     # Construct the gdrive command
-    gdrive_command = f'gdrive files upload --recursive "{destination_dir}"'
+    gdrive_command = f"gdrive files upload --recursive {destination_dir}"
 
     # Run the gdrive command and write the output to the log file
     print("Uploading to Google Drive...")
     with open(log_path, "w") as log_file:
-        subprocess.run(shlex.split(gdrive_command), stdout=log_file, stderr=subprocess.STDOUT)
+        # Use os.walk to traverse the directory and exclude symbolic link files
+        for root, dirs, files in os.walk(destination_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                if not os.path.islink(file_path):
+                    # Execute the gdrive command for non-symbolic link files
+                    subprocess.run(shlex.split(gdrive_command), stdout=log_file, stderr=subprocess.STDOUT)
 
     print("Upload to Google Drive completed.")
     
