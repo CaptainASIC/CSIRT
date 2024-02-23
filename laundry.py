@@ -214,11 +214,23 @@ def configure_directories():
     input("Press Enter to return to the main menu...")  # Wait for user input
 
 def dry(config):
+    # Read current configuration
+    config = configparser.ConfigParser()
+    config.read(script_dir / 'config.ini')
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
+    print("Making Drive Read-Only.")
     for root, dirs, files in os.walk(destination_dir):
         for d in dirs:
             d_path = os.path.join(root, d)
             os.chmod(d_path, 0o555)  # Make the directory read-only
+    
+    print("Drive protection completed.")
+    
+    # Finish
+    midi_file = script_dir / "snd/ffvii.mp3"
+    pygame.mixer.music.load(str(midi_file))
+    pygame.mixer.music.play()
+    input("Press Enter to return to the main menu...")  # Wait for user input
 
 
 def upload_to_gdrive():
@@ -233,7 +245,7 @@ def upload_to_gdrive():
     log_path = script_dir / "log" / log_filename
 
     # Construct the gdrive command
-    gdrive_command = f"gdrive files upload --recursive '{destination_dir}'"
+    gdrive_command = f"gdrive files upload --recursive "{destination_dir}""
 
     # Run the gdrive command and write the output to the log file
     print("Uploading to Google Drive...")
