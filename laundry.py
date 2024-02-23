@@ -273,6 +273,73 @@ def upload_to_gdrive():
     pygame.mixer.music.play()
     input("Press Enter to return to the main menu...")  # Wait for user input
 
+def tidy_up():
+    # Read current configuration
+    config = configparser.ConfigParser()
+    config.read(script_dir / 'config.ini')
+
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
+    current_datetime = datetime.datetime.now()
+    log_filename = "fold_" + current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
+    log_path = script_dir / "log" / log_filename
+
+    # Record initial destination size
+    initial_destination_size = get_directory_size(destination_dir)
+
+    # Print destination size at start
+    print("Destination size at start:", convert_bytes(initial_destination_size))
+
+    # Iterate over each folder in the root of the destination directory
+    for root, dirs, files in os.walk(destination_dir):
+        for d in dirs:
+            folder_path = os.path.join(root, d)
+            print("\nFolder:", folder_path)
+            
+            # Record folder size
+            folder_size = get_directory_size(folder_path)
+            print("Folder size:", convert_bytes(folder_size))
+
+            # Compress folder into an archive
+            archive_name = f"{d}.tar.gz"
+            archive_path = os.path.join(destination_dir, archive_name)
+            print("Compressing folder into archive:", archive_path)
+            with tarfile.open(archive_path, "w:gz") as tar:
+                tar.add(folder_path, arcname=os.path.basename(folder_path))
+
+            # Record archive size
+            archive_size = os.path.getsize(archive_path)
+            print("Archive size:", convert_bytes(archive_size))
+
+            # Delete the original folder
+            print("Deleting original folder:", folder_path)
+            shutil.rmtree(folder_path)
+
+            # Print destination size after deletion
+            final_destination_size = get_directory_size(destination_dir)
+            print("Destination size after deletion:", convert_bytes(final_destination_size))
+
+    # Record final destination size
+    final_destination_size = get_directory_size(destination_dir)
+
+    # Print final destination size with all folders deleted and only remaining archives
+    print("\nFinal destination size:", convert_bytes(final_destination_size))
+
+    print("Upload to Google Drive completed.")
+    
+    # Finish
+    midi_file = script_dir / "snd/ffvii.mp3"
+    pygame.mixer.music.load(str(midi_file))
+    pygame.mixer.music.play()
+    input("Press Enter to return to the main menu...")  # Wait for user input
+
+def get_directory_size(directory):
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(directory):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            total_size += os.path.getsize(fp)
+    return total_size
+
 def display_menu():
     print("Menu:")
     print("1. Bleach Mode: Move data from a dirty drive")
@@ -280,7 +347,7 @@ def display_menu():
     print("3. Wash: Scan Bleached Drive with ClamAV")
     print("4. Dry: Write Protect Destination Folders")
     print("5. Fold: Upload to GDrive")
-    print("6. Tidy up: Compress Destination Folders. (Run After Folding) NOT YET IMPLEMENTED")
+    print("6. Tidy up: Compress Destination Folders. (Run After Folding)")
     print("C. Configure Directories")
     print("I. Install Prerequisites")
     print("Q. Quit Script")
@@ -390,7 +457,7 @@ def main():
     {dark_orange}|{reset_color}{'Drive Sanitizer Script'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'Created by Samuel Presgraves, Security Engineer'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'LIXIL HQ, Digital Group, Security & IAM Team'.center(84)}{dark_orange}|{reset_color}
-    {dark_orange}|{reset_color}{'Version 1.3, Feb 2024'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{'Version 1.4, Feb 2024'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
     \n
@@ -407,7 +474,7 @@ def main():
         # Display menu
         display_menu()
 
-        choice = input("Enter your choice (1/2/3/4/5/C/I/Q): ").upper()
+        choice = input("Enter your choice (1-6, C, I, or Q): ").upper()
         if choice == '1':
             bleach_mode()
         elif choice == '2':
@@ -418,6 +485,8 @@ def main():
             dry(config)  # Pass config object to dry function
         elif choice == '5':
             upload_to_gdrive()
+        elif choice == '6':
+            tidy_up()
         elif choice == 'C':
             configure_directories()
         elif choice == 'I':
