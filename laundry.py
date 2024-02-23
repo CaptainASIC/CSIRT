@@ -225,15 +225,15 @@ def upload_to_gdrive():
     # Read current configuration
     config = configparser.ConfigParser()
     config.read(script_dir / 'config.ini')
-    
+
     # Get the current date and time for the log filename
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
     current_datetime = datetime.datetime.now()
-    log_filename = current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
+    log_filename = "fold_" + current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
     log_path = script_dir / "log" / log_filename
 
     # Construct the gdrive command
-    gdrive_command = f"gdrive files upload --recursive {destination_dir}/TESTING"
+    gdrive_command = f"gdrive files upload --recursive {destination_dir}"
 
     # Run the gdrive command and write the output to the log file
     print("Uploading to Google Drive...")
