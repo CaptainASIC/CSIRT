@@ -9,6 +9,7 @@ import fnmatch
 import shlex
 import urllib.request
 import tarfile
+import datetime
 
 # Get the directory where the script is located
 script_dir = Path(__file__).resolve().parent
@@ -221,16 +222,36 @@ def dry(config):
 
 
 def upload_to_gdrive():
-    # Define the function to upload to GDrive here
-    pass
+    # Get the current date and time for the log filename
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
+    current_datetime = datetime.datetime.now()
+    log_filename = current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
+    log_path = script_dir / "log" / log_filename
+
+    # Construct the gdrive command
+    gdrive_command = f"gdrive files upload --recursive {destination_dir}/TESTING"
+
+    # Run the gdrive command and write the output to the log file
+    print("Uploading to Google Drive...")
+    with open(log_path, "w") as log_file:
+        subprocess.run(shlex.split(gdrive_command), stdout=log_file, stderr=subprocess.STDOUT)
+
+    print("Upload to Google Drive completed.")
+    
+    # Finish
+    midi_file = script_dir / "snd/ffvii.mp3"
+    pygame.mixer.music.load(str(midi_file))
+    pygame.mixer.music.play()
+    input("Press Enter to return to the main menu...")  # Wait for user input
 
 def display_menu():
     print("Menu:")
     print("1. Bleach Mode: Move data from a dirty drive")
-    print("2. Pre-soak: Delete Prohibited Files & Empty Directories")
+    print("2. Pre-soak: Delete Prohibited Files")
     print("3. Wash: Scan Bleached Drive with ClamAV")
     print("4. Dry: Write Protect Destination Folders")
     print("5. Fold: Upload to GDrive")
+    print("6. Tidy up: Compress Destination Folders. (Run After Folding) NOT YET IMPLEMENTED")
     print("C. Configure Directories")
     print("I. Install Prerequisites")
     print("Q. Quit Script")
@@ -340,7 +361,7 @@ def main():
     {dark_orange}|{reset_color}{'Drive Sanitizer Script'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'Created by Samuel Presgraves, Security Engineer'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'LIXIL HQ, Digital Group, Security & IAM Team'.center(84)}{dark_orange}|{reset_color}
-    {dark_orange}|{reset_color}{'Version 1.2, Feb 2024'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{'Version 1.3, Feb 2024'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
     \n
