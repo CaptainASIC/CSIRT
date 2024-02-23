@@ -245,7 +245,7 @@ def upload_to_gdrive():
     log_path = script_dir / "log" / log_filename
 
     # Construct the gdrive command
-    gdrive_command = f"gdrive files upload --recursive "{destination_dir}""
+    gdrive_command = f'gdrive files upload --recursive "{destination_dir}"'
 
     # Run the gdrive command and write the output to the log file
     print("Uploading to Google Drive...")
