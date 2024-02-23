@@ -258,6 +258,7 @@ def upload_to_gdrive():
                     # Execute the gdrive command for non-symbolic link files
                     subprocess.run(shlex.split(gdrive_command), stdout=log_file, stderr=subprocess.STDOUT)
 
+
     print("Upload to Google Drive completed.")
     
     # Finish
