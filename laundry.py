@@ -247,16 +247,21 @@ def upload_to_gdrive():
     # Construct the gdrive command
     gdrive_command = f"gdrive files upload --recursive {destination_dir}"
 
-    # Run the gdrive command and write the output to the log file
-    print("Uploading to Google Drive...")
-    with open(log_path, "w") as log_file:
-        # Use os.walk to traverse the directory and exclude symbolic link files
+    # Delete symbolic link files before uploading
+    print("Deleting symbolic link files...")
+    with open(log_path, "a") as log_file:
         for root, dirs, files in os.walk(destination_dir):
             for file in files:
                 file_path = os.path.join(root, file)
-                if not os.path.islink(file_path):
-                    # Execute the gdrive command for non-symbolic link files
-                    subprocess.run(shlex.split(gdrive_command), stdout=log_file, stderr=subprocess.STDOUT)
+                if os.path.islink(file_path):
+                    log_file.write(f"Deleted File: {file_path}\n")
+                    os.unlink(file_path)
+                    print(f"Deleted symbolic link: {file_path}")
+
+    # Run the gdrive command and write the output to the log file
+    print("Uploading to Google Drive...")
+    with open(log_path, "a") as log_file:
+        subprocess.run(shlex.split(gdrive_command), stdout=log_file, stderr=subprocess.STDOUT)
 
 
     print("Upload to Google Drive completed.")
