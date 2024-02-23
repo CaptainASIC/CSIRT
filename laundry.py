@@ -253,7 +253,7 @@ def upload_to_gdrive():
         for root, dirs, files in os.walk(destination_dir):
             for file in files:
                 file_path = os.path.join(root, file)
-                if os.path.islink(file_path) or os.path.isfifo(file_path):
+                if os.path.islink(file_path) or stat.S_ISFIFO(os.stat(file_path).st_mode):
                     log_file.write(f"Deleted File: {file_path}\n")
                     os.unlink(file_path)
                     #print(f"Deleted symbolic link or named pipe: {file_path}")
