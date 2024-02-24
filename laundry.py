@@ -383,7 +383,7 @@ def delete_prohibited_items(destination_dir, prohibited_files_list, prohibited_d
                     shutil.rmtree(dir_path, ignore_errors=True)
                     num_deleted_dirs += 1
                     log_message = f"Deleted directory: {dir_path}"
-                    print(log_message)
+                    #print(log_message)
                     log_file.write(log_message + "\n")
 
     for file_path in destination_dir_path.rglob('*'):
@@ -393,7 +393,7 @@ def delete_prohibited_items(destination_dir, prohibited_files_list, prohibited_d
                     file_path.unlink(missing_ok=True)
                     num_deleted_files += 1
                     log_message = f"Deleted file: {file_path}"
-                    print(log_message)
+                    #print(log_message)
                     log_file.write(log_message + "\n")
 
     print(f"Number of directories deleted: {num_deleted_dirs}")
