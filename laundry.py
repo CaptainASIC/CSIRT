@@ -264,7 +264,7 @@ def upload_to_gdrive():
         folder_path = os.path.join(destination_dir, folder)
 
         # Construct the gdrive command for the current folder
-        gdrive_command = f"gdrive files upload --parent BASCO --recursive \"{folder_path}\""
+        gdrive_command = f"gdrive files upload --parent 1kVostcz6mavBkCSxVF3ndKmp0m8jRBDn --recursive \"{folder_path}\""
 
     # Run the gdrive command and write the output to the log file
     print(f"Uploading \"{folder}\" to Google Drive.")
