@@ -245,9 +245,6 @@ def upload_to_gdrive():
     log_filename = "fold_" + current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
     log_path = script_dir / "log" / log_filename
 
-    # Construct the gdrive command
-    gdrive_command = f"gdrive files upload --recursive {destination_dir}"
-
     # Delete symbolic link files before uploading
     print("Deleting symbolic link files...")
     with open(log_path, "a") as log_file:
@@ -259,8 +256,18 @@ def upload_to_gdrive():
                     os.unlink(file_path)
                     #print(f"Deleted symbolic link or named pipe: {file_path}")
 
+     # Get a list of folders in the destination directory
+    folders = [folder for folder in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, folder))]
+
+    # Iterate over each folder and upload to Google Drive
+    for folder in folders:
+        folder_path = os.path.join(destination_dir, folder)
+
+        # Construct the gdrive command for the current folder
+        gdrive_command = f"gdrive files upload --recursive \"{folder_path}\""
+
     # Run the gdrive command and write the output to the log file
-    print("Uploading to Google Drive...")
+    print(f"Uploading \"{folder}\" to Google Drive.")
     with open(log_path, "a") as log_file:
         subprocess.run(shlex.split(gdrive_command), stdout=log_file, stderr=subprocess.STDOUT)
 
@@ -324,7 +331,7 @@ def tidy_up():
     # Print final destination size with all folders deleted and only remaining archives
     print("\nFinal destination size:", convert_bytes(final_destination_size))
 
-    print("Upload to Google Drive completed.")
+    print("The laundry has finished.")
     
     # Finish
     midi_file = script_dir / "snd/ffvii.mp3"
