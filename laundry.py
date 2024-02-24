@@ -26,13 +26,11 @@ def play_start_sound():
 
 # Function to wash the drive
 def bleach_mode():
-    # Read configuration
     config = configparser.ConfigParser()
     config.read(script_dir / 'config.ini')
     source_dir = config.get('Directories', 'SourceDirectory', fallback='/media/cleaner/Windows/Users')
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
 
-    # Construct the full destination directory path
     destination_name = input("Enter the User's Real Name as Last.First: ")
     if not destination_name:
         print("Error: Destination directory name is required.")
@@ -41,111 +39,57 @@ def bleach_mode():
     destination_dir = f'{destination_dir}/{destination_name}'
     print("Destination directory:", destination_dir)
 
-    # Use destination_name as the log filename
     log_filename = f"bleach_{destination_name.lower().replace(' ', '_')}.log"
-
-    # Create the log file
     log_path = script_dir / "log" / log_filename
     log_file = open(log_path, "w")
 
-    # Record start time
     start_time = time.time()
     print("Starting file copy...")
 
-    # Read extensions from the reference file
     extensions_file = script_dir / "extensions.list"
     with open(extensions_file) as f:
         extensions = [f'"--include={line.strip()}"' for line in f]
 
-    # Perform the file copy using rsync
-    rsync_command = f'rsync -av --stats {" ".join(extensions)} --exclude="*.*" --exclude="desktop.ini" --exclude="/administrator/" --exclude="/Default/" --exclude="/Public/" {source_dir}/ {destination_dir}'
-    #debug# print("Rsync command:", rsync_command)
-    rsync_result = subprocess.run(rsync_command, shell=True, text=True, stdout=log_file, stderr=subprocess.STDOUT)
-    #print("Rsync output:", rsync_result.stdout)
+    rsync_command = f'rsync -av --stats {" ".join(extensions)} --exclude="*.*" --exclude="/administrator/" --exclude="/Default/" --exclude="/Public/" {source_dir}/ {destination_dir}'
+    subprocess.run(rsync_command, shell=True, text=True, stdout=log_file, stderr=subprocess.STDOUT)
 
     print("File copy completed.")
 
-    # Delete prohibited files
-    delete_prohibited_items(destination_dir, "prohibited.files", "prohibited.dirs")
+    # Call delete_prohibited_items with logging
+    delete_prohibited_items(destination_dir, "prohibited.files", "prohibited.dirs", log_file)
 
-    # Clean up empty directories in the destination directory
-    #clean_empty_directories(destination_dir)
-
-    # Calculate elapsed time
     end_time = time.time()
     elapsed_time = end_time - start_time
-
-    # Output the elapsed time
     print("Total time taken:", convert_seconds(int(elapsed_time)))
+    log_file.write(f"\nTotal time taken: {convert_seconds(int(elapsed_time))}\n")
 
-    # Write total time taken to the log file
-    log_file.write(f"\nTotal time taken: {convert_seconds(int(elapsed_time))}")
-
-    # Close the log file
     log_file.close()
 
-    # Finish
     midi_file = script_dir / "snd/ffvii.mp3"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
-    input("Press Enter to return to the main menu...")  # Wait for user input
+    input("Press Enter to return to the main menu...")
 
 def pre_soak(config):
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
     
-    # Generate a timestamp for the log filename
     current_datetime = datetime.datetime.now()
     log_filename = f"pre-soak_{current_datetime.strftime('%Y-%m-%d-%H-%M-%S')}.log"
     log_path = script_dir / "log" / log_filename
     
-    # Open the log file
     with open(log_path, "w") as log_file:
-        # Log the start of the pre-soak process
         log_file.write(f"Pre-soak process started at {current_datetime.strftime('%Y-%m-%d %H:%M:%S')}\n")
         
-        # Delete prohibited files and directories, logging actions
-        print("Deleting prohibited files and directories...")
-        num_deleted_files = 0
-        num_deleted_dirs = 0
+        # Enhanced directory matching and logging
+        delete_prohibited_items(destination_dir, "prohibited.files", "prohibited.dirs", log_file)
         
-        with open("prohibited.files") as f:
-            prohibited_file_patterns = f.read().splitlines()
-        with open("prohibited.dirs") as f:
-            prohibited_dir_patterns = f.read().splitlines()
-        
-    for root, dirs, files in os.walk(destination_dir, topdown=False):
-        for dir in dirs:
-            dir_path = Path(root) / dir  # Construct the full directory path
-            for pattern in prohibited_dir_patterns:
-                # Match pattern against the full directory path
-                if fnmatch.fnmatch(str(dir_path), f'*{pattern}*'):
-                    shutil.rmtree(dir_path, ignore_errors=True)  # Use ignore_errors to avoid issues if the directory is already deleted
-                    num_deleted_dirs += 1
-                    log_file.write(f"Deleted directory: {dir_path}\n")
-                    #print(f"Deleted directory: {dir_path}")
-        
-        for root, dirs, files in os.walk(destination_dir):
-            for file in files:
-                file_path = os.path.join(root, file)
-                if any(fnmatch.fnmatch(file, pattern) for pattern in prohibited_file_patterns):
-                    if os.path.exists(file_path):
-                        os.remove(file_path)
-                        num_deleted_files += 1
-                        log_file.write(f"Deleted file: {file_path}\n")
-                        #print(f"Deleted file: {file_path}")
-        
-        print(f"Number of directories deleted: {num_deleted_dirs}")
-        print(f"Number of files deleted: {num_deleted_files}")
-        
-        # Log the completion of the pre-soak process
-        log_file.write(f"Pre-soak process completed. Directories deleted: {num_deleted_dirs}, Files deleted: {num_deleted_files}\n")
+        log_file.write(f"Pre-soak process completed.\n")
     
-    # Finish
     midi_file = script_dir / "snd/ffvii.mp3"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
     print("Pre-soak completed.")
-    input("Press Enter to return to the main menu...")  # Wait for user input
+    input("Press Enter to return to the main menu...")
 
 # Function to clean the drive
 def wash_drive():
@@ -419,39 +363,43 @@ def convert_seconds(sec):
     seconds = sec % 60
     return f"{days} days, {hours:02}:{minutes:02}:{seconds:02}"
 
-def delete_prohibited_items(destination_dir, prohibited_files_list, prohibited_dirs_list):
+def delete_prohibited_items(destination_dir, prohibited_files_list, prohibited_dirs_list, log_file):
     print("Deleting prohibited directories and files...")
     num_deleted_files = 0
     num_deleted_dirs = 0
 
-    # Load prohibited patterns for files and directories
     with open(prohibited_files_list) as f:
-        prohibited_file_patterns = f.read().splitlines()
+        prohibited_file_patterns = [line.strip() for line in f if line.strip()]
     with open(prohibited_dirs_list) as f:
-        prohibited_dir_patterns = f.read().splitlines()
+        prohibited_dir_patterns = [line.strip() for line in f if line.strip()]
 
-    # First pass: Delete prohibited directories
-    for root, dirs, files in os.walk(destination_dir, topdown=False):  # Iterate through the directory structure
-        for dir in dirs:
-            dir_path = os.path.join(root, dir)
-            if any(fnmatch.fnmatch(dir, pattern) for pattern in prohibited_dir_patterns):
-                shutil.rmtree(dir_path)
-                num_deleted_dirs += 1
-                print(f"Deleted directory: {dir_path}")
+    destination_dir_path = Path(destination_dir)
 
-    # Second pass: Delete prohibited files
-    # Note: Some files might have already been deleted by removing their parent directories
-    for root, dirs, files in os.walk(destination_dir):
-        for file in files:
-            file_path = os.path.join(root, file)
-            if any(fnmatch.fnmatch(file, pattern) for pattern in prohibited_file_patterns):
-                if os.path.exists(file_path):  # Check if the file still exists
-                    os.remove(file_path)
+    for dir_path in destination_dir_path.rglob('*'):
+        if dir_path.is_dir():
+            relative_dir_path = dir_path.relative_to(destination_dir_path)
+            for pattern in prohibited_dir_patterns:
+                if fnmatch.fnmatch(str(relative_dir_path), pattern):
+                    shutil.rmtree(dir_path, ignore_errors=True)
+                    num_deleted_dirs += 1
+                    log_message = f"Deleted directory: {dir_path}"
+                    print(log_message)
+                    log_file.write(log_message + "\n")
+
+    for file_path in destination_dir_path.rglob('*'):
+        if file_path.is_file():
+            for pattern in prohibited_file_patterns:
+                if fnmatch.fnmatch(file_path.name, pattern):
+                    file_path.unlink(missing_ok=True)
                     num_deleted_files += 1
-                    print(f"Deleted file: {file_path}")
+                    log_message = f"Deleted file: {file_path}"
+                    print(log_message)
+                    log_file.write(log_message + "\n")
 
     print(f"Number of directories deleted: {num_deleted_dirs}")
     print(f"Number of files deleted: {num_deleted_files}")
+    log_file.write(f"Summary: {num_deleted_dirs} directories and {num_deleted_files} files deleted.\n")
+
 
 def file_in_prohibited_list(file_path, prohibited_file):
     with open(prohibited_file) as f:
