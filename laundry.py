@@ -66,8 +66,8 @@ def bleach_mode():
     print("File copy completed.")
 
     # Delete prohibited files
-    delete_prohibited_files(destination_dir , "prohibited.list")
-
+    delete_prohibited_items(destination_dir, "prohibited.files", "prohibited.dirs")
+    
     # Clean up empty directories in the destination directory
     #clean_empty_directories(destination_dir)
 
@@ -93,7 +93,7 @@ def bleach_mode():
 def pre_soak(config):
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
     # Delete prohibited files
-    delete_prohibited_files(destination_dir , "prohibited.list")
+    delete_prohibited_items(destination_dir, "prohibited.files", "prohibited.dirs")
 
     # Clean up empty directories in the destination directory
    # clean_empty_directories(destination_dir)
