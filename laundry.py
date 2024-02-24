@@ -377,33 +377,28 @@ def convert_seconds(sec):
     return f"{days} days, {hours:02}:{minutes:02}:{seconds:02}"
 
 def delete_prohibited_files(destination_dir, prohibited_file):
-    # Delete prohibited files recursively
-    print("Deleting prohibited files...")
+    print("Deleting prohibited files and directories...")
     num_deleted_files = 0
-    for root, dirs, files in os.walk(destination_dir):
-        for file in files:
-            file_path = os.path.join(root, file)
-            if file_in_prohibited_list(file_path, prohibited_file):
-                #debug#print(f"Deleting: {file_path}")
-                os.remove(file_path)
-                num_deleted_files += 1
+    num_deleted_dirs = 0
+    with open(prohibited_file) as f:
+        prohibited_patterns = f.read().splitlines()
+    for root, dirs, files in os.walk(destination_dir, topdown=False): # Use topdown=False to iterate directories from the leaf up
+        for name in files + dirs:  # Combine files and dirs to check both
+            for pattern in prohibited_patterns:
+                if fnmatch.fnmatch(name, pattern):
+                    full_path = os.path.join(root, name)
+                    if os.path.isdir(full_path):
+                        shutil.rmtree(full_path)
+                        num_deleted_dirs += 1
+                        print(f"Deleted directory: {full_path}")
+                    elif os.path.isfile(full_path):
+                        os.remove(full_path)
+                        num_deleted_files += 1
+                        print(f"Deleted file: {full_path}")
+                    break  # Once matched, no need to check against other patterns
 
-    # Delete empty directories recursively
-#    print("Cleaning up empty directories...")
-#    num_deleted_dirs = 0
-#    for root, dirs, files in os.walk(destination_dir, topdown=False):
-#        for dir in dirs:
-#            dir_path = os.path.join(root, dir)
-#            if not os.listdir(dir_path):
-                #debug#print(f"Deleting empty directory: {dir_path}")
-#                try:
-#                    os.rmdir(dir_path)
-#                    num_deleted_dirs += 1
-#                except NotADirectoryError:
-#                    print(f"Error: {dir_path} is not a directory.")
-
-#    print(f"Number of files deleted: {num_deleted_files}")
-#    print(f"Number of empty directories deleted: {num_deleted_dirs}")
+    print(f"Number of files deleted: {num_deleted_files}")
+    print(f"Number of directories deleted: {num_deleted_dirs}")
 
 def file_in_prohibited_list(file_path, prohibited_file):
     with open(prohibited_file) as f:
@@ -464,7 +459,7 @@ def main():
     {dark_orange}|{reset_color}{'Drive Sanitizer Script'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'Created by Samuel Presgraves, Security Engineer'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'LIXIL HQ, Digital Group, Security & IAM Team'.center(84)}{dark_orange}|{reset_color}
-    {dark_orange}|{reset_color}{'Version 1.4, Feb 2024'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{'Version 1.5, Feb 2024'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
     \n
