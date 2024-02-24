@@ -67,7 +67,7 @@ def bleach_mode():
 
     # Delete prohibited files
     delete_prohibited_items(destination_dir, "prohibited.files", "prohibited.dirs")
-    
+
     # Clean up empty directories in the destination directory
     #clean_empty_directories(destination_dir)
 
@@ -92,11 +92,54 @@ def bleach_mode():
 
 def pre_soak(config):
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
-    # Delete prohibited files
-    delete_prohibited_items(destination_dir, "prohibited.files", "prohibited.dirs")
-
-    # Clean up empty directories in the destination directory
-   # clean_empty_directories(destination_dir)
+    
+    # Generate a timestamp for the log filename
+    current_datetime = datetime.datetime.now()
+    log_filename = f"pre-soak_{current_datetime.strftime('%Y-%m-%d-%H-%M-%S')}.log"
+    log_path = script_dir / "log" / log_filename
+    
+    # Open the log file
+    with open(log_path, "w") as log_file:
+        # Log the start of the pre-soak process
+        log_file.write(f"Pre-soak process started at {current_datetime.strftime('%Y-%m-%d %H:%M:%S')}\n")
+        
+        # Delete prohibited files and directories, logging actions
+        print("Deleting prohibited files and directories...")
+        num_deleted_files = 0
+        num_deleted_dirs = 0
+        
+        with open("prohibited.files") as f:
+            prohibited_file_patterns = f.read().splitlines()
+        with open("prohibited.dirs") as f:
+            prohibited_dir_patterns = f.read().splitlines()
+        
+    for root, dirs, files in os.walk(destination_dir, topdown=False):
+        for dir in dirs:
+            dir_path = Path(root) / dir  # Construct the full directory path
+            for pattern in prohibited_dir_patterns:
+                # Match pattern against the full directory path
+                if fnmatch.fnmatch(str(dir_path), f'*{pattern}*'):
+                    shutil.rmtree(dir_path, ignore_errors=True)  # Use ignore_errors to avoid issues if the directory is already deleted
+                    num_deleted_dirs += 1
+                    log_file.write(f"Deleted directory: {dir_path}\n")
+                    #print(f"Deleted directory: {dir_path}")
+        
+        for root, dirs, files in os.walk(destination_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                if any(fnmatch.fnmatch(file, pattern) for pattern in prohibited_file_patterns):
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                        num_deleted_files += 1
+                        log_file.write(f"Deleted file: {file_path}\n")
+                        #print(f"Deleted file: {file_path}")
+        
+        print(f"Number of directories deleted: {num_deleted_dirs}")
+        print(f"Number of files deleted: {num_deleted_files}")
+        
+        # Log the completion of the pre-soak process
+        log_file.write(f"Pre-soak process completed. Directories deleted: {num_deleted_dirs}, Files deleted: {num_deleted_files}\n")
+    
     # Finish
     midi_file = script_dir / "snd/ffvii.mp3"
     pygame.mixer.music.load(str(midi_file))
