@@ -376,29 +376,39 @@ def convert_seconds(sec):
     seconds = sec % 60
     return f"{days} days, {hours:02}:{minutes:02}:{seconds:02}"
 
-def delete_prohibited_files(destination_dir, prohibited_file):
-    print("Deleting prohibited files and directories...")
+def delete_prohibited_items(destination_dir, prohibited_files_list, prohibited_dirs_list):
+    print("Deleting prohibited directories and files...")
     num_deleted_files = 0
     num_deleted_dirs = 0
-    with open(prohibited_file) as f:
-        prohibited_patterns = f.read().splitlines()
-    for root, dirs, files in os.walk(destination_dir, topdown=False): # Use topdown=False to iterate directories from the leaf up
-        for name in files + dirs:  # Combine files and dirs to check both
-            for pattern in prohibited_patterns:
-                if fnmatch.fnmatch(name, pattern):
-                    full_path = os.path.join(root, name)
-                    if os.path.isdir(full_path):
-                        shutil.rmtree(full_path)
-                        num_deleted_dirs += 1
-                        print(f"Deleted directory: {full_path}")
-                    elif os.path.isfile(full_path):
-                        os.remove(full_path)
-                        num_deleted_files += 1
-                        print(f"Deleted file: {full_path}")
-                    break  # Once matched, no need to check against other patterns
 
-    print(f"Number of files deleted: {num_deleted_files}")
+    # Load prohibited patterns for files and directories
+    with open(prohibited_files_list) as f:
+        prohibited_file_patterns = f.read().splitlines()
+    with open(prohibited_dirs_list) as f:
+        prohibited_dir_patterns = f.read().splitlines()
+
+    # First pass: Delete prohibited directories
+    for root, dirs, files in os.walk(destination_dir, topdown=False):  # Iterate through the directory structure
+        for dir in dirs:
+            dir_path = os.path.join(root, dir)
+            if any(fnmatch.fnmatch(dir, pattern) for pattern in prohibited_dir_patterns):
+                shutil.rmtree(dir_path)
+                num_deleted_dirs += 1
+                print(f"Deleted directory: {dir_path}")
+
+    # Second pass: Delete prohibited files
+    # Note: Some files might have already been deleted by removing their parent directories
+    for root, dirs, files in os.walk(destination_dir):
+        for file in files:
+            file_path = os.path.join(root, file)
+            if any(fnmatch.fnmatch(file, pattern) for pattern in prohibited_file_patterns):
+                if os.path.exists(file_path):  # Check if the file still exists
+                    os.remove(file_path)
+                    num_deleted_files += 1
+                    print(f"Deleted file: {file_path}")
+
     print(f"Number of directories deleted: {num_deleted_dirs}")
+    print(f"Number of files deleted: {num_deleted_files}")
 
 def file_in_prohibited_list(file_path, prohibited_file):
     with open(prohibited_file) as f:
@@ -408,11 +418,6 @@ def file_in_prohibited_list(file_path, prohibited_file):
                 return True
     return False
 
-
-#def clean_empty_directories(destination_dir):
-    # Clean up empty directories in the destination directory
-#    print(f"Cleaning up empty directories in {destination_dir}...")
-#    subprocess.run(["find", destination_dir, "-empty", "-type", "d", "-delete"])
 
 def main():
     # Play start sound
