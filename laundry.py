@@ -232,40 +232,36 @@ def upload_to_gdrive():
     log_filename = "fold_" + current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
     log_path = script_dir / "log" / log_filename
 
-    # Delete symbolic link files before uploading
-    print("Deleting symbolic link files...")
+    # Open log file to append
     with open(log_path, "a") as log_file:
+        # Delete symbolic link files before uploading
+        print("Deleting symbolic link files...")
         for root, dirs, files in os.walk(destination_dir):
             for file in files:
                 file_path = os.path.join(root, file)
                 if os.path.islink(file_path) or stat.S_ISFIFO(os.stat(file_path).st_mode):
                     log_file.write(f"Deleted File: {file_path}\n")
                     os.unlink(file_path)
-                    #print(f"Deleted symbolic link or named pipe: {file_path}")
 
-     # Get a list of folders in the destination directory
-    folders = [folder for folder in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, folder))]
+        # Get a list of folders in the destination directory
+        folders = [folder for folder in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, folder))]
 
-    # Iterate over each folder and upload to Google Drive
-    for folder in folders:
-        folder_path = os.path.join(destination_dir, folder)
+        # Iterate over each folder and upload to Google Drive
+        for folder in folders:
+            folder_path = os.path.join(destination_dir, folder)
+            # Construct the gdrive command for the current folder
+            gdrive_command = f"gdrive upload --recursive --parent YOUR_FOLDER_ID_HERE \"{folder_path}\""
+            print(f"Uploading \"{folder}\" to Google Drive.")
+            # Run the gdrive command and write the output to the log file
+            subprocess.run(shlex.split(gdrive_command), stdout=log_file, stderr=subprocess.STDOUT)
 
-        # Construct the gdrive command for the current folder
-        gdrive_command = f"gdrive files upload --parent 1kVostcz6mavBkCSxVF3ndKmp0m8jRBDn --recursive \"{folder_path}\""
-
-    # Run the gdrive command and write the output to the log file
-    print(f"Uploading \"{folder}\" to Google Drive.")
-    with open(log_path, "a") as log_file:
-        subprocess.run(shlex.split(gdrive_command), stdout=log_file, stderr=subprocess.STDOUT)
-
-
-    print("Upload to Google Drive completed.")
+        print("Upload to Google Drive completed.")
     
     # Finish
     midi_file = script_dir / "snd/ffvii.mp3"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
-    input("Press Enter to return to the main menu...")  # Wait for user input
+    input("Press Enter to return to the main menu...")
 
 def tidy_up():
     # Read current configuration
