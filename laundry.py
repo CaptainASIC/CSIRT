@@ -253,7 +253,12 @@ def upload_to_gdrive():
             gdrive_command = f"gdrive upload --recursive --parent 1kVostcz6mavBkCSxVF3ndKmp0m8jRBDn \"{folder_path}\""
             print(f"Uploading \"{folder}\" to Google Drive.")
             # Run the gdrive command and write the output to the log file
-            subprocess.run(shlex.split(gdrive_command), stdout=log_file, stderr=subprocess.STDOUT)
+            try:
+                result = subprocess.run(gdrive_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                log_file.write(f"Upload successful for {folder_path}\n")
+                log_file.write(result.stdout)
+            except subprocess.CalledProcessError as e:
+                log_file.write(f"Error uploading {folder_path}: {e.stderr}\n")
 
         print("Upload to Google Drive completed.")
     
