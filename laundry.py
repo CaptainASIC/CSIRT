@@ -254,16 +254,11 @@ def upload_to_gdrive():
             print(f"Uploading \"{folder}\" to Google Drive.")
             # Run the gdrive command and write the output to the log file
             try:
-                # Execute the command and capture output
-                result = subprocess.run(gdrive_command, check=True, text=True, capture_output=True)
-                # Log both stdout and stderr from gdrive command
+                result = subprocess.run(gdrive_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                log_file.write(f"Upload successful for {folder_path}\n")
                 log_file.write(result.stdout)
-                if result.stderr:
-                    log_file.write(result.stderr)
             except subprocess.CalledProcessError as e:
-                # Log the error if command execution fails
-                log_file.write(f"Error uploading {folder_path}: {e.output}\n")
-
+                log_file.write(f"Error uploading {folder_path}: {e.stderr}\n")
 
         print("Upload to Google Drive completed.")
     
