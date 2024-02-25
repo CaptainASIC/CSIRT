@@ -83,6 +83,15 @@ def pre_soak(config):
         # Enhanced directory matching and logging
         delete_prohibited_items(destination_dir, "prohibited.files", "prohibited.dirs", log_file)
         
+        # Delete symbolic link files before uploading
+        print("Deleting symbolic link files...")
+        for root, dirs, files in os.walk(destination_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                if os.path.islink(file_path) or stat.S_ISFIFO(os.stat(file_path).st_mode):
+                    log_file.write(f"Deleted File: {file_path}\n")
+                    os.unlink(file_path)
+
         log_file.write(f"Pre-soak process completed.\n")
     
     midi_file = script_dir / "snd/ffvii.mp3"
@@ -234,15 +243,6 @@ def upload_to_gdrive():
 
     # Open log file to append
     with open(log_path, "a") as log_file:
-        # Delete symbolic link files before uploading
-        print("Deleting symbolic link files...")
-        for root, dirs, files in os.walk(destination_dir):
-            for file in files:
-                file_path = os.path.join(root, file)
-                if os.path.islink(file_path) or stat.S_ISFIFO(os.stat(file_path).st_mode):
-                    log_file.write(f"Deleted File: {file_path}\n")
-                    os.unlink(file_path)
-
         # Get a list of folders in the destination directory
         folders = [folder for folder in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, folder))]
 
@@ -254,11 +254,16 @@ def upload_to_gdrive():
             print(f"Uploading \"{folder}\" to Google Drive.")
             # Run the gdrive command and write the output to the log file
             try:
-                result = subprocess.run(gdrive_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                log_file.write(f"Upload successful for {folder_path}\n")
+                # Execute the command and capture output
+                result = subprocess.run(gdrive_command, check=True, text=True, capture_output=True)
+                # Log both stdout and stderr from gdrive command
                 log_file.write(result.stdout)
+                if result.stderr:
+                    log_file.write(result.stderr)
             except subprocess.CalledProcessError as e:
-                log_file.write(f"Error uploading {folder_path}: {e.stderr}\n")
+                # Log the error if command execution fails
+                log_file.write(f"Error uploading {folder_path}: {e.output}\n")
+
 
         print("Upload to Google Drive completed.")
     
