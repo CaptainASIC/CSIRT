@@ -260,10 +260,10 @@ def upload_to_gdrive():
                     result = subprocess.run(gdrive_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     # Log success
                     log_file.write(f"Upload successful for {folder_path}\n")
-                    log_file.write(result.stdout.decode() + "\n")
+                    log_file.write(result.stdout + "\n")
                 except subprocess.CalledProcessError as e:
                     # Log errors
-                    log_file.write(f"Error uploading {folder_path}: {e.stderr.decode()}\n")
+                    log_file.write(f"Error uploading {folder_path}: {e.stderr}\n")
             else:
                 print(f"Skipping \"{folder}\".")
 
