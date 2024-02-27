@@ -249,16 +249,23 @@ def upload_to_gdrive():
         # Iterate over each folder and upload to Google Drive
         for folder in folders:
             folder_path = os.path.join(destination_dir, folder)
-            # Construct the gdrive command for the current folder
-            gdrive_command = f"gdrive files upload --recursive --parent 1kVostcz6mavBkCSxVF3ndKmp0m8jRBDn \"{folder_path}\""
-            print(f"Uploading \"{folder}\" to Google Drive.")
-            # Run the gdrive command and write the output to the log file
-            try:
-                result = subprocess.run(gdrive_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                log_file.write(f"Upload successful for {folder_path}\n")
-                log_file.write(result.stdout)
-            except subprocess.CalledProcessError as e:
-                log_file.write(f"Error uploading {folder_path}: {e.stderr}\n")
+            # Ask the user for confirmation before uploading each folder
+            user_decision = input(f"Do you want to upload \"{folder}\" to Google Drive? (y/n): ")
+            if user_decision.lower() == 'y':
+                # Construct the gdrive command for the current folder
+                gdrive_command = f"gdrive files upload --recursive --parent 1kVostcz6mavBkCSxVF3ndKmp0m8jRBDn \"{folder_path}\""
+                print(f"Uploading \"{folder}\" to Google Drive.")
+                # Run the gdrive command and write the output to the log file
+                try:
+                    result = subprocess.run(gdrive_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Log success
+                    log_file.write(f"Upload successful for {folder_path}\n")
+                    log_file.write(result.stdout.decode() + "\n")
+                except subprocess.CalledProcessError as e:
+                    # Log errors
+                    log_file.write(f"Error uploading {folder_path}: {e.stderr.decode()}\n")
+            else:
+                print(f"Skipping \"{folder}\".")
 
         print("Upload to Google Drive completed.")
     
@@ -266,6 +273,7 @@ def upload_to_gdrive():
     midi_file = script_dir / "snd/ffvii.mp3"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
+    print("Upload completed.")
     input("Press Enter to return to the main menu...")
 
 def tidy_up():
