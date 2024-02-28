@@ -11,6 +11,8 @@ import urllib.request
 import tarfile
 import datetime
 import stat
+import threading
+from queue import Queue
 
 # Get the directory where the script is located
 script_dir = Path(__file__).resolve().parent
@@ -229,6 +231,20 @@ def dry(config):
     pygame.mixer.music.play()
     input("Press Enter to return to the main menu...")  # Wait for user input
 
+def upload_folder(gdrive_command, log_file, folder_path):
+    try:
+        result = subprocess.run(gdrive_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # Log success
+        log_file.write(f"Upload successful for {folder_path}\n{result.stdout}\n")
+    except subprocess.CalledProcessError as e:
+        # Log errors
+        log_file.write(f"Error uploading {folder_path}: {e.stderr}\n")
+
+def worker(upload_queue, log_file):
+    while not upload_queue.empty():
+        folder_path, gdrive_command = upload_queue.get()
+        upload_folder(gdrive_command, log_file, folder_path)
+        upload_queue.task_done()
 
 def upload_to_gdrive():
     # Read current configuration
@@ -241,33 +257,37 @@ def upload_to_gdrive():
     log_filename = "fold_" + current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
     log_path = script_dir / "log" / log_filename
 
-    # Open log file to append
-    with open(log_path, "a") as log_file:
-        # Get a list of folders in the destination directory
-        folders = [folder for folder in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, folder))]
+    # Concurrent uploads configuration
+    concurrent_uploads = 3  # Set this value from your configuration if needed
 
-        # Iterate over each folder and upload to Google Drive
-        for folder in folders:
+    # Create a queue for folders to be uploaded
+    upload_queue = Queue()
+
+    # Get a list of folders in the destination directory
+    folders = [folder for folder in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, folder))]
+
+    # Fill the queue with tasks, asking for user confirmation
+    for folder in folders:
+        user_decision = input(f"Do you want to upload \"{folder}\" to Google Drive? (y/n): ")
+        if user_decision.lower() == 'y':
             folder_path = os.path.join(destination_dir, folder)
-            # Ask the user for confirmation before uploading each folder
-            user_decision = input(f"Do you want to upload \"{folder}\" to Google Drive? (y/n): ")
-            if user_decision.lower() == 'y':
-                # Construct the gdrive command for the current folder
-                gdrive_command = f"gdrive files upload --recursive --parent 1kVostcz6mavBkCSxVF3ndKmp0m8jRBDn \"{folder_path}\""
-                print(f"Uploading \"{folder}\" to Google Drive.")
-                # Run the gdrive command and write the output to the log file
-                try:
-                    result = subprocess.run(gdrive_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    # Log success
-                    log_file.write(f"Upload successful for {folder_path}\n")
-                    log_file.write(result.stdout + "\n")
-                except subprocess.CalledProcessError as e:
-                    # Log errors
-                    log_file.write(f"Error uploading {folder_path}: {e.stderr}\n")
-            else:
-                print(f"Skipping \"{folder}\".")
+            gdrive_command = f"gdrive files upload --recursive --parent 1kVostcz6mavBkCSxVF3ndKmp0m8jRBDn \"{folder_path}\""
+            upload_queue.put((folder_path, gdrive_command))
+        else:
+            print(f"Skipping \"{folder}\".")
 
-        print("Upload to Google Drive completed.")
+    # Create and start threads
+    threads = []
+    for _ in range(concurrent_uploads):
+        t = threading.Thread(target=worker, args=(upload_queue, log_path))
+        t.start()
+        threads.append(t)
+
+    # Wait for all threads to finish
+    for t in threads:
+        t.join()
+
+    print("Upload to Google Drive completed.")
     
     # Finish
     midi_file = script_dir / "snd/ffvii.mp3"
@@ -464,7 +484,7 @@ def main():
     {dark_orange}|{reset_color}{'Drive Sanitizer Script'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'Created by Samuel Presgraves, Security Engineer'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'LIXIL HQ, Digital Group, Security & IAM Team'.center(84)}{dark_orange}|{reset_color}
-    {dark_orange}|{reset_color}{'Version 1.5, Feb 2024'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{'Version 1.6, Feb 2024'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
     \n
