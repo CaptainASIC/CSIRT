@@ -28,8 +28,8 @@ def play_start_sound():
 def bleach_mode():
     config = configparser.ConfigParser()
     config.read(script_dir / 'config.ini')
-    source_dir = config.get('Directories', 'SourceDirectory', fallback='/media/cleaner/Windows/Users')
-    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
+    source_dir = config.get('Directories', 'SourceDirectory', fallback='/dev/null')
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
 
     destination_name = input("Enter the User's Real Name as Last.First: ")
     if not destination_name:
@@ -71,7 +71,7 @@ def bleach_mode():
     input("Press Enter to return to the main menu...")
 
 def pre_soak(config):
-    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
     
     current_datetime = datetime.datetime.now()
     log_filename = f"pre-soak_{current_datetime.strftime('%Y-%m-%d-%H-%M-%S')}.log"
@@ -181,8 +181,8 @@ def configure_directories():
     config = configparser.ConfigParser()
     config.read(script_dir / 'config.ini')
 
-    source_dir = config.get('Directories', 'SourceDirectory', fallback='/media/cleaner/Windows/Users')
-    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
+    source_dir = config.get('Directories', 'SourceDirectory', fallback='/dev/null')
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
 
     print(f"Current source directory: {source_dir}")
     change_source_dir = input("Do you want to change the source directory? (y/n): ").lower()
@@ -214,7 +214,7 @@ def dry(config):
     # Read current configuration
     config = configparser.ConfigParser()
     config.read(script_dir / 'config.ini')
-    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
     print("Making Drive Read-Only.")
     for root, dirs, files in os.walk(destination_dir):
         for d in dirs:
@@ -236,7 +236,7 @@ def upload_to_gdrive():
     config.read(script_dir / 'config.ini')
 
     # Get the current date and time for the log filename
-    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
     current_datetime = datetime.datetime.now()
     log_filename = "fold_" + current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
     log_path = script_dir / "log" / log_filename
@@ -281,7 +281,7 @@ def tidy_up():
     config = configparser.ConfigParser()
     config.read(script_dir / 'config.ini')
 
-    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
     current_datetime = datetime.datetime.now()
     log_filename = "fold_" + current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
     log_path = script_dir / "log" / log_filename
@@ -427,7 +427,7 @@ def main():
     if not os.path.exists(script_dir / 'config.ini'):
         # Create default configuration
         config = configparser.ConfigParser()
-        config['Directories'] = {'SourceDirectory': '/media/cleaner/Windows/Users', 'DestinationDirectory': '/media/cleaner/Passport'}
+        config['Directories'] = {'SourceDirectory': '/dev/null', 'DestinationDirectory': '/dev/null'}
         with open(script_dir / 'config.ini', 'w') as configfile:
             config.write(configfile)
     else:
@@ -435,8 +435,8 @@ def main():
         config.read(script_dir / 'config.ini')
 
     # Fetch source directory from config
-    source_dir = config.get('Directories', 'SourceDirectory', fallback='/media/cleaner/Windows/Users')
-    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/media/cleaner/Passport')
+    source_dir = config.get('Directories', 'SourceDirectory', fallback='/dev/null')
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
 
     while True:
         # Clear the screen
