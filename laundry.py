@@ -288,6 +288,7 @@ def tidy_up():
 
     with open(log_path, "w") as log_file:
         # Record initial destination size
+        print("Collecting Statistics:")
         initial_destination_size = get_directory_size(destination_dir)
         log_file.write(f"Destination size at start: {convert_bytes(initial_destination_size)}\n")
 
