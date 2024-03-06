@@ -283,57 +283,44 @@ def tidy_up():
 
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
     current_datetime = datetime.datetime.now()
-    log_filename = "fold_" + current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
+    log_filename = "tidy_" + current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
     log_path = script_dir / "log" / log_filename
 
-    # Record initial destination size
-    initial_destination_size = get_directory_size(destination_dir)
+    with open(log_path, "w") as log_file:
+        # Record initial destination size
+        initial_destination_size = get_directory_size(destination_dir)
+        log_file.write(f"Destination size at start: {convert_bytes(initial_destination_size)}\n")
 
-    # Print destination size at start
-    print("Destination size at start:", convert_bytes(initial_destination_size))
+        # Iterate over each folder in the root of the destination directory
+        for root, dirs, files in os.walk(destination_dir, topdown=False):
+            for d in dirs:
+                folder_path = os.path.join(root, d)
+                user_decision = input(f"Do you want to tidy up \"{folder_path}\"? (y/n): ")
+                if user_decision.lower() == 'y':
+                    print(f"\nTidying up: {folder_path}")
+                    archive_name = f"{d}.tar.gz"
+                    archive_path = os.path.join(root, archive_name)
+                    with tarfile.open(archive_path, "w:gz") as tar:
+                        tar.add(folder_path, arcname=os.path.basename(folder_path))
+                        print(f"Compressed into archive: {archive_name}")
+                        log_file.write(f"Compressed \"{folder_path}\" into \"{archive_name}\"\n")
+                    shutil.rmtree(folder_path)
+                    print(f"Deleted original folder: {folder_path}")
+                    log_file.write(f"Deleted original folder: {folder_path}\n")
+                else:
+                    print(f"Skipping \"{folder_path}\".")
 
-    # Iterate over each folder in the root of the destination directory
-    for root, dirs, files in os.walk(destination_dir):
-        for d in dirs:
-            folder_path = os.path.join(root, d)
-            print("\nFolder:", folder_path)
-            
-            # Record folder size
-            folder_size = get_directory_size(folder_path)
-            print("Folder size:", convert_bytes(folder_size))
+        # Record final destination size
+        final_destination_size = get_directory_size(destination_dir)
+        log_file.write(f"Final destination size: {convert_bytes(final_destination_size)}\n")
 
-            # Compress folder into an archive
-            archive_name = f"{d}.tar.gz"
-            archive_path = os.path.join(destination_dir, archive_name)
-            print("Compressing folder into archive:", archive_path)
-            with tarfile.open(archive_path, "w:gz") as tar:
-                tar.add(folder_path, arcname=os.path.basename(folder_path))
-
-            # Record archive size
-            archive_size = os.path.getsize(archive_path)
-            print("Archive size:", convert_bytes(archive_size))
-
-            # Delete the original folder
-            print("Deleting original folder:", folder_path)
-            shutil.rmtree(folder_path)
-
-            # Print destination size after deletion
-            final_destination_size = get_directory_size(destination_dir)
-            print("Destination size after deletion:", convert_bytes(final_destination_size))
-
-    # Record final destination size
-    final_destination_size = get_directory_size(destination_dir)
-
-    # Print final destination size with all folders deleted and only remaining archives
-    print("\nFinal destination size:", convert_bytes(final_destination_size))
-
-    print("The laundry has finished.")
-    
+    print("Tidy up completed.")
     # Finish
     midi_file = script_dir / "snd/ffvii.mp3"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
-    input("Press Enter to return to the main menu...")  # Wait for user input
+    print("Laundry finished. Press Enter to return to the main menu...")
+    input()  # Wait for user input
 
 def get_directory_size(directory):
     total_size = 0
@@ -356,14 +343,11 @@ def display_menu():
     print("Q. Quit Script")
 
 def convert_bytes(bytes):
-    if bytes < 1024:
-        return f"{bytes} bytes"
-    elif bytes < 1024**2:
-        return f"{bytes / 1024} KB"
-    elif bytes < 1024**3:
-        return f"{bytes / 1024**2} MB"
-    else:
-        return f"{bytes / 1024**3} GB"
+    """Convert bytes to a more readable format."""
+    for unit in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+        if bytes < 1024:
+            return f"{bytes:.2f} {unit}"
+        bytes /= 1024
 
 def convert_seconds(sec):
     days = sec // 86400
