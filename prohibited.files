@@ -5,6 +5,8 @@ desktop.ini
 *.rar
 *.tar
 *.tar.gz
+*.tgz
+*.bak
 *.iso
 *.apk
 *.cab

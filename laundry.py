@@ -298,7 +298,7 @@ def tidy_up():
                 user_decision = input(f"Do you want to tidy up \"{folder_path}\"? (y/n): ")
                 if user_decision.lower() == 'y':
                     print(f"\nTidying up: {folder_path}")
-                    archive_name = f"{d}.tar.gz"
+                    archive_name = f"{d}.csirt"
                     archive_path = os.path.join(root, archive_name)
                     with tarfile.open(archive_path, "w:gz") as tar:
                         tar.add(folder_path, arcname=os.path.basename(folder_path))
