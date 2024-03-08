@@ -1,5 +1,5 @@
 [Desktop Entry]
-Version=1.5
+Version=1.6
 Name=CSIRT Laundry
 Comment=Perform CSIRT Disk Cleanup Tasks
 Exec=~/CSIRT/csirt %U
@@ -7,5 +7,5 @@ Icon=~/CSIRT/csirt.svg
 Terminal=True
 StartupWMClass=CSIRT Laundry
 Type=Application
-Categories=Security Tools
+Categories=Utility;Security Tools;
 MimeType=Shell Script
