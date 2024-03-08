@@ -8,7 +8,9 @@ check_for_updates_and_dependencies() {
     case "$choice" in
         [Yy][Ee][Ss]|[Yy])
             # Run git pull
-            git pull
+            git fetch
+            git reset --hard HEAD
+            git merge origin/$CURRENT_BRANCH
 
             # Run apt update
             sudo apt update 
