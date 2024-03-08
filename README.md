@@ -30,6 +30,7 @@ The `config.ini` file in the `cfg` directory allows you to configure the followi
 
 - Source directory: The directory from which data will be copied.
 - Destination directory: The directory where data will be moved or uploaded.
+- Google Drive folder ID: The ID for the folder in Google Drive you want to upload to.
 
 The `extensions.list`, `prohibited.files`, and `prohibited.dirs` files can also be configured and tailored as necessary based on your own findings, policies, or preferences.
 

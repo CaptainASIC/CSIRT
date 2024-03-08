@@ -206,6 +206,7 @@ def upload_to_gdrive():
     # Read current configuration
     config = configparser.ConfigParser()
     config.read(script_dir / '../cfg/config.ini')
+    folder_id = config.get('GoogleDrive', 'FolderID')
 
     # Get the current date and time for the log filename
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
@@ -225,7 +226,7 @@ def upload_to_gdrive():
             user_decision = input(f"Do you want to upload \"{folder}\" to Google Drive? (y/n): ")
             if user_decision.lower() == 'y':
                 # Construct the gdrive command for the current folder
-                gdrive_command = f"gdrive files upload --recursive --parent 1kVostcz6mavBkCSxVF3ndKmp0m8jRBDn \"{folder_path}\""
+                gdrive_command = f"gdrive files upload --recursive --parent {folder_id} \"{folder_path}\""
                 print(f"Uploading \"{folder}\" to Google Drive.")
                 # Run the gdrive command and write the output to the log file
                 try:
