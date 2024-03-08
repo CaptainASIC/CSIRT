@@ -167,7 +167,7 @@ def install_prerequisites():
     print("Installing prerequisites...")
     download_and_install_gdrive()
     subprocess.run(["sudo", "apt", "update"])
-    result = subprocess.run(["sudo", "apt", "install", "-y", "clamav"], capture_output=True, text=True)
+    result = subprocess.run(["sudo", "apt", "install", "-y", "clamav", "7zip"], capture_output=True, text=True)
     if result.returncode == 0:
         print("Prerequisites Installed")
     else:
@@ -276,6 +276,25 @@ def upload_to_gdrive():
     print("Upload completed.")
     input("Press Enter to return to the main menu...")
 
+def compress_with_7zip(source_folder, archive_path):
+    try:
+        # Construct the 7-Zip command. Adjust the path to 7z if necessary.
+        cmd = ['7z', 'a', '-t7z', archive_path, source_folder, '-bsp1']
+
+        # Run the command and capture output.
+        with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1, text=True, universal_newlines=True) as p:
+            for line in p.stdout:
+                if '%' in line:  # This is a naive check; adjust based on actual 7z output.
+                    print(f"\r{line.strip()}", end='')  # Update progress in place.
+            p.stdout.close()
+            return_code = p.wait()
+            if return_code != 0:
+                print(f"7-Zip command failed with return code: {return_code}")
+            else:
+                print("\nCompression completed successfully.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 def tidy_up():
     # Read current configuration
     config = configparser.ConfigParser()
@@ -308,8 +327,7 @@ def tidy_up():
                 archive_name = f"{d}.csirt"
                 archive_path = os.path.join(destination_dir, archive_name)
                 print("Compressing folder into archive:", archive_path)
-                with tarfile.open(archive_path, "w:gz") as tar:
-                    tar.add(folder_path, arcname=d)
+                compress_with_7zip(folder_path, archive_path)
                 
                 # Record archive size
                 archive_size = os.path.getsize(archive_path)
