@@ -288,40 +288,50 @@ def tidy_up():
 
     with open(log_path, "w") as log_file:
         # Record initial destination size
-        print("Collecting Statistics:")
         initial_destination_size = get_directory_size(destination_dir)
-        log_file.write(f"Destination size at start: {convert_bytes(initial_destination_size)}\n")
+        log_file.write("Destination size at start: " + convert_bytes(initial_destination_size) + "\n")
 
-        # Iterate over each folder in the root of the destination directory
-        for root, dirs, files in os.walk(destination_dir, topdown=False):
-            for d in dirs:
-                folder_path = os.path.join(root, d)
-                user_decision = input(f"Do you want to tidy up \"{folder_path}\"? (y/n): ")
-                if user_decision.lower() == 'y':
-                    print(f"\nTidying up: {folder_path}")
-                    archive_name = f"{d}.csirt"
-                    archive_path = os.path.join(root, archive_name)
-                    with tarfile.open(archive_path, "w:gz") as tar:
-                        tar.add(folder_path, arcname=os.path.basename(folder_path))
-                        print(f"Compressed into archive: {archive_name}")
-                        log_file.write(f"Compressed \"{folder_path}\" into \"{archive_name}\"\n")
-                    shutil.rmtree(folder_path)
-                    print(f"Deleted original folder: {folder_path}")
-                    log_file.write(f"Deleted original folder: {folder_path}\n")
-                else:
-                    print(f"Skipping \"{folder_path}\".")
+        # List only top-level directories in the destination directory
+        dirs = [d for d in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, d))]
+
+        for d in dirs:
+            folder_path = os.path.join(destination_dir, d)
+            print("\nFolder:", folder_path)
+
+            user_decision = input(f"Do you want to tidy up \"{d}\"? (y/n): ")
+            if user_decision.lower() == 'y':
+                # Record folder size
+                folder_size = get_directory_size(folder_path)
+                print("Folder size:", convert_bytes(folder_size))
+
+                # Compress folder into an archive, here using .csirt as requested
+                archive_name = f"{d}.csirt"
+                archive_path = os.path.join(destination_dir, archive_name)
+                print("Compressing folder into archive:", archive_path)
+                with tarfile.open(archive_path, "w:gz") as tar:
+                    tar.add(folder_path, arcname=d)
+                
+                # Record archive size
+                archive_size = os.path.getsize(archive_path)
+                log_file.write(f"Compressed \"{d}\" into \"{archive_name}\". Size: {convert_bytes(archive_size)}\n")
+
+                # Delete the original folder
+                shutil.rmtree(folder_path)
+                print("Deleted original folder:", folder_path)
+                log_file.write(f"Deleted original folder: {folder_path}\n")
+            else:
+                print(f"Skipping \"{d}\".")
 
         # Record final destination size
         final_destination_size = get_directory_size(destination_dir)
-        log_file.write(f"Final destination size: {convert_bytes(final_destination_size)}\n")
+        log_file.write("Final destination size: " + convert_bytes(final_destination_size) + "\n")
 
     print("Tidy up completed.")
     # Finish
     midi_file = script_dir / "snd/ffvii.mp3"
     pygame.mixer.music.load(str(midi_file))
     pygame.mixer.music.play()
-    print("Laundry finished. Press Enter to return to the main menu...")
-    input()  # Wait for user input
+    input("Press Enter to return to the main menu...")  # Wait for user input
 
 def get_directory_size(directory):
     total_size = 0
