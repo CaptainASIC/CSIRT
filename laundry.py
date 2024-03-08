@@ -15,4 +15,4 @@ if __name__ == "__main__":
         cli_functions.main()
     else:
         from lib import gui as gui_application
-        gui_application.mainloop()
+        gui_application.root.mainloop()
