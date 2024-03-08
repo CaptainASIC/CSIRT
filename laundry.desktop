@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.5
+Name=CSIRT Laundry
+Comment=Perform CSIRT Disk Cleanup Tasks
+Exec=~/CSIRT/csirt
+Icon=~/CSIRT/csirt.svg
+Terminal=True
+StartupWMClass=CSIRT Laundry
+Type=Application
+Categories=Security Tools
+MimeType=Shell Script
