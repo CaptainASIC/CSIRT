@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Function to check for updates
+check_for_updates() {
+    # Ask user if they want to check for updates
+    read -p "Do you want to check for updates? (yes/no): " choice
+
+    case "$choice" in
+        [Yy][Ee][Ss]|[Yy])
+            # Run apt update and upgrade
+            sudo apt update && sudo apt upgrade -y
+
+            # Run git pull
+            git pull
+            ;;
+        [Nn][Oo]|[Nn])
+            ;;
+        *)
+            echo "Invalid choice. Exiting."
+            exit 1
+            ;;
+    esac
+}
+
+# Main script
+check_for_updates
+
+# Run python3 laundry.py regardless of the update choice
+python3 laundry.py

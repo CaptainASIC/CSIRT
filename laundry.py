@@ -278,21 +278,22 @@ def upload_to_gdrive():
 
 def compress_with_7zip(source_folder, archive_path):
     try:
-        cmd = ['7z', 'a', '-t7z', archive_path, source_folder]  # Adjust flags as needed
+        # Construct the 7-Zip command. Adjust the path to 7z if necessary.
+        cmd = ['7z', 'a', '-t7z', archive_path, source_folder, '-bsp1']
+
+        # Run the command and capture output.
         with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1, text=True, universal_newlines=True) as p:
             for line in p.stdout:
-                print(line, end='')  # Directly print all output for debugging
-                if '%' in line:  # Adjust condition based on actual output format
-                    print(f"\r{line.strip()}", end='')
+                if '%' in line:  # This is a naive check; adjust based on actual 7z output.
+                    print(f"\r{line.strip()}", end='')  # Update progress in place.
             p.stdout.close()
             return_code = p.wait()
             if return_code != 0:
-                print(f"\n7-Zip command failed with return code: {return_code}")
+                print(f"7-Zip command failed with return code: {return_code}")
             else:
                 print("\nCompression completed successfully.")
     except Exception as e:
         print(f"An error occurred: {e}")
-
 
 def tidy_up():
     # Read current configuration
