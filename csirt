@@ -11,6 +11,7 @@ check_for_updates_and_dependencies() {
             git fetch
             git reset --hard HEAD
             git merge origin/$CURRENT_BRANCH
+            chmod +x csirt
 
             # Run pip update
             pip3 install --upgrade pip
