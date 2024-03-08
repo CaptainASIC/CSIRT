@@ -39,4 +39,4 @@ check_for_updates_and_dependencies() {
 check_for_updates_and_dependencies
 
 # Run python3 laundry.py regardless of the update choice
-python3 laundry.py
+python3 laundry.py "$@"
