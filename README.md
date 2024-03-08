@@ -15,7 +15,8 @@ This utility script provides various functions to clean, sanitize, and manage da
 
 1. Clone the repository to your local machine.
 2. Ensure you have Python 3.x installed.
-3. Configure the script by editing the `config.ini` file in the `cfg` directory.
+3. Configure the script by editing the `sample.config.ini` file in the `cfg` directory.
+   Save the file as `config.ini` once complete.
 
 ## Usage
 
