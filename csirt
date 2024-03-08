@@ -12,6 +12,9 @@ check_for_updates_and_dependencies() {
 
             # Run apt update and upgrade
             sudo apt update && sudo apt upgrade -y
+            
+            # Install ClamAV and 7zip
+            sudo apt install clamav p7zip-full -y
 
             # Run pip update
             pip3 install --upgrade pip

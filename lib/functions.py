@@ -153,17 +153,6 @@ def download_and_install_gdrive():
 
     print("gdrive installed successfully.")
 
-# Function to install prerequisites
-def install_prerequisites():
-    print("Installing prerequisites...")
-    download_and_install_gdrive()
-    subprocess.run(["sudo", "apt", "update"])
-    result = subprocess.run(["sudo", "apt", "install", "-y", "clamav", "7zip"], capture_output=True, text=True)
-    if result.returncode == 0:
-        finish_task("Prerequisites Installed")
-    else:
-        finish_task("Error installing prerequisites.")
-
 def configure_directories():
     # Read current configuration
     config = configparser.ConfigParser()
@@ -499,13 +488,11 @@ def main():
             tidy_up()
         elif choice == 'C':
             configure_directories()
-        elif choice == 'I':
-            install_prerequisites()
         elif choice == 'Q':
             print("Quitting script...")
             exit()
         else:
-            print("Invalid choice. Please enter 1, 2, 3, 4, 5, C, I, or Q.")
+            print("Invalid choice. Please enter 1, 2, 3, 4, 5, C, or Q.")
 
 if __name__ == "__main__":
     main()
