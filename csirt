@@ -12,12 +12,6 @@ check_for_updates_and_dependencies() {
             git reset --hard HEAD
             git merge origin/$CURRENT_BRANCH
 
-            # Run apt update
-            sudo apt update 
-            
-            # Install ClamAV and 7zip
-            sudo apt install clamav p7zip-full -y
-
             # Run pip update
             pip3 install --upgrade pip
 

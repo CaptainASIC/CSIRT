@@ -15,7 +15,25 @@ This utility script provides various functions to clean, sanitize, and manage da
 
 1. Clone the repository to your local machine.
 2. Ensure you have Python 3.x installed.
-3. Configure the script by editing the `sample.config.ini` file in the `cfg` directory.
+3. Install the required dependencies:
+
+   ### Debian-based Systems (Debian, Ubuntu)
+   ```bash
+   sudo apt update
+   sudo apt install clamav p7zip-full -y
+   ```
+   ### Arch-based Systems (Arch Linux, Manjaro)
+   ```bash
+   sudo pacman -Syu clamav p7zip --noconfirm
+   ```
+   ### RHEL-based Systems (CentOS, Fedora)
+
+   ```bash
+   sudo yum update
+   sudo yum install clamav p7zip -y
+   ```
+
+4. Configure the script by editing the `sample.config.ini` file in the `cfg` directory.
    Save the file as `config.ini` once complete.
 
 ## Usage
