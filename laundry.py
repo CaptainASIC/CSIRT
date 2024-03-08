@@ -280,7 +280,7 @@ def tidy_up():
     # Read current configuration
     config = configparser.ConfigParser()
     config.read(script_dir / 'config.ini')
-
+    print("Collecting Statistics:")
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
     current_datetime = datetime.datetime.now()
     log_filename = "tidy_" + current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
