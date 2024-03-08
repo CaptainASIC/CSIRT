@@ -27,7 +27,7 @@ def play_start_sound():
 # Function to wash the drive
 def bleach_mode():
     config = configparser.ConfigParser()
-    config.read(script_dir / 'config.ini')
+    config.read(script_dir / 'cfg/config.ini')
     source_dir = config.get('Directories', 'SourceDirectory', fallback='/dev/null')
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
 
@@ -46,7 +46,7 @@ def bleach_mode():
     start_time = time.time()
     print("Starting file copy...")
 
-    extensions_file = script_dir / "extensions.list"
+    extensions_file = script_dir / "cfg/extensions.list"
     with open(extensions_file) as f:
         extensions = [f'"--include={line.strip()}"' for line in f]
 
@@ -56,7 +56,7 @@ def bleach_mode():
     print("File copy completed.")
 
     # Call delete_prohibited_items with logging
-    delete_prohibited_items(destination_dir, "prohibited.files", "prohibited.dirs", log_file)
+    delete_prohibited_items(destination_dir, "cfg/prohibited.files", "cfg/prohibited.dirs", log_file)
 
     end_time = time.time()
     elapsed_time = end_time - start_time
@@ -81,7 +81,7 @@ def pre_soak(config):
         log_file.write(f"Pre-soak process started at {current_datetime.strftime('%Y-%m-%d %H:%M:%S')}\n")
         
         # Enhanced directory matching and logging
-        delete_prohibited_items(destination_dir, "prohibited.files", "prohibited.dirs", log_file)
+        delete_prohibited_items(destination_dir, "cfg/prohibited.files", "cfg/prohibited.dirs", log_file)
         
         # Delete symbolic link files before uploading
         print("Deleting symbolic link files...")
@@ -179,7 +179,7 @@ def install_prerequisites():
 def configure_directories():
     # Read current configuration
     config = configparser.ConfigParser()
-    config.read(script_dir / 'config.ini')
+    config.read(script_dir / 'cfg/config.ini')
 
     source_dir = config.get('Directories', 'SourceDirectory', fallback='/dev/null')
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
@@ -190,7 +190,7 @@ def configure_directories():
     if change_source_dir == 'y':
         new_source_dir = input("Enter the new source directory: ")
         config.set('Directories', 'SourceDirectory', new_source_dir)
-        with open(script_dir / 'config.ini', 'w') as configfile:
+        with open(script_dir / 'cfg/config.ini', 'w') as configfile:
             config.write(configfile)
         print("Source directory updated successfully.")
     else:
@@ -202,7 +202,7 @@ def configure_directories():
     if change_dest_dir == 'y':
         new_dest_dir = input("Enter the new destination directory: ")
         config.set('Directories', 'DestinationDirectory', new_dest_dir)
-        with open(script_dir / 'config.ini', 'w') as configfile:
+        with open(script_dir / 'cfg/config.ini', 'w') as configfile:
             config.write(configfile)
         print("Destination directory updated successfully.")
     else:
@@ -213,7 +213,7 @@ def configure_directories():
 def dry(config):
     # Read current configuration
     config = configparser.ConfigParser()
-    config.read(script_dir / 'config.ini')
+    config.read(script_dir / 'cfg/config.ini')
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
     print("Making Drive Read-Only.")
     for root, dirs, files in os.walk(destination_dir):
@@ -233,7 +233,7 @@ def dry(config):
 def upload_to_gdrive():
     # Read current configuration
     config = configparser.ConfigParser()
-    config.read(script_dir / 'config.ini')
+    config.read(script_dir / 'cfg/config.ini')
 
     # Get the current date and time for the log filename
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
@@ -298,7 +298,7 @@ def compress_with_7zip(source_folder, archive_path):
 def tidy_up():
     # Read current configuration
     config = configparser.ConfigParser()
-    config.read(script_dir / 'config.ini')
+    config.read(script_dir / 'cfg/config.ini')
     print("Collecting Statistics:")
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
     current_datetime = datetime.datetime.now()
@@ -437,15 +437,15 @@ def main():
     play_start_sound()
 
     # Load configuration
-    if not os.path.exists(script_dir / 'config.ini'):
+    if not os.path.exists(script_dir / 'cfg/config.ini'):
         # Create default configuration
         config = configparser.ConfigParser()
         config['Directories'] = {'SourceDirectory': '/dev/null', 'DestinationDirectory': '/dev/null'}
-        with open(script_dir / 'config.ini', 'w') as configfile:
+        with open(script_dir / 'cfg/config.ini', 'w') as configfile:
             config.write(configfile)
     else:
         config = configparser.ConfigParser()
-        config.read(script_dir / 'config.ini')
+        config.read(script_dir / 'cfg/config.ini')
 
     # Fetch source directory from config
     source_dir = config.get('Directories', 'SourceDirectory', fallback='/dev/null')
