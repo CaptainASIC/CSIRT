@@ -1,15 +1,14 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-# import functions_cli.py  # uncomment later
 
 def quit_app():
     root.destroy()
 
 root = tk.Tk()
-root.title("CSIRT Laudry")
+root.title("CSIRT Laundry")
 
 # Load and display 'csirt.png' with a width of 512 pixels
-image_path = "img/csirt.png"  # Adjust the path to your actual image location
+image_path = "../img/csirt.png"  # Make sure this path is correct
 img = Image.open(image_path)
 
 # Calculate the new height to maintain the aspect ratio
@@ -17,7 +16,8 @@ aspect_ratio = img.height / img.width
 new_width = 512
 new_height = int(new_width * aspect_ratio)
 
-img = img.resize((new_width, new_height), Image.ANTIALIAS)
+# Use Image.Resampling.LANCZOS for newer versions of Pillow
+img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 img_tk = ImageTk.PhotoImage(img)
 
 label_image = tk.Label(root, image=img_tk)
