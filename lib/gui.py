@@ -8,7 +8,7 @@ root = tk.Tk()
 root.title("CSIRT Laundry")
 
 # Load and display 'csirt.png' with a width of 512 pixels
-image_path = "../img/csirt.png"  # Make sure this path is correct
+image_path = "img/csirt.png"  # Make sure this path is correct
 img = Image.open(image_path)
 
 # Calculate the new height to maintain the aspect ratio
