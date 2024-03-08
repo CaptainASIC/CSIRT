@@ -2,7 +2,7 @@
 Version=1.5
 Name=CSIRT Laundry
 Comment=Perform CSIRT Disk Cleanup Tasks
-Exec=~/CSIRT/csirt
+Exec=~/CSIRT/csirt %U
 Icon=~/CSIRT/csirt.svg
 Terminal=True
 StartupWMClass=CSIRT Laundry
