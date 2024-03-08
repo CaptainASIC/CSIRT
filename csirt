@@ -1,20 +1,27 @@
 #!/bin/bash
 
-# Function to check for updates
-check_for_updates() {
+# Function to check for updates and install Python dependencies
+check_for_updates_and_dependencies() {
     # Ask user if they want to check for updates
     read -p "Do you want to check for updates? (yes/no): " choice
 
     case "$choice" in
         [Yy][Ee][Ss]|[Yy])
+            # Run git pull
+            git pull
+
             # Run apt update and upgrade
             sudo apt update && sudo apt upgrade -y
 
             # Run pip update
             pip3 install --upgrade pip
 
-            # Run git pull
-            git pull
+            # Install or update Python dependencies
+            if [ -f "requirements.txt" ]; then
+                pip3 install --upgrade -r requirements.txt
+            else
+                echo "requirements.txt file not found. Skipping dependency installation/update."
+            fi
             ;;
         [Nn][Oo]|[Nn])
             ;;
@@ -26,7 +33,7 @@ check_for_updates() {
 }
 
 # Main script
-check_for_updates
+check_for_updates_and_dependencies
 
 # Run python3 laundry.py regardless of the update choice
 python3 laundry.py

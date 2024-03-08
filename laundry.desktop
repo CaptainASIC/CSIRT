@@ -1,5 +1,5 @@
 [Desktop Entry]
-Version=1.6
+Version=2.0.0
 Name=CSIRT Laundry
 Comment=Perform CSIRT Disk Cleanup Tasks
 Exec=~/CSIRT/csirt %U
