@@ -333,7 +333,6 @@ def display_menu():
     print("5. Fold: Upload to GDrive")
     print("6. Tidy up: Compress Destination Folders")
     print("C. Configure Directories")
-    print("I. Install Prerequisites")
     print("Q. Quit Script")
 
 def convert_bytes(bytes):
@@ -474,7 +473,7 @@ def main():
         # Display menu
         display_menu()
 
-        choice = input("Enter your choice (1-6, C, I, or Q): ").upper()
+        choice = input("Enter your choice (1-6, C, or Q): ").upper()
         if choice == '1':
             bleach_mode()
         elif choice == '2':
@@ -493,7 +492,7 @@ def main():
             print("Quitting script...")
             exit()
         else:
-            print("Invalid choice. Please enter 1, 2, 3, 4, 5, C, or Q.")
+            print("Invalid choice. Please enter 1, 2, 3, 4, 5, 6, C, or Q.")
 
 if __name__ == "__main__":
     main()

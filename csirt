@@ -10,8 +10,8 @@ check_for_updates_and_dependencies() {
             # Run git pull
             git pull
 
-            # Run apt update and upgrade
-            sudo apt update && sudo apt upgrade -y
+            # Run apt update
+            sudo apt update 
             
             # Install ClamAV and 7zip
             sudo apt install clamav p7zip-full -y
