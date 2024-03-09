@@ -20,17 +20,23 @@ This utility script provides various functions to clean, sanitize, and manage da
    ### Debian-based Systems (Debian, Ubuntu)
    ```bash
    sudo apt update
-   sudo apt install clamav p7zip-full -y
+   sudo apt install clamav p7zip python3 python3-pip python3-tk -y
    ```
    ### Arch-based Systems (Arch Linux, Manjaro)
    ```bash
-   sudo pacman -Syu clamav p7zip --noconfirm
+   sudo pacman -Syu clamav p7zip python python-pip tk --noconfirm
    ```
    ### RHEL-based Systems (CentOS, Fedora)
-
    ```bash
    sudo yum update
-   sudo yum install clamav p7zip -y
+   sudo yum install epel-release -y
+   sudo yum install clamav p7zip python3 python3-pip tkinter -y
+   ```
+
+### Apple macOS
+   ```bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   brew install clamav p7zip python3
    ```
 
 4. Configure the script by editing the `sample.config.ini` file in the `cfg` directory.
@@ -56,6 +62,10 @@ The `extensions.list`, `prohibited.files`, and `prohibited.dirs` files can also 
 ## Requirements
 
 - Python 3.x
+- Python Tkinter
+- Pip
+- 7-Zip
+- ClamAV
 - Dependencies listed in `requirements.txt`
 
 ## Credits

@@ -14,5 +14,5 @@ if __name__ == "__main__":
         from lib import functions as cli_functions
         cli_functions.main()
     else:
-        from lib import gui as gui_application
+        from lib import main as gui_application
         gui_application.root.mainloop()
