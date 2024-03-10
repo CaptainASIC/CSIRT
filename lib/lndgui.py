@@ -2,8 +2,10 @@ import tkinter as tk
 from tkinter import messagebox, simpledialog
 from PIL import Image, ImageTk
 from tkinter.font import Font
-from functions import bleach_mode
+from lndcli import bleach_mode
 import configparser
+from functions import compress_with_7zip, finish_task
+
 
 class LaundryServicePage(tk.Frame):
     def __init__(self, parent, controller):
@@ -89,7 +91,6 @@ class LaundryServicePage(tk.Frame):
                 # Call bleach_mode with GUI adjustments
                 try:
                     message = bleach_mode(destination_name, source_dir, destination_dir, self.finish_task_gui)
-                    messagebox.showinfo("Success", message, parent=self)
                 except Exception as e:
                     messagebox.showerror("Error", str(e), parent=self)
         else:

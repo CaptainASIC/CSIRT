@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     # Decide whether to run in CLI mode or GUI mode
     if cli_mode or not is_graphical_environment():
-        from lib import functions as cli_functions
+        from CSIRT.lib import lndcli as cli_functions
         cli_functions.main()
     else:
         from lib import main as gui_application
