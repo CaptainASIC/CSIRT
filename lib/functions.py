@@ -24,49 +24,50 @@ def play_start_sound():
     pygame.mixer.music.load(str(sound_file))
     pygame.mixer.music.play()
 
-# Function to wash the drive
-def bleach_mode():
+def bleach_mode(destination_name, source_dir, destination_dir, callback=None):
+    if not destination_name:
+        return "Error: Destination directory name is required."
+    
+    full_destination_dir = f'{destination_dir}/{destination_name}'
+    log_filename = f"bleach_{destination_name.lower().replace(' ', '_')}.log"
+    log_path = script_dir / "../log" / log_filename
+    
+    with open(log_path, "w") as log_file:
+        start_time = time.time()
+
+        extensions_file = script_dir / "../cfg/extensions.list"
+        with open(extensions_file) as f:
+            extensions = [f'--include={line.strip()}' for line in f]
+
+        rsync_command = f'rsync -av --stats {" ".join(extensions)} --exclude="*.*" --exclude="/administrator/" --exclude="/Default/" --exclude="/Public/" {source_dir} {full_destination_dir}'
+        subprocess.run(rsync_command, shell=True, text=True, stdout=log_file, stderr=subprocess.STDOUT)
+
+        delete_prohibited_items(full_destination_dir, "cfg/prohibited.files", "cfg/prohibited.dirs", log_file)
+
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+
+        finish_message = f"File copy and cleanup completed.\nTotal time taken: {convert_seconds(int(elapsed_time))}"
+
+        # Check if a callback function is provided for GUI use
+        if callback and callable(callback):
+            callback(finish_message)
+        else:
+            return finish_message
+
+def run_bleach_mode_cli():
     config = configparser.ConfigParser()
     config.read(script_dir / '../cfg/config.ini')
     source_dir = config.get('Directories', 'SourceDirectory', fallback='/dev/null')
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
-
+    
     destination_name = input("Enter the User's Real Name as Last.First: ")
-    if not destination_name:
-        print("Error: Destination directory name is required.")
-        return
+    if destination_name:
+        result_message = bleach_mode(destination_name, source_dir, destination_dir)
+        print(result_message)
+    else:
+        print("Operation canceled, destination name was not provided.")
 
-    destination_dir = f'{destination_dir}/{destination_name}'
-    print("Destination directory:", destination_dir)
-
-    log_filename = f"bleach_{destination_name.lower().replace(' ', '_')}.log"
-    log_path = script_dir / "log" / log_filename
-    log_file = open(log_path, "w")
-
-    start_time = time.time()
-    print("Starting file copy...")
-
-    extensions_file = script_dir / "../cfg/extensions.list"
-    with open(extensions_file) as f:
-        extensions = [f'"--include={line.strip()}"' for line in f]
-
-    rsync_command = f'rsync -av --stats {" ".join(extensions)} --exclude="*.*" --exclude="/administrator/" --exclude="/Default/" --exclude="/Public/" {source_dir}/ {destination_dir}'
-    subprocess.run(rsync_command, shell=True, text=True, stdout=log_file, stderr=subprocess.STDOUT)
-
-    print("File copy completed.")
-
-    # Call delete_prohibited_items with logging
-    delete_prohibited_items(destination_dir, "../cfg/prohibited.files", "../cfg/prohibited.dirs", log_file)
-
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print("Total time taken:", convert_seconds(int(elapsed_time)))
-    log_file.write(f"\nTotal time taken: {convert_seconds(int(elapsed_time))}\n")
-
-    log_file.close()
-
-    # Play finish sound and wait for user input
-    finish_task("File copy and cleanup completed.")
 
 def pre_soak(config):
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
@@ -475,7 +476,7 @@ def main():
 
         choice = input("Enter your choice (1-6, C, or Q): ").upper()
         if choice == '1':
-            bleach_mode()
+            run_bleach_mode_cli()
         elif choice == '2':
             pre_soak(config)  # Pass config object to pre_soak function
         elif choice == '3':
