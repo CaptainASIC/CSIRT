@@ -20,20 +20,20 @@ This utility script provides various functions to clean, sanitize, and manage da
    ### Debian-based Systems (Debian, Ubuntu)
    ```bash
    sudo apt update
-   sudo apt install clamav p7zip python3 python3-pip python3-tk -y
+   sudo apt install clamav p7zip python3 python3-pip python3-tk policykit-1 -y
    ```
    ### Arch-based Systems (Arch Linux, Manjaro)
    ```bash
-   sudo pacman -Syu clamav p7zip python python-pip tk --noconfirm
+   sudo pacman -Syu clamav p7zip python python-pip tk polkit --noconfirm
    ```
    ### RHEL-based Systems (CentOS, Fedora)
    ```bash
    sudo yum update
    sudo yum install epel-release -y
-   sudo yum install clamav p7zip python3 python3-pip tkinter -y
+   sudo yum install clamav p7zip python3 python3-pip tkinter polkit -y
    ```
 
-### Apple macOS
+### Apple macOS (may not work)
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    brew install clamav p7zip python3
@@ -44,7 +44,7 @@ This utility script provides various functions to clean, sanitize, and manage da
 
 ## Usage
 
-1. Run the script by executing `./csirt`.
+1. Run the script by executing `./csirt` or `./csirt --cli` if you want to force CLI mode.
 2. Follow the on-screen menu to choose the desired operation.
 3. Enter the necessary inputs when prompted.
 4. View the logs in the `log` directory for detailed information about each operation.
@@ -82,6 +82,7 @@ This script was created by Captain ASIC.
 - 1.5: Improved error handling and logging (Feb 2024)
 - 1.6: Added configuration option and prerequisites installation (Mar 2024)
 - 2.0.0: Started GUI Project and optimized CLI version (Mar 2024)
+- 2.0.3: WIP, Bleach, Pre-soak, Wash, Dry now functional in the GUI.
 
 ## License
 
