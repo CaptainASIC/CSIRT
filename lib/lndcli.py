@@ -66,7 +66,7 @@ def run_bleach_mode_cli():
         print("Operation canceled, destination name was not provided.")
 
 
-def pre_soak(config):
+def pre_soak(config, callback=None):
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
     
     current_datetime = datetime.datetime.now()
@@ -77,7 +77,7 @@ def pre_soak(config):
         log_file.write(f"Pre-soak process started at {current_datetime.strftime('%Y-%m-%d %H:%M:%S')}\n")
         
         # Enhanced directory matching and logging
-        delete_prohibited_items(destination_dir, "../cfg/prohibited.files", "../cfg/prohibited.dirs", log_file)
+        delete_prohibited_items(destination_dir, "cfg/prohibited.files", "cfg/prohibited.dirs", log_file)
         
         # Delete symbolic link files before uploading
         print("Deleting symbolic link files...")
@@ -91,7 +91,13 @@ def pre_soak(config):
         log_file.write(f"Pre-soak process completed.\n")
     
     # Play finish sound and wait for user input
-    finish_task("Pre-soak completed.")
+    finish_message = f"Pre-soak completed successfully."
+
+    if callback and callable(callback):
+        callback(finish_message)
+    else:
+        return finish_message
+
 
 # Function to clean the drive
 def wash_drive():
@@ -325,7 +331,7 @@ def main():
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'Created by Captain ASIC'.center(84)}{dark_orange}|{reset_color}
-    {dark_orange}|{reset_color}{'Version 2.0.1, Mar 2024'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{'Version 2.0.2, Mar 2024'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
     \n

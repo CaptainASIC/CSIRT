@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, simpledialog
 from PIL import Image, ImageTk
 from tkinter.font import Font
-from lndcli import bleach_mode
+from lndcli import bleach_mode, pre_soak
 import configparser
 from functions import compress_with_7zip, finish_task
 
@@ -75,6 +75,8 @@ class LaundryServicePage(tk.Frame):
     def handle_service(self, name):
         if name == "Bleach":
             self.run_bleach_service()
+        elif name == "Pre-soak":
+            self.run_pre_soak_service()
         else:
             print(f"Handling service: {name}")
             # Add cases for other services as needed.
@@ -95,6 +97,14 @@ class LaundryServicePage(tk.Frame):
                     messagebox.showerror("Error", str(e), parent=self)
         else:
             messagebox.showwarning("Cancelled", "Bleach mode cancelled.", parent=self)
+
+    def run_pre_soak_service(self):
+        config = self.config  
+        destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
+        try:
+            pre_soak_message = pre_soak(self.config, self.finish_task_gui)  # Adjusted call for GUI
+        except Exception as e:
+            messagebox.showerror("Error", str(e), parent=self)
 
     @staticmethod
     def finish_task_gui(message):

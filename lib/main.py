@@ -6,7 +6,7 @@ from cfggui import ConfigPage
 class MainApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.title("ASIC's CSIRT Services - Version 2.0.1")
+        self.title("ASIC's CSIRT Services - Version 2.0.2")
         self.geometry("1280x800")
         self.resizable(False, False)
         self.configure(bg='gray5')
