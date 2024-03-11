@@ -115,7 +115,7 @@ def run_command_with_privileges(command):
     except subprocess.CalledProcessError as e:
         print(f"Failed to execute command: {' '.join(command)}")
 
-def wash_drive(config):
+def wash_drive(config, callback=None):
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
     
     # Commands requiring elevated privileges
@@ -138,8 +138,12 @@ def wash_drive(config):
         return
     
     # Play finish sound and wait for user input
-    finish_task("Wash cycle completed.")
+    finish_message = f"Wash cycle completed."
 
+    if callback and callable(callback):
+        callback(finish_message)
+    else:
+        return finish_message
 
 def download_and_install_gdrive():
     # Define paths
@@ -180,7 +184,7 @@ def download_and_install_gdrive():
 
     print("gdrive installed successfully.")
 
-def dry(config):
+def dry(config, callback=None):
     # Read current configuration
     config = configparser.ConfigParser()
     config.read(script_dir / '../cfg/config.ini')
@@ -192,7 +196,12 @@ def dry(config):
             os.chmod(d_path, 0o555)  # Make the directory read-only
     
     # Play finish sound and wait for user input
-    finish_task("Drying cycle completed.")
+    finish_message = f"Drying cycle completed."
+
+    if callback and callable(callback):
+        callback(finish_message)
+    else:
+        return finish_message
 
 
 def upload_to_gdrive():

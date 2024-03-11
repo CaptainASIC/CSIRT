@@ -112,14 +112,14 @@ class LaundryServicePage(tk.Frame):
 
     def run_wash_service(self):
         try:
-            wash_result = wash_drive(self.config)
+            wash_result = wash_drive(self.config, self.finish_task_gui)
             messagebox.showinfo("Wash Complete", wash_result)
         except Exception as e:
             messagebox.showerror("Wash Error", str(e))
 
     def run_dry_service(self):
         try:
-            dry_result = dry(self.config)
+            dry_result = dry(self.config, self.finish_task_gui)
             messagebox.showinfo("Dry Complete", dry_result)
         except Exception as e:
             messagebox.showerror("Dry Error", str(e))
