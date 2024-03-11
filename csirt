@@ -10,7 +10,7 @@ check_for_updates_and_dependencies() {
             # Run git pull
             git fetch
             git reset --hard HEAD
-            git merge origin/$CURRENT_BRANCH
+            git merge --ff-only origin/$(git rev-parse --abbrev-ref HEAD)
             chmod +x csirt
 
             # Run pip update
@@ -35,5 +35,6 @@ check_for_updates_and_dependencies() {
 # Main script
 check_for_updates_and_dependencies
 
-# Run python3 laundry.py regardless of the update choice
-python3 laundry.py "$@"
+# Ensure that laundry.py is executed from the script's directory
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+python3 "$DIR/laundry.py" "$@"
