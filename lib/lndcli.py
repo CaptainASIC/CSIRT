@@ -11,11 +11,13 @@ import urllib.request
 import tarfile
 import datetime
 import stat
+import sys
 from functions import compress_with_7zip, configure_directories, finish_task, play_start_sound, delete_prohibited_items, convert_seconds
 
 
 # Get the directory where the script is located
 script_dir = Path(__file__).resolve().parent
+sys.path.append(str(script_dir))
 
 # Initialize pygame audio mixer
 pygame.mixer.init()
