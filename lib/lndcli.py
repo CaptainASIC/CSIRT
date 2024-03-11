@@ -99,25 +99,47 @@ def pre_soak(config, callback=None):
     else:
         return finish_message
 
+def can_use_pkexec():
+    # Simple check for graphical session; may need adjustment for accuracy
+    return "DISPLAY" in os.environ or "WAYLAND_DISPLAY" in os.environ
 
-# Function to clean the drive
-def wash_drive():
-    # Stop clamav-freshclam service
-    subprocess.run(["sudo", "service", "clamav-freshclam", "stop"])
+def run_command_with_privileges(command):
+    if can_use_pkexec():
+        run_command = ["pkexec"] + command
+    else:
+        run_command = ["sudo"] + command
+    
+    try:
+        subprocess.run(run_command, check=True)
+        print(f"Command executed successfully: {' '.join(command)}")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to execute command: {' '.join(command)}")
 
-    # Update ClamAV signatures
-    subprocess.run(["sudo", "freshclam"])
-
-    # Start clamav-freshclam service
-    subprocess.run(["sudo", "service", "clamav-freshclam", "start"])
-
+def wash_drive(config):
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
+    
+    # Commands requiring elevated privileges
+    commands = [
+        ["service", "clamav-freshclam", "stop"], # Stop clamav-freshclam service
+        ["freshclam"], # Update ClamAV signatures
+        ["service", "clamav-freshclam", "start"] # Start clamav-freshclam service
+    ]
+    
+    for command in commands:
+        run_command_with_privileges(command)
+    
     # Run ClamAV scan on the specified folder and its subfolders
-    folder_path = "/media/cleaner/Passport"
     print("Running ClamAV scan on the folder and its subfolders...")
-    subprocess.run(["clamscan", "-r", folder_path])
+    try:
+        subprocess.run(["clamscan", "-r", destination_dir], check=True)
+        print("ClamAV scan completed successfully.")
+    except subprocess.CalledProcessError:
+        print("ClamAV scan failed.")
+        return
     
     # Play finish sound and wait for user input
     finish_task("Wash cycle completed.")
+
 
 def download_and_install_gdrive():
     # Define paths
@@ -332,7 +354,7 @@ def main():
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'Created by Captain ASIC'.center(84)}{dark_orange}|{reset_color}
-    {dark_orange}|{reset_color}{'Version 2.0.2, Mar 2024'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{'Version 2.0.3, Mar 2024'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
     \n
@@ -355,7 +377,7 @@ def main():
         elif choice == '2':
             pre_soak(config)  # Pass config object to pre_soak function
         elif choice == '3':
-            wash_drive()
+            wash_drive(config) # Pass config object to wash function
         elif choice == '4':
             dry(config)  # Pass config object to dry function
         elif choice == '5':
