@@ -17,7 +17,6 @@ from functions import compress_with_7zip, configure_directories, finish_task, pl
 
 # Get the directory where the script is located
 script_dir = Path(__file__).resolve().parent
-sys.path.append(str(script_dir))
 
 # Initialize pygame audio mixer
 pygame.mixer.init()

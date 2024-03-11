@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter.font import Font
-from lndgui import LaundryServicePage  # Make sure this import is correct based on your file structure
+from lndgui import LaundryServicePage 
 from cfggui import ConfigPage
 class MainApp(tk.Tk):
     def __init__(self, *args, **kwargs):
