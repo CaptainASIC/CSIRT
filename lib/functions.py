@@ -12,6 +12,9 @@ import tarfile
 import datetime
 import stat
 
+APP_VERSION = "2.0.4"
+BUILD_DATE = "Mar 2024"
+
 script_dir = Path(__file__).resolve().parent
 
 # Function to play start sound

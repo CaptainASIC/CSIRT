@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, simpledialog
 from PIL import Image, ImageTk
 from tkinter.font import Font
-from lndcli import bleach_mode, pre_soak, wash_drive, dry
+from lndcli import bleach_mode, pre_soak, wash_drive, dry, upload_to_gdrive, generate_log_path, tidy_up
 import configparser
 from functions import compress_with_7zip, finish_task
 
@@ -81,6 +81,10 @@ class LaundryServicePage(tk.Frame):
             self.run_wash_service()
         elif name == "Dry":
             self.run_dry_service()
+        elif name == "Fold":
+            self.run_fold_service()
+        elif name == "Tidy up":
+            self.run_fold_service()
         else:
             print(f"Handling service: {name}")
             # Add cases for other services as needed.
@@ -124,6 +128,21 @@ class LaundryServicePage(tk.Frame):
         except Exception as e:
             messagebox.showerror("Dry Error", str(e))
 
+    def run_fold_service(self):
+        log_path = generate_log_path("fold")
+        try:
+            fold_result = upload_to_gdrive(self.config, log_path, is_gui=True, callback=None)
+            messagebox.showinfo("Folding Complete", fold_result)
+        except Exception as e:
+            messagebox.showerror("Folding Error", str(e))
+
+    def run_tidy_up_service(self):
+        log_path = generate_log_path("tidy")
+        try:
+            tidy_up_result = tidy_up(self.config, log_path, is_gui=True, callback=None)
+            messagebox.showinfo("Everything is neat & Tidy.", tidy_up_result)
+        except Exception as e:
+            messagebox.showerror("Tidy Error", str(e))
 
     @staticmethod
     def finish_task_gui(message):

@@ -3,10 +3,12 @@ from PIL import Image, ImageTk
 from tkinter.font import Font
 from lndgui import LaundryServicePage 
 from cfggui import ConfigPage
+from functions import APP_VERSION
+
 class MainApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.title("ASIC's CSIRT Services - Version 2.0.3")
+        self.title(f"ASIC's CSIRT Toolbox - Version {APP_VERSION}")
         self.geometry("1280x800")
         self.resizable(False, False)
         self.configure(bg='gray5')
@@ -34,6 +36,14 @@ class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg='gray5')
         self.controller = controller
+
+        # Stylized banner text for 'CSIRT Toolbox'
+        self.banner_font = Font(family="Helvetica", size=60, weight="bold")  # Customize as needed
+        self.banner_label = tk.Label(self, text="CSIRT Toolbox", font=self.banner_font, fg="orange", bg='black')
+        self.version_font = Font(family="Helvetica", size=14)
+        self.by_label = tk.Label(self, text="By", font=self.version_font, fg="white", bg='black')
+        
+        self.banner_label.pack(pady=20)
 
         # Load and display 'ASIC.png' with a specified width
         image_path = "img/ASIC.png"  # Adjust the path to your actual image location

@@ -12,8 +12,8 @@ import tarfile
 import datetime
 import stat
 import sys
-from functions import compress_with_7zip, configure_directories, finish_task, play_start_sound, delete_prohibited_items, convert_seconds
-
+from functions import compress_with_7zip, configure_directories, finish_task, play_start_sound, delete_prohibited_items, convert_seconds, APP_VERSION, BUILD_DATE, get_directory_size, convert_bytes
+from tkinter import messagebox
 
 # Get the directory where the script is located
 script_dir = Path(__file__).resolve().parent
@@ -204,102 +204,95 @@ def dry(config, callback=None):
         return finish_message
 
 
-def upload_to_gdrive():
-    # Read current configuration
-    config = configparser.ConfigParser()
-    config.read(script_dir / '../cfg/config.ini')
+def upload_to_gdrive(config, log_path, is_gui=False, callback=None):
     folder_id = config.get('GoogleDrive', 'FolderID')
-
-    # Get the current date and time for the log filename
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
-    current_datetime = datetime.datetime.now()
-    log_filename = "fold_" + current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
-    log_path = script_dir / "../log" / log_filename
-
     # Open log file to append
     with open(log_path, "a") as log_file:
         # Get a list of folders in the destination directory
         folders = [folder for folder in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, folder))]
 
-        # Iterate over each folder and upload to Google Drive
         for folder in folders:
             folder_path = os.path.join(destination_dir, folder)
-            # Ask the user for confirmation before uploading each folder
-            user_decision = input(f"Do you want to upload \"{folder}\" to Google Drive? (y/n): ")
-            if user_decision.lower() == 'y':
-                # Construct the gdrive command for the current folder
+            if is_gui:
+                # Use dialog box for GUI
+                user_decision = messagebox.askyesno("Confirm Upload", f"Do you want to upload \"{folder}\" to Google Drive?")
+            else:
+                # Use CLI input
+                user_decision = input(f"Do you want to upload \"{folder}\" to Google Drive? (y/n): ").lower() == 'y'
+            
+            if user_decision:
                 gdrive_command = f"gdrive files upload --recursive --parent {folder_id} \"{folder_path}\""
-                print(f"Uploading \"{folder}\" to Google Drive.")
-                # Run the gdrive command and write the output to the log file
                 try:
                     result = subprocess.run(gdrive_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    # Log success
                     log_file.write(f"Upload successful for {folder_path}\n")
                     log_file.write(result.stdout + "\n")
+                    if is_gui:
+                        # Log success with GUI message
+                        messagebox.showinfo("Upload Successful", f"Upload successful for {folder_path}")
+                    else:
+                        # Log success in CLI
+                        print(f"Upload successful for {folder_path}")
                 except subprocess.CalledProcessError as e:
-                    # Log errors
                     log_file.write(f"Error uploading {folder_path}: {e.stderr}\n")
-            else:
-                print(f"Skipping \"{folder}\".")
+                    if is_gui:
+                        messagebox.showerror("Error", f"Error uploading {folder_path}: {e.stderr}")
+                    else:
+                        print(f"Error uploading {folder_path}: {e.stderr}")
+    if callback:
+        callback("Folding has been completed.")
 
-        print("Upload to Google Drive completed.")
-    
-    # Play finish sound and wait for user input
-    finish_task("Folding has been completed.")
-
-
-def tidy_up():
-    # Read current configuration
-    config = configparser.ConfigParser()
-    config.read(script_dir / '../cfg/config.ini')
-    print("Collecting Statistics:")
-    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
+# Function to generate log paths could also be here or imported if defined elsewhere
+def generate_log_path(service_name):
     current_datetime = datetime.datetime.now()
-    log_filename = "tidy_" + current_datetime.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
-    log_path = script_dir / "../log" / log_filename
+    log_filename = f"{service_name}_{current_datetime.strftime('%Y-%m-%d-%H-%M-%S')}.log"
+    return Path(script_dir) / "../log" / log_filename
 
-    with open(log_path, "w") as log_file:
+
+def tidy_up(config, log_file, is_gui=False, callback=None):
+    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
+    
+    with open(log_file, "w") as log_file:
         # Record initial destination size
         initial_destination_size = get_directory_size(destination_dir)
-        log_file.write("Destination size at start: " + convert_bytes(initial_destination_size) + "\n")
+        log_file.write(f"Destination size at start: " + convert_bytes(initial_destination_size) + "\n")
 
-        # List only top-level directories in the destination directory
+        # Iterate through directories for tidying
         dirs = [d for d in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, d))]
-
         for d in dirs:
             folder_path = os.path.join(destination_dir, d)
-            print("\nFolder:", folder_path)
+            
+            # Decide on action based on the interface mode
+            if is_gui:
+                user_decision = messagebox.askyesno("Confirm", f"Do you want to tidy up \"{d}\"?")
+            else:
+                print("\nFolder:", folder_path)
+                user_decision = input(f"Do you want to tidy up \"{d}\"? (y/n): ").lower() == 'y'
 
-            user_decision = input(f"Do you want to tidy up \"{d}\"? (y/n): ")
-            if user_decision.lower() == 'y':
-                # Record folder size
+            if user_decision:
                 folder_size = get_directory_size(folder_path)
-                print("Folder size:", convert_bytes(folder_size))
-
-                # Compress folder into an archive, here using .csirt as requested
                 archive_name = f"{d}.csirt"
                 archive_path = os.path.join(destination_dir, archive_name)
-                print("Compressing folder into archive:", archive_path)
+                
                 compress_with_7zip(folder_path, archive_path)
                 
-                # Record archive size
+                # Log the operation
                 archive_size = os.path.getsize(archive_path)
                 log_file.write(f"Compressed \"{d}\" into \"{archive_name}\". Size: {convert_bytes(archive_size)}\n")
-
-                # Delete the original folder
+                
                 shutil.rmtree(folder_path)
-                print("Deleted original folder:", folder_path)
                 log_file.write(f"Deleted original folder: {folder_path}\n")
-            else:
-                print(f"Skipping \"{d}\".")
-
-        # Record final destination size
+                
         final_destination_size = get_directory_size(destination_dir)
         log_file.write("Final destination size: " + convert_bytes(final_destination_size) + "\n")
 
     # Play finish sound and wait for user input
-    finish_task("Everything is neat & Tidy.")
+    finish_message = f"Tidying up completed successfully."
 
+    if callback and callable(callback):
+        callback(finish_message)
+    else:
+        return finish_message
 
 
 def display_menu():
@@ -363,7 +356,7 @@ def main():
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{'Created by Captain ASIC'.center(84)}{dark_orange}|{reset_color}
-    {dark_orange}|{reset_color}{'Version 2.0.3, Mar 2024'.center(84)}{dark_orange}|{reset_color}
+    {dark_orange}|{reset_color}{f'Version {APP_VERSION}, {BUILD_DATE}'.center(84)}{dark_orange}|{reset_color}
     {dark_orange}|{reset_color}{' ' * 84}{dark_orange}|{reset_color}
     {dark_orange}+{'-' * 84}+{reset_color}
     \n
@@ -390,9 +383,11 @@ def main():
         elif choice == '4':
             dry(config)  # Pass config object to dry function
         elif choice == '5':
-            upload_to_gdrive()
+            log_path = generate_log_path("fold")
+            upload_to_gdrive(config, log_path, is_gui=False, callback=None)
         elif choice == '6':
-            tidy_up()
+            log_path = generate_log_path("tidy")
+            tidy_up(config, log_path, is_gui=False, callback=None)
         elif choice == 'C':
             configure_directories()
         elif choice == 'Q':
