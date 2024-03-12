@@ -82,7 +82,7 @@ This script was created by Captain ASIC.
 - 1.5: Improved error handling and logging (Feb 2024)
 - 1.6: Added configuration option and prerequisites installation (Mar 2024)
 - 2.0.0: Started GUI Project and optimized CLI version (Mar 2024)
-- 2.0.3: WIP, Bleach, Pre-soak, Wash, Dry now functional in the GUI.
+- 2.0.4: WIP, all tasks should be functional in the GUI.
 
 ## License
 
