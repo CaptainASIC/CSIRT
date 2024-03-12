@@ -8,7 +8,7 @@ from functions import APP_VERSION
 class MainApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.title(f"ASIC's CSIRT Toolbox - Version {APP_VERSION}")
+        self.title(f"Captain ASIC's CSIRT Toolbox - Version {APP_VERSION}")
         self.geometry("1280x800")
         self.resizable(False, False)
         self.configure(bg='gray5')
@@ -37,38 +37,35 @@ class StartPage(tk.Frame):
         super().__init__(parent, bg='gray5')
         self.controller = controller
 
+        # Initialize a Canvas
+        self.canvas = tk.Canvas(self, width=1280, height=800)
+        self.canvas.pack(fill="both", expand=True)
+
+        # Load and scale wallpaper
+        wallpaper_path = "img/asic-csirt.png"  
+        wallpaper = Image.open(wallpaper_path)
+        wallpaper = wallpaper.resize((1280, 800), Image.Resampling.LANCZOS)
+        wallpaper_tk = ImageTk.PhotoImage(wallpaper)
+
+        # Set wallpaper on the canvas
+        self.canvas.create_image(0, 0, anchor='nw', image=wallpaper_tk)
+        self.canvas.image = wallpaper_tk  # Keep a reference!
+
         # Stylized banner text for 'CSIRT Toolbox'
         self.banner_font = Font(family="Helvetica", size=60, weight="bold")  # Customize as needed
-        self.banner_label = tk.Label(self, text="CSIRT Toolbox", font=self.banner_font, fg="orange", bg='black')
-        self.version_font = Font(family="Helvetica", size=14)
-        self.by_label = tk.Label(self, text="By", font=self.version_font, fg="white", bg='black')
-        
-        self.banner_label.pack(pady=20)
-
-        # Load and display 'ASIC.png' with a specified width
-        image_path = "img/ASIC.png"  # Adjust the path to your actual image location
-        img = Image.open(image_path)
-        aspect_ratio = img.height / img.width
-        new_width = 500
-        new_height = int(new_width * aspect_ratio)
-        img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-        img_tk = ImageTk.PhotoImage(img)
-
-        label_image = tk.Label(self, image=img_tk, bg='gray5')
-        label_image.image = img_tk  # Keep a reference to avoid garbage collection
-        label_image.pack(pady=20)
+        text_bg = self.canvas.create_rectangle(100, 50, 1180, 150, fill='black', outline='black')
+        self.canvas.create_text(640, 50, text="CSIRT Toolbox", font=self.banner_font, fill="orange", anchor="n")
 
         # Font configuration for buttons
         button_font = Font(family="Helvetica", size=10, weight="bold")
 
         # Create a Laundry Service button
         laundry_service_button = tk.Button(self, text="Laundry Service", font=button_font, command=lambda: controller.show_frame("LaundryServicePage"))
-        laundry_service_button.pack(pady=10)
+        self.canvas.create_window(640, 700, window=laundry_service_button)
 
         # Create a Quit button with bold text
         quit_button = tk.Button(self, text="Quit", font=button_font, command=controller.quit)
-        quit_button.pack(side=tk.BOTTOM, anchor='se', padx=20, pady=20)
-
+        self.canvas.create_window(1260, 760, anchor="se", window=quit_button)
 if __name__ == "__main__":
     app = MainApp()
     app.mainloop()
