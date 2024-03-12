@@ -53,8 +53,8 @@ class StartPage(tk.Frame):
 
         # Stylized banner text for 'CSIRT Toolbox'
         self.banner_font = Font(family="Helvetica", size=60, weight="bold")  # Customize as needed
-        text_bg = self.canvas.create_rectangle(100, 50, 1180, 150, fill='black', outline='black')
-        self.canvas.create_text(640, 50, text="CSIRT Toolbox", font=self.banner_font, fill="orange", anchor="n")
+        text_bg = self.canvas.create_rectangle(100, 60, 1180, 150, fill='black', outline='black')
+        self.canvas.create_text(640, 60, text="CSIRT Toolbox", font=self.banner_font, fill="orange", anchor="n")
 
         # Font configuration for buttons
         button_font = Font(family="Helvetica", size=10, weight="bold")
