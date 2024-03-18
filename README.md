@@ -71,6 +71,12 @@ The `extensions.list`, `prohibited.files`, and `prohibited.dirs` files can also 
 ## Credits
 
 This script was created by Captain ASIC.
+Other packages and repositories used:
+- gdrive - https://github.com/glotlabs/gdrive
+- ClamAV - https://github.com/Cisco-Talos/clamav
+- 7-Zip - https://www.7-zip.org
+- rsync - https://rsync.samba.org
+
 
 ## Version History
 
