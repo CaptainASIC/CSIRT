@@ -76,6 +76,7 @@ Other packages and repositories used:
 - ClamAV - https://github.com/Cisco-Talos/clamav
 - 7-Zip - https://www.7-zip.org
 - rsync - https://rsync.samba.org
+- pygame - https://www.pygame.org
 
 
 ## Version History

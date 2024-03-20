@@ -12,7 +12,7 @@ import tarfile
 import datetime
 import stat
 import sys
-from functions import compress_with_7zip, configure_directories, finish_task, play_start_sound, delete_prohibited_items, convert_seconds, APP_VERSION, BUILD_DATE, get_directory_size, convert_bytes
+from functions import compress_with_7zip, configure_directories, finish_task, play_start_sound, delete_prohibited_items, convert_seconds, APP_VERSION, BUILD_DATE, get_directory_size, convert_bytes, download_and_install_gdrive
 from tkinter import messagebox
 
 # Get the directory where the script is located
@@ -144,45 +144,6 @@ def wash_drive(config, callback=None):
         callback(finish_message)
     else:
         return finish_message
-
-def download_and_install_gdrive():
-    # Define paths
-    download_url = "https://github.com/glotlabs/gdrive/releases/download/3.9.1/gdrive_linux-x64.tar.gz"
-    download_path = "/tmp/gdrive.tar.gz"
-    extract_dir = "/tmp/gdrive"
-
-    # Check if gdrive already exists in /usr/local/bin
-    if os.path.exists("/usr/local/bin/gdrive"):
-        print("gdrive is already installed.")
-        return
-
-    # Download gdrive
-    print("Downloading gdrive...")
-    urllib.request.urlretrieve(download_url, download_path)
-
-    # Extract gdrive
-    print("Extracting gdrive...")
-    with tarfile.open(download_path, "r:gz") as tar:
-        tar.extractall(path=extract_dir)
-
-    # Move gdrive to /usr/local/bin using sudo
-    print("Moving gdrive to /usr/local/bin...")
-    subprocess.run(["sudo", "mv", os.path.join(extract_dir, "gdrive"), "/usr/local/bin"])
-
-    # Change permissions using sudo
-    print("Changing permissions...")
-    subprocess.run(["sudo", "chmod", "755", "/usr/local/bin/gdrive"])
-
-    # Clean up
-    print("Cleaning up...")
-    os.remove(download_path)
-    shutil.rmtree(extract_dir)
-
-    # Verify installation
-    print("Verifying installation...")
-    subprocess.run(["gdrive", "account", "add"])
-
-    print("gdrive installed successfully.")
 
 def dry(config, callback=None):
     # Read current configuration
@@ -384,6 +345,7 @@ def main():
             dry(config)  # Pass config object to dry function
         elif choice == '5':
             log_path = generate_log_path("fold")
+            download_and_install_gdrive()
             upload_to_gdrive(config, log_path, is_gui=False, callback=None)
         elif choice == '6':
             log_path = generate_log_path("tidy")
