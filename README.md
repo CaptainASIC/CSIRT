@@ -66,6 +66,9 @@ The `extensions.list`, `prohibited.files`, and `prohibited.dirs` files can also 
 - Pip
 - 7-Zip
 - ClamAV
+- GDrive
+   - CLI will automatically Install this package when you call the "Tidy up" task.
+   - GUI has an "Install G-Drive" option on the Configure Page.
 - Dependencies listed in `requirements.txt`
 
 ## Credits
@@ -89,7 +92,9 @@ Other packages and repositories used:
 - 1.5: Improved error handling and logging (Feb 2024)
 - 1.6: Added configuration option and prerequisites installation (Mar 2024)
 - 2.0.0: Started GUI Project and optimized CLI version (Mar 2024)
-- 2.0.4: WIP, all tasks should be functional in the GUI.
+- 2.0.4: All tasks should be functional in the GUI. (Mar 2024)
+- 2.0.5: Tested operational, also added G-Drive installation to the GUI. (Mar 2024)
+
 
 ## License
 
