@@ -5,12 +5,18 @@ from tkinter import Frame, Label, Button, messagebox, ttk
 from tkinter.font import Font
 from PIL import Image, ImageTk
 import configparser
+from scan import WiFiScanner
+import datetime
 
 class WifiSharkPage(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
+        self.wifiScanner = WiFiScanner(self.update_dropdown_with_ssids)  # Pass callback function to update dropdown
         self.init_ui()
+
+        # Add an attribute to keep track of scanning state
+        self.scanning = False
 
     def init_ui(self):
         # Load configuration
@@ -67,7 +73,7 @@ class WifiSharkPage(Frame):
 
     def handle_service(self, name):
         if name == "Scan for SSIDs":
-            self.scan_for_ssids()
+            self.toggle_scan()
         elif name == "De-Auth SSIDs":
             messagebox.showinfo("Info", "De-authenticating SSIDs... (functionality to be implemented)")
         elif name == "WEP Crack":
@@ -80,3 +86,20 @@ class WifiSharkPage(Frame):
 
     def configure_service(self):
         self.controller.show_frame("WifiConfigPage")
+
+    def toggle_scan(self):
+        if not self.scanning:
+            # Start the scan with the log file path
+            self.wifiScanner.start_scan()
+            self.service_buttons[0].config(text="Stop Scan", bg="dark red")
+            self.scanning = True
+        else:
+            self.wifiScanner.stop_scan()
+            self.service_buttons[0].config(text="Scan for SSIDs", bg='steelblue4')
+            self.scanning = False
+
+
+    def update_dropdown_with_ssids(self, ssids):
+        # Update your dropdown menu here
+        self.ssid_var.set("Select SSID")
+        self.ssid_dropdown['values'] = ssids
