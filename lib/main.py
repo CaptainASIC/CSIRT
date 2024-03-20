@@ -3,6 +3,8 @@ from PIL import Image, ImageTk
 from tkinter.font import Font
 from lndgui import LaundryServicePage 
 from cfggui import ConfigPage
+from wifigui import WifiSharkPage
+from wificfg import WifiConfigPage
 from functions import APP_VERSION
 
 class MainApp(tk.Tk):
@@ -20,7 +22,7 @@ class MainApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (StartPage, LaundryServicePage, ConfigPage):
+        for F in (StartPage, LaundryServicePage, ConfigPage, WifiSharkPage, WifiConfigPage):
             frame = F(parent=container, controller=self)
             self.frames[F.__name__] = frame  # Use class name as string identifier
             frame.grid(row=0, column=0, sticky="nsew")
@@ -61,7 +63,12 @@ class StartPage(tk.Frame):
 
         # Create a Laundry Service button
         laundry_service_button = tk.Button(self, text="Laundry Service", font=button_font, command=lambda: controller.show_frame("LaundryServicePage"))
-        self.canvas.create_window(640, 700, window=laundry_service_button)
+        self.canvas.create_window(540, 700, window=laundry_service_button)
+
+        # Create a Wifi Shark button
+        wifi_shark_button = tk.Button(self, text="WiFi Shark", font=button_font, command=lambda: controller.show_frame("WifiSharkPage"))
+        self.canvas.create_window(740, 700, window=wifi_shark_button)
+
 
         # Create a Quit button with bold text
         quit_button = tk.Button(self, text="Quit", font=button_font, command=controller.quit)

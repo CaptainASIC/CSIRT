@@ -1,8 +1,11 @@
-# CSIRT Laundry Services
+# CSIRT Toolbox
 
-This utility script provides various functions to clean, sanitize, and manage data on recovered and infected drives. It's particularly useful for maintaining the cleanliness and security of data stored on drives.
+The CSIRT Toolbox is a comprehensive suite of tools designed for Computer Security Incident Response Teams (CSIRTs) to aid in the clean-up, analysis, and management of data on recovered and infected drives, as well as network monitoring and analysis.
 
-## Features
+## Tools
+
+### Laundry Services
+Provides various functions to clean, sanitize, and manage data on drives.
 
 - **Bleach Mode:** Moves data from a dirty drive to a specified destination directory, while also deleting prohibited files and directories.
 - **Pre-soak:** Deletes prohibited files from the destination directory.
@@ -10,6 +13,9 @@ This utility script provides various functions to clean, sanitize, and manage da
 - **Dry:** Write-protects destination folders.
 - **Fold:** Uploads data to Google Drive.
 - **Tidy Up:** Compresses destination folders and deletes the original folders.
+
+### Wifi Shark
+A network monitoring and analysis tool for observing data flows and detecting anomalies in network traffic.
 
 ## Installation
 
@@ -94,6 +100,7 @@ Other packages and repositories used:
 - 2.0.0: Started GUI Project and optimized CLI version (Mar 2024)
 - 2.0.4: All tasks should be functional in the GUI. (Mar 2024)
 - 2.0.5: Tested operational, also added G-Drive installation to the GUI. (Mar 2024)
+- 3.0.0: Adds Wifi Shark to the GUI (Apr 2024)
 
 
 ## License

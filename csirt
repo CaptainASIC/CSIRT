@@ -37,4 +37,4 @@ check_for_updates_and_dependencies
 
 # Ensure that laundry.py is executed from the script's directory
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-python3 "$DIR/laundry.py" "$@"
+python3 "$DIR/toolbox.py" "$@"
