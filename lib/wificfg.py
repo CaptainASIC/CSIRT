@@ -44,33 +44,36 @@ class WifiConfigPage(tk.Frame):
         self.canvas.create_window(1160, 760, window=exit_btn)
 
     def install_aircrack(self):
-        # Indicate the start of the installation process
-        messagebox.showinfo("Starting Installation", "Beginning Aircrack-ng installation. This may take some time.", parent=self)
+    # URL of the Aircrack-ng tar.gz file
+    aircrack_url = "https://download.aircrack-ng.org/aircrack-ng-1.7.tar.gz"
+    # Path where the tar.gz file will be saved
+    download_path = "/tmp/aircrack-ng-1.7.tar.gz"
+    # Path for the extracted content
+    extract_dir = "/tmp/aircrack-ng-1.7"
 
-        try:
-            # Define the commands to download, extract, build, and install Aircrack-ng from source
-            commands = [
-                ["wget", "https://download.aircrack-ng.org/aircrack-ng-1.7.tar.gz", "-O", "/tmp/aircrack-ng-1.7.tar.gz"],
-                ["tar", "-zxvf", "/tmp/aircrack-ng-1.7.tar.gz", "-C", "/tmp"],
-                ["autoreconf", "-i"],
-                ["./configure", "--with-experimental"],
-                ["make"],
-                ["sudo", "make", "install"],
-                ["sudo", "ldconfig"]
-            ]
+    try:
+        # Indicate start of download
+        messagebox.showinfo("Download", "Starting the download of Aircrack-ng.", parent=self)
+        # Downloading the tar.gz file
+        response = requests.get(aircrack_url)
+        with open(download_path, 'wb') as file:
+            file.write(response.content)
+        messagebox.showinfo("Download Complete", "Aircrack-ng downloaded successfully.", parent=self)
 
-            # Change directory to the extracted source code directory
-            os.chdir("/tmp/aircrack-ng-1.7")
+        # Extracting the tar.gz file
+        with tarfile.open(download_path, "r:gz") as tar:
+            tar.extractall(path="/tmp")
 
-            # Execute each command in the list
-            for command in commands:
-                subprocess.run(command, check=True)
+        # Change directory to the extracted folder
+        os.chdir(extract_dir)
 
-            # Inform the user of successful installation
-            messagebox.showinfo("Installation Success", "Aircrack-ng was successfully installed.", parent=self)
-
-        except subprocess.CalledProcessError as e:
-            # In case of an error, display an error message
-            messagebox.showerror("Installation Failed", f"Aircrack-ng installation failed. Error: {str(e)}", parent=self)
-
-
+        # Compilation and installation process
+        subprocess.check_call(["autoreconf", "-i"])
+        subprocess.check_call(["./configure", "--with-experimental"])
+        subprocess.check_call(["make"])
+        subprocess.check_call(["sudo", "make", "install"])
+        subprocess.check_call(["sudo", "ldconfig"])
+        
+        messagebox.showinfo("Installation Complete", "Aircrack-ng has been successfully installed.", parent=self)
+    except Exception as e:
+        messagebox.showerror("Installation Error", f"Failed to install Aircrack-ng: {e}", parent=self)
