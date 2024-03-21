@@ -5,7 +5,8 @@ from PIL import Image, ImageTk
 import subprocess
 import os
 import configparser
-
+import requests
+import tarfile
 
 class WifiConfigPage(tk.Frame):
     def __init__(self, parent, controller):
