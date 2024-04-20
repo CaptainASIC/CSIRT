@@ -177,7 +177,9 @@ def tidy_up(config, log_file, is_gui=False, callback=None):
                 archive_size = os.path.getsize(archive_path)
                 log_file.write(f"Compressed \"{d}\" into \"{archive_name}\". Size: {convert_bytes(archive_size)}\n")
                 
-                shutil.rmtree(folder_path)
+                # Delete the Destination Folders and Data
+                run_command_with_privileges(['rm', '-rf', folder_path])
+                #shutil.rmtree(folder_path) # doesnt work if path is read-only, needs sudo
                 log_file.write(f"Deleted original folder: {folder_path}\n")
                 
         final_destination_size = get_directory_size(destination_dir)
