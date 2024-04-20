@@ -19,34 +19,62 @@ A network monitoring and analysis tool for observing data flows and detecting an
 
 ## Installation
 
-1. Clone the repository to your local machine.
-2. Ensure you have Python 3.x installed.
-3. Install the required dependencies:
+### Dependencies
 
-   ### Debian-based Systems (Debian, Ubuntu)
+Before installing CSIRT Toolbox, make sure your system has the required dependencies installed.
+
+#### Common Dependencies
+
+- Python 3.x
+- pip (Python package installer)
+- git (optional, for cloning the repository)
+
+#### Additional Dependencies for Aircrack-ng
+
+- Autoconf
+- Automake
+- Libtool
+- shtool
+- OpenSSL or libgcrypt development package
+- pkg-config
+- ethtool and rfkill (for Airmon-ng)
+- lsusb (if USB bus is present)
+- lspci (if PCI/PCIe bus is present)
+- libnl-dev (LibNetlink 1) or libnl-3-dev and libnl-genl-3-dev (LibNetlink 3), can be disabled with `--disable-libnl`
+- Kernel headers, gcc, make, and the Standard C++ Library development package
+
+### Installing on Linux
+
+   #### Debian-based Systems (Debian, Ubuntu)
+
    ```bash
    sudo apt update
-   sudo apt install clamav p7zip python3 python3-pip python3-tk policykit-1 -y
+   sudo apt install clamav p7zip python3 python3-pip python3-tk policykit-1 autoconf automake libtool shtool libssl-dev libnl-3-dev libnl-genl-3-dev ethtool rfkill lsusb lspci build-essential -y
    ```
-   ### Arch-based Systems (Arch Linux, Manjaro)
+
+   #### Arch-based Systems (Arch Linux, Manjaro)
    ```bash
-   sudo pacman -Syu clamav p7zip python python-pip tk polkit --noconfirm
+   sudo pacman -Syu clamav p7zip python python-pip tk polkit autoconf automake libtool shtool openssl libnl ethtool rfkill usbutils pciutils base-devel --noconfirm
    ```
    ### RHEL-based Systems (CentOS, Fedora)
    ```bash
    sudo yum update
    sudo yum install epel-release -y
-   sudo yum install clamav p7zip python3 python3-pip tkinter polkit -y
+   sudo yum install clamav p7zip python3 python3-pip tkinter polkit autoconf automake libtool shtool openssl-devel libnl3-devel ethtool rfkill usbutils pciutils gcc-c++ -y
    ```
 
 ### Apple macOS (may not work)
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   brew install clamav p7zip python3
+   brew install clamav p7zip python3 autoconf automake libtool openssl shtool pkg-config hwloc pcre sqlite3 libpcap cmocka
    ```
 
-4. Configure the script by editing the `sample.config.ini` file in the `cfg` directory.
-   Save the file as `config.ini` once complete.
+
+## Installing CSIRT Toolbox
+   1. Clone the repository or download the source code.
+   2. Navigate to the CSIRT Toolbox directory.
+   3. Configure the script by editing the `sample.config.ini` file in the `cfg` directory.
+      Save the file as `config.ini` once complete.
 
 ## Usage
 
