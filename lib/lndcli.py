@@ -12,7 +12,7 @@ import tarfile
 import datetime
 import stat
 import sys
-from functions import compress_with_7zip, configure_directories, finish_task, play_start_sound, delete_prohibited_items, convert_seconds, APP_VERSION, BUILD_DATE, get_directory_size, convert_bytes, download_and_install_gdrive
+from functions import compress_with_7zip, configure_directories, finish_task, play_start_sound, delete_prohibited_items, convert_seconds, APP_VERSION, BUILD_DATE, get_directory_size, convert_bytes
 from tkinter import messagebox
 
 # Get the directory where the script is located
@@ -165,9 +165,9 @@ def dry(config, callback=None):
         return finish_message
 
 
-def upload_to_gdrive(config, log_path, is_gui=False, callback=None):
+def upload_to_cloud(config, log_path, is_gui=False, callback=None):
     # Retrieve remote drive name and folder path from the configuration
-    remote_name = config.get('RemoteDrive', 'Name')
+    remote_name = config.get('RemoteDrive', 'RemoteName')
     base_remote_path = config.get('RemoteDrive', 'BasePath', fallback='')
 
     # Open log file to append
@@ -208,48 +208,6 @@ def upload_to_gdrive(config, log_path, is_gui=False, callback=None):
                         input("Press Enter to continue...") 
     if callback:
         callback("Upload process has been completed.")
-
-
-#def upload_to_gdrive(config, log_path, is_gui=False, callback=None):
-#    folder_id = config.get('GoogleDrive', 'FolderID')
-#    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
-#    # Open log file to append
-#    with open(log_path, "a") as log_file:
-#        # Get a list of folders in the destination directory
-#        folders = [folder for folder in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, folder))]
-#
-#        for folder in folders:
-#            folder_path = os.path.join(destination_dir, folder)
-#            if is_gui:
-#                # Use dialog box for GUI
-#                user_decision = messagebox.askyesno("Confirm Upload", f"Do you want to upload \"{folder}\" to Google Drive?")
-#            else:
-#                # Use CLI input
-#                user_decision = input(f"Do you want to upload \"{folder}\" to Google Drive? (y/n): ").lower() == 'y'
-#            
-#            if user_decision:
-#                gdrive_command = f"gdrive files upload --recursive --parent {folder_id} \"{folder_path}\""
-#                try:
-#                    result = subprocess.run(gdrive_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#                    log_file.write(f"Upload successful for {folder_path}\n")
-#                    log_file.write(result.stdout + "\n")
-#                    if is_gui:
-#                        # Log success with GUI message
-#                        messagebox.showinfo("Upload Successful", f"Upload successful for {folder_path}")
-#                    else:
-#                        # Log success in CLI
-#                        print(f"Upload successful for {folder_path}")
-#                except subprocess.CalledProcessError as e:
-#                    log_file.write(f"Error uploading {folder_path}: {e.stderr}\n")
-#                    if is_gui:
-#                        messagebox.showerror("Error", f"Error uploading {folder_path}: {e.stderr}")
-#                    else:
-#                        print(f"Error uploading {folder_path}: {e.stderr}")
-#    if callback:
-#        callback("Folding has been completed.")
-
-
-
 
 # Function to generate log paths could also be here or imported if defined elsewhere
 def generate_log_path(service_name):
@@ -310,7 +268,7 @@ def display_menu():
     print("2. Pre-soak: Delete Prohibited Files")
     print("3. Wash: Scan Bleached Drive with ClamAV")
     print("4. Dry: Write Protect Destination Folders")
-    print("5. Fold: Upload to GDrive")
+    print("5. Fold: Upload to Cloud Storage")
     print("6. Tidy up: Compress Destination Folders")
     print("C. Configure Directories")
     print("Q. Quit Script")
@@ -393,8 +351,7 @@ def main():
             dry(config)  # Pass config object to dry function
         elif choice == '5':
             log_path = generate_log_path("fold")
-            #download_and_install_gdrive()
-            upload_to_gdrive(config, log_path, is_gui=False, callback=None)
+            upload_to_cloud(config, log_path, is_gui=False, callback=None)
         elif choice == '6':
             log_path = generate_log_path("tidy")
             tidy_up(config, log_path, is_gui=False, callback=None)

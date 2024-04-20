@@ -11,7 +11,7 @@ Provides various functions to clean, sanitize, and manage data on drives.
 - **Pre-soak:** Deletes prohibited files from the destination directory.
 - **Wash:** Scans the bleached drive with ClamAV antivirus.
 - **Dry:** Write-protects destination folders.
-- **Fold:** Uploads data to Google Drive.
+- **Fold:** Uploads data to a configured remote storage using rclone.
 - **Tidy Up:** Compresses destination folders and deletes the original folders.
 
 ### Wifi Shark
@@ -89,7 +89,8 @@ The `config.ini` file in the `cfg` directory allows you to configure the followi
 
 - Source directory: The directory from which data will be copied.
 - Destination directory: The directory where data will be moved or uploaded.
-- Google Drive folder ID: The ID for the folder in Google Drive you want to upload to.
+- RemoteName: This should match the name of the remote as configured in rclone.
+- BasePath: This is the path within your remote storage where files will be uploaded. This path should already exist unless your rclone configuration allows for dynamic creation of directories. This could be set to a path like "MyFolder/SubFolder" or even left blank to copy directly into the root of the remote.
 - WLAN Interface: The interface you want to use for WiFi Shark tools.
 
 The `extensions.list`, `prohibited.files`, and `prohibited.dirs` files can also be configured and tailored as necessary based on your own findings, policies, or preferences.
@@ -101,16 +102,15 @@ The `extensions.list`, `prohibited.files`, and `prohibited.dirs` files can also 
 - Pip
 - 7-Zip
 - ClamAV
-- GDrive
-   - CLI will automatically Install this package when you call the "Tidy up" task.
-   - GUI has an "Install G-Drive" option on the Configure Page.
+- Rclone
+   - You will need to run `rclone config` prior to running the CSIRT Toolbox. Take note of the `Name` given to your remote share and enter this in the `config.ini` file.
 - Dependencies listed in `requirements.txt`
 
 ## Credits
 
 This script was created by Captain ASIC.
 Other packages and repositories used:
-- gdrive - https://github.com/glotlabs/gdrive
+- Rclone - https://rclone.org/
 - ClamAV - https://github.com/Cisco-Talos/clamav
 - 7-Zip - https://www.7-zip.org
 - rsync - https://rsync.samba.org
@@ -129,7 +129,8 @@ Other packages and repositories used:
 - 2.0.0: Started GUI Project and optimized CLI version (Mar 2024)
 - 2.0.4: All tasks should be functional in the GUI. (Mar 2024)
 - 2.0.5: Tested operational, also added G-Drive installation to the GUI. (Mar 2024)
-- 3.0.0: Adds Wifi Shark to the GUI (Apr 2024)
+- 3.0.0 Beta: Adds Wifi Shark to the GUI (Apr 2024)
+- 3.0.1 Beta: Switched to Rclone to support more cloud storage options. (Apr 2024)
 
 
 ## License

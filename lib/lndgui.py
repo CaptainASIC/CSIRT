@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, simpledialog
 from PIL import Image, ImageTk
 from tkinter.font import Font
-from lndcli import bleach_mode, pre_soak, wash_drive, dry, upload_to_gdrive, generate_log_path, tidy_up
+from lndcli import bleach_mode, pre_soak, wash_drive, dry, upload_to_cloud, generate_log_path, tidy_up
 import configparser
 from functions import compress_with_7zip, finish_task
 
@@ -49,7 +49,7 @@ class LaundryServicePage(tk.Frame):
             "Pre-soak: Deletes prohibited files before the main wash cycle.",
             "Wash: Scans the drive with antivirus software to clean it.",
             "Dry: Marks the drive as read-only to protect its contents.",
-            "Fold: Uploads the cleaned data to Google Drive.",
+            "Fold: Uploads the cleaned data to cloud storage.",
             "Tidy up: Compresses and organizes the cleaned data."
         ]
         legend_font = Font(family="Helvetica", size=12)
@@ -131,7 +131,7 @@ class LaundryServicePage(tk.Frame):
     def run_fold_service(self):
         log_path = generate_log_path("fold")
         try:
-            fold_result = upload_to_gdrive(self.config, log_path, is_gui=True, callback=None)
+            fold_result = upload_to_cloud(self.config, log_path, is_gui=True, callback=None)
             messagebox.showinfo("Folding Complete", fold_result)
         except Exception as e:
             messagebox.showerror("Folding Error", str(e))

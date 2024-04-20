@@ -12,7 +12,7 @@ import tarfile
 import datetime
 import stat
 
-APP_VERSION = "3.0.0 Beta"
+APP_VERSION = "3.0.1 Beta"
 BUILD_DATE = "Apr 2024"
 
 script_dir = Path(__file__).resolve().parent
@@ -155,34 +155,3 @@ def finish_task(message):
 
     # Wait for user input
     input("Press Enter to return to the main menu...")
-
-def download_and_install_gdrive(callback=None):
-    # Define paths
-    download_url = "https://github.com/glotlabs/gdrive/releases/download/3.9.1/gdrive_linux-x64.tar.gz"
-    download_path = "/tmp/gdrive.tar.gz"
-    extract_dir = "/tmp/gdrive"
-
-    # Check if gdrive already exists in /usr/local/bin
-    if os.path.exists("/usr/local/bin/gdrive"):
-        message = "gdrive is already installed."
-        if callback: callback(message)
-        else: print(message)
-        return
-
-    steps = [
-        ("Downloading gdrive...", lambda: urllib.request.urlretrieve(download_url, download_path)),
-        ("Extracting gdrive...", lambda: tarfile.open(download_path, "r:gz").extractall(path=extract_dir)),
-        ("Moving gdrive to /usr/local/bin...", lambda: subprocess.run(["sudo", "mv", os.path.join(extract_dir, "gdrive"), "/usr/local/bin"])),
-        ("Changing permissions...", lambda: subprocess.run(["sudo", "chmod", "755", "/usr/local/bin/gdrive"])),
-        ("Cleaning up...", lambda: os.remove(download_path) or shutil.rmtree(extract_dir)),
-        ("Verifying installation...", lambda: subprocess.run(["gdrive", "account", "add"]))
-    ]
-
-    for step_message, step_action in steps:
-        if callback: callback(step_message)
-        else: print(step_message)
-        step_action()
-
-    message = "gdrive installed successfully."
-    if callback: callback(message)
-    else: print(message)
