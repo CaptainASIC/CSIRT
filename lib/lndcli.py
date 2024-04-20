@@ -165,7 +165,7 @@ def dry(config, callback=None):
         return finish_message
 
 
-def upload_to_drive(config, log_path, is_gui=False, callback=None):
+def upload_to_gdrive(config, log_path, is_gui=False, callback=None):
     # Retrieve remote drive name and folder path from the configuration
     remote_name = config.get('RemoteDrive', 'Name')
     base_remote_path = config.get('RemoteDrive', 'BasePath', fallback='')
