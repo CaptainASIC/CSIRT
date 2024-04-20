@@ -12,7 +12,7 @@ import tarfile
 import datetime
 import stat
 import sys
-from functions import compress_with_7zip, configure_directories, finish_task, play_start_sound, delete_prohibited_items, convert_seconds, APP_VERSION, BUILD_DATE, get_directory_size, convert_bytes
+from functions import compress_with_7zip, configure_directories, finish_task, play_start_sound, delete_prohibited_items, convert_seconds, APP_VERSION, BUILD_DATE, get_directory_size, convert_bytes, upload_to_cloud, run_command_with_privileges, generate_log_path
 from tkinter import messagebox
 
 # Get the directory where the script is located
@@ -99,22 +99,6 @@ def pre_soak(config, callback=None):
     else:
         return finish_message
 
-def can_use_pkexec():
-    # Simple check for graphical session; may need adjustment for accuracy
-    return "DISPLAY" in os.environ or "WAYLAND_DISPLAY" in os.environ
-
-def run_command_with_privileges(command):
-    if can_use_pkexec():
-        run_command = ["pkexec"] + command
-    else:
-        run_command = ["sudo"] + command
-    
-    try:
-        subprocess.run(run_command, check=True)
-        print(f"Command executed successfully: {' '.join(command)}")
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to execute command: {' '.join(command)}")
-
 def wash_drive(config, callback=None):
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
     
@@ -163,58 +147,6 @@ def dry(config, callback=None):
         callback(finish_message)
     else:
         return finish_message
-
-
-def upload_to_cloud(config, log_path, is_gui=False, callback=None):
-    # Retrieve remote drive name and folder path from the configuration
-    remote_name = config.get('RemoteDrive', 'RemoteName')
-    base_remote_path = config.get('RemoteDrive', 'BasePath', fallback='')
-
-    # Open log file to append
-    with open(log_path, "a") as log_file:
-        # Get a list of folders in the local destination directory
-        destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
-        folders = [folder for folder in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, folder))]
-
-        for folder in folders:
-            folder_path = os.path.join(destination_dir, folder)
-            remote_folder_path = os.path.join(base_remote_path, folder) if base_remote_path else folder
-
-            if is_gui:
-                # Use dialog box for GUI
-                user_decision = messagebox.askyesno("Confirm Upload", f"Do you want to upload \"{folder}\" to Drive?")
-            else:
-                # Use CLI input
-                user_decision = input(f"Do you want to upload \"{folder}\" to Drive? (y/n): ").lower() == 'y'
-            
-            if user_decision:
-                rclone_command = f"rclone copy \"{folder_path}\" \"{remote_name}:{remote_folder_path}\""
-                try:
-                    result = subprocess.run(rclone_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    log_file.write(f"Upload successful for {folder_path}\n")
-                    log_file.write(result.stdout + "\n")
-                    if is_gui:
-                        # Log success with GUI message
-                        messagebox.showinfo("Upload Successful", f"Upload successful for {folder_path}")
-                    else:
-                        # Log success in CLI
-                        print(f"Upload successful for {folder_path}")
-                except subprocess.CalledProcessError as e:
-                    log_file.write(f"Error uploading {folder_path}: {e.stderr}\n")
-                    if is_gui:
-                        messagebox.showerror("Error", f"Error uploading {folder_path}: {e.stderr}")
-                    else:
-                        print(f"Error uploading {folder_path}: {e.stderr}")
-                        input("Press Enter to continue...") 
-    if callback:
-        callback("Upload process has been completed.")
-
-# Function to generate log paths could also be here or imported if defined elsewhere
-def generate_log_path(service_name):
-    current_datetime = datetime.datetime.now()
-    log_filename = f"{service_name}_{current_datetime.strftime('%Y-%m-%d-%H-%M-%S')}.log"
-    return Path(script_dir) / "../log" / log_filename
-
 
 def tidy_up(config, log_file, is_gui=False, callback=None):
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')

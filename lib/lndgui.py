@@ -2,9 +2,9 @@ import tkinter as tk
 from tkinter import messagebox, simpledialog
 from PIL import Image, ImageTk
 from tkinter.font import Font
-from lndcli import bleach_mode, pre_soak, wash_drive, dry, upload_to_cloud, generate_log_path, tidy_up
+from lndcli import bleach_mode, pre_soak, wash_drive, dry, tidy_up
 import configparser
-from functions import compress_with_7zip, finish_task
+from functions import compress_with_7zip, finish_task, upload_to_cloud, generate_log_path
 
 
 class LaundryServicePage(tk.Frame):
