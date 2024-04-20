@@ -49,7 +49,7 @@ Before installing CSIRT Toolbox, make sure your system has the required dependen
 
    ```bash
    sudo apt update
-   sudo apt install clamav p7zip python3 python3-pip python3-tk policykit-1 autoconf automake libtool shtool libssl-dev libnl-3-dev libnl-genl-3-dev ethtool rfkill lsusb lspci build-essential -y
+   sudo apt install clamav p7zip python3 python3-pip python3-tk policykit-1 autoconf automake libtool shtool libssl-dev libnl-3-dev libnl-genl-3-dev ethtool rfkill lsusb lspci build-essential rclone -y
    ```
 
    #### Arch-based Systems (Arch Linux, Manjaro)

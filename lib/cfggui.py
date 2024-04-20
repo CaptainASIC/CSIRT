@@ -3,7 +3,6 @@ from PIL import Image, ImageTk
 from tkinter.font import Font
 from tkinter import messagebox
 import configparser
-from functions import download_and_install_gdrive
 
 class ConfigPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -39,9 +38,6 @@ class ConfigPage(tk.Frame):
             self.canvas.create_window(640, 160 + i*60, window=label)
             self.canvas.create_window(640, 190 + i*60, window=entry)
 
-        # Adding the Install G-Drive Button
-        gdrive_btn = tk.Button(self, text="Install G-Drive", font=text_font, bg='steelblue4', fg='white', command=self.install_gdrive)
-        self.canvas.create_window(640, 450, window=gdrive_btn)
 
         save_btn = tk.Button(self, text="Save Config", font=text_font, bg='steelblue4', fg='white', command=self.save_config)
         self.canvas.create_window(640, 500, window=save_btn)
@@ -56,15 +52,6 @@ class ConfigPage(tk.Frame):
             self.config.write(configfile)
         
         messagebox.showinfo("Configuration Saved", "Your configuration has been successfully saved.", parent=self)
-
-    def gdrive_installation_callback(self, message):
-        messagebox.showinfo("G-Drive Installation", message, parent=self)
-
-    def install_gdrive(self):
-        # Use a separate thread if the installation process is blocking the GUI
-        from threading import Thread
-        installation_thread = Thread(target=download_and_install_gdrive, args=(self.gdrive_installation_callback,))
-        installation_thread.start()
 
     def quit_app(self):
         self.controller.quit()
