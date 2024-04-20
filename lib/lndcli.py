@@ -392,7 +392,7 @@ def main():
             dry(config)  # Pass config object to dry function
         elif choice == '5':
             log_path = generate_log_path("fold")
-            download_and_install_gdrive()
+            #download_and_install_gdrive()
             upload_to_gdrive(config, log_path, is_gui=False, callback=None)
         elif choice == '6':
             log_path = generate_log_path("tidy")

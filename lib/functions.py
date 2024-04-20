@@ -12,7 +12,7 @@ import tarfile
 import datetime
 import stat
 
-APP_VERSION = "3.0.0"
+APP_VERSION = "3.0.0 Beta"
 BUILD_DATE = "Apr 2024"
 
 script_dir = Path(__file__).resolve().parent
