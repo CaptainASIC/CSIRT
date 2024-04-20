@@ -49,24 +49,24 @@ Before installing CSIRT Toolbox, make sure your system has the required dependen
 
    ```bash
    sudo apt update
-   sudo apt install clamav p7zip python3 python3-pip python3-tk policykit-1 autoconf automake libtool shtool libssl-dev libnl-3-dev libnl-genl-3-dev ethtool rfkill lsusb lspci build-essential rclone -y
+   sudo apt install clamav p7zip-full python3 python3-pip python3-tk policykit-1 autoconf automake libtool shtool libssl-dev libnl-3-dev libnl-genl-3-dev ethtool rfkill lsusb lspci build-essential rclone -y
    ```
 
    #### Arch-based Systems (Arch Linux, Manjaro)
    ```bash
-   sudo pacman -Syu clamav p7zip python python-pip tk polkit autoconf automake libtool shtool openssl libnl ethtool rfkill usbutils pciutils base-devel rclone --noconfirm
+   sudo pacman -Syu clamav p7zip-full python python-pip tk polkit autoconf automake libtool shtool openssl libnl ethtool rfkill usbutils pciutils base-devel rclone --noconfirm
    ```
    ### RHEL-based Systems (CentOS, Fedora)
    ```bash
    sudo yum update
    sudo yum install epel-release -y
-   sudo yum install clamav p7zip python3 python3-pip tkinter polkit autoconf automake libtool shtool openssl-devel libnl3-devel ethtool rfkill usbutils pciutils gcc-c++ rclone -y
+   sudo yum install clamav p7zip-full python3 python3-pip tkinter polkit autoconf automake libtool shtool openssl-devel libnl3-devel ethtool rfkill usbutils pciutils gcc-c++ rclone -y
    ```
 
 ### Apple macOS (may not work)
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   brew install clamav p7zip python3 autoconf automake libtool openssl shtool pkg-config hwloc pcre sqlite3 libpcap cmocka rclone
+   brew install clamav p7zip-full python3 autoconf automake libtool openssl shtool pkg-config hwloc pcre sqlite3 libpcap cmocka rclone
    ```
 
 
