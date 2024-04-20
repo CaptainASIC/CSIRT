@@ -54,19 +54,19 @@ Before installing CSIRT Toolbox, make sure your system has the required dependen
 
    #### Arch-based Systems (Arch Linux, Manjaro)
    ```bash
-   sudo pacman -Syu clamav p7zip python python-pip tk polkit autoconf automake libtool shtool openssl libnl ethtool rfkill usbutils pciutils base-devel --noconfirm
+   sudo pacman -Syu clamav p7zip python python-pip tk polkit autoconf automake libtool shtool openssl libnl ethtool rfkill usbutils pciutils base-devel rclone --noconfirm
    ```
    ### RHEL-based Systems (CentOS, Fedora)
    ```bash
    sudo yum update
    sudo yum install epel-release -y
-   sudo yum install clamav p7zip python3 python3-pip tkinter polkit autoconf automake libtool shtool openssl-devel libnl3-devel ethtool rfkill usbutils pciutils gcc-c++ -y
+   sudo yum install clamav p7zip python3 python3-pip tkinter polkit autoconf automake libtool shtool openssl-devel libnl3-devel ethtool rfkill usbutils pciutils gcc-c++ rclone -y
    ```
 
 ### Apple macOS (may not work)
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   brew install clamav p7zip python3 autoconf automake libtool openssl shtool pkg-config hwloc pcre sqlite3 libpcap cmocka
+   brew install clamav p7zip python3 autoconf automake libtool openssl shtool pkg-config hwloc pcre sqlite3 libpcap cmocka rclone
    ```
 
 
