@@ -27,7 +27,8 @@ class ConfigPage(tk.Frame):
         config_fields = [
             ("Source Directory", "Directories", "sourcedirectory", "red4"),
             ("Destination Directory", "Directories", "destinationdirectory", "dark green"),
-            ("Google Drive Folder ID", "GoogleDrive", "FolderID", None)  # No special color for this field
+            ("Cloud Storage Name", "RemoteDrive", "RemoteName", None),  # No special color for this field
+            ("Cloud Storage Folder", "RemoteDrive", "BasePath", None)  # No special color for this field
         ]
         
         for i, (label_text, section, option, bg_color) in enumerate(config_fields, start=1):
