@@ -84,7 +84,7 @@ class LaundryServicePage(tk.Frame):
         elif name == "Fold":
             self.run_fold_service()
         elif name == "Tidy up":
-            self.run_fold_service()
+            self.run_tidy_up_service()
         else:
             print(f"Handling service: {name}")
             # Add cases for other services as needed.

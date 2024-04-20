@@ -21,7 +21,6 @@ script_dir = Path(__file__).resolve().parent
 # Initialize pygame audio mixer
 pygame.mixer.init()
 
-
 def bleach_mode(destination_name, source_dir, destination_dir, callback=None):
     if not destination_name:
         return "Error: Destination directory name is required."
@@ -65,7 +64,6 @@ def run_bleach_mode_cli():
         print(result_message)
     else:
         print("Operation canceled, destination name was not provided.")
-
 
 def pre_soak(config, callback=None):
     destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
@@ -192,7 +190,6 @@ def tidy_up(config, log_file, is_gui=False, callback=None):
         callback(finish_message)
     else:
         return finish_message
-
 
 def display_menu():
     print("Menu:")
