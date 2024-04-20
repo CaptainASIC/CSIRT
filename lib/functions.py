@@ -158,8 +158,8 @@ def finish_task(message):
 
 def upload_to_cloud(config, log_path, is_gui=False, callback=None):
     # Retrieve remote drive name and folder path from the configuration
-    remote_name = config.get('RemoteDrive', 'RemoteName')
-    base_remote_path = config.get('RemoteDrive', 'BasePath', fallback='')
+    remote_name = config.get('RemoteDrive', 'remotename')
+    base_remote_path = config.get('RemoteDrive', 'basepath', fallback='')
 
     # Open log file to append
     with open(log_path, "a") as log_file:
