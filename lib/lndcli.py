@@ -208,45 +208,45 @@ def upload_to_gdrive(config, log_path, is_gui=False, callback=None):
     if callback:
         callback("Upload process has been completed.")
 
-''' using gdrive tool
-def upload_to_gdrive(config, log_path, is_gui=False, callback=None):
-    folder_id = config.get('GoogleDrive', 'FolderID')
-    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
-    # Open log file to append
-    with open(log_path, "a") as log_file:
-        # Get a list of folders in the destination directory
-        folders = [folder for folder in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, folder))]
 
-        for folder in folders:
-            folder_path = os.path.join(destination_dir, folder)
-            if is_gui:
-                # Use dialog box for GUI
-                user_decision = messagebox.askyesno("Confirm Upload", f"Do you want to upload \"{folder}\" to Google Drive?")
-            else:
-                # Use CLI input
-                user_decision = input(f"Do you want to upload \"{folder}\" to Google Drive? (y/n): ").lower() == 'y'
-            
-            if user_decision:
-                gdrive_command = f"gdrive files upload --recursive --parent {folder_id} \"{folder_path}\""
-                try:
-                    result = subprocess.run(gdrive_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    log_file.write(f"Upload successful for {folder_path}\n")
-                    log_file.write(result.stdout + "\n")
-                    if is_gui:
-                        # Log success with GUI message
-                        messagebox.showinfo("Upload Successful", f"Upload successful for {folder_path}")
-                    else:
-                        # Log success in CLI
-                        print(f"Upload successful for {folder_path}")
-                except subprocess.CalledProcessError as e:
-                    log_file.write(f"Error uploading {folder_path}: {e.stderr}\n")
-                    if is_gui:
-                        messagebox.showerror("Error", f"Error uploading {folder_path}: {e.stderr}")
-                    else:
-                        print(f"Error uploading {folder_path}: {e.stderr}")
-    if callback:
-        callback("Folding has been completed.")
-'''
+#def upload_to_gdrive(config, log_path, is_gui=False, callback=None):
+#    folder_id = config.get('GoogleDrive', 'FolderID')
+#    destination_dir = config.get('Directories', 'DestinationDirectory', fallback='/dev/null')
+#    # Open log file to append
+#    with open(log_path, "a") as log_file:
+#        # Get a list of folders in the destination directory
+#        folders = [folder for folder in os.listdir(destination_dir) if os.path.isdir(os.path.join(destination_dir, folder))]
+#
+#        for folder in folders:
+#            folder_path = os.path.join(destination_dir, folder)
+#            if is_gui:
+#                # Use dialog box for GUI
+#                user_decision = messagebox.askyesno("Confirm Upload", f"Do you want to upload \"{folder}\" to Google Drive?")
+#            else:
+#                # Use CLI input
+#                user_decision = input(f"Do you want to upload \"{folder}\" to Google Drive? (y/n): ").lower() == 'y'
+#            
+#            if user_decision:
+#                gdrive_command = f"gdrive files upload --recursive --parent {folder_id} \"{folder_path}\""
+#                try:
+#                    result = subprocess.run(gdrive_command, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#                    log_file.write(f"Upload successful for {folder_path}\n")
+#                    log_file.write(result.stdout + "\n")
+#                    if is_gui:
+#                        # Log success with GUI message
+#                        messagebox.showinfo("Upload Successful", f"Upload successful for {folder_path}")
+#                    else:
+#                        # Log success in CLI
+#                        print(f"Upload successful for {folder_path}")
+#                except subprocess.CalledProcessError as e:
+#                    log_file.write(f"Error uploading {folder_path}: {e.stderr}\n")
+#                    if is_gui:
+#                        messagebox.showerror("Error", f"Error uploading {folder_path}: {e.stderr}")
+#                    else:
+#                        print(f"Error uploading {folder_path}: {e.stderr}")
+#    if callback:
+#        callback("Folding has been completed.")
+
 
 
 
