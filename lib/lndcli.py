@@ -205,6 +205,7 @@ def upload_to_gdrive(config, log_path, is_gui=False, callback=None):
                         messagebox.showerror("Error", f"Error uploading {folder_path}: {e.stderr}")
                     else:
                         print(f"Error uploading {folder_path}: {e.stderr}")
+                        input("Press Enter to continue...") 
     if callback:
         callback("Upload process has been completed.")
 
