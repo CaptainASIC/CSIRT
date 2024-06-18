@@ -52,9 +52,9 @@ class LogVoodooPage(tk.Frame):
     def setup_control_buttons(self, button_font):
         # Placeholder for control buttons
         control_button_config = {
-            'Configure': (150, 700),
-            'Back': (590, 700),
-            'Exit': (1030, 700)
+            'Configure': (640, 760),
+            'Back': (120, 760),
+            'Exit': (1160, 760)
         }
         for name, (x, y) in control_button_config.items():
             button = tk.Button(self, text=name, font=button_font, bg='gray', fg='black', command=lambda n=name: self.handle_control(n))

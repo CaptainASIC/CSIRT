@@ -68,7 +68,7 @@ class StartPage(tk.Frame):
         
         # Create a Log Voodoo button
         log_voodoo_button = tk.Button(self, text="Log Voodoo", font=button_font, command=lambda: controller.show_frame("LogVoodooPage"))
-        self.canvas.create_window(540, 700, window=log_voodoo_button)
+        self.canvas.create_window(640, 700, window=log_voodoo_button)
 
         # Create a Wifi Shark button
         wifi_shark_button = tk.Button(self, text="WiFi Shark", font=button_font, command=lambda: controller.show_frame("WifiSharkPage"))
