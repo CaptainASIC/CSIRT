@@ -1,7 +1,7 @@
 import tkinter as tk
+from tkinter import messagebox, filedialog
 from PIL import Image, ImageTk
 from tkinter.font import Font
-from tkinter import messagebox
 import configparser
 
 class ConfigPage(tk.Frame):
@@ -25,23 +25,27 @@ class ConfigPage(tk.Frame):
         text_font = Font(family="Helvetica", size=16)
         
         config_fields = [
-            ("Source Directory", "Directories", "sourcedirectory", "red4"),
-            ("Destination Directory", "Directories", "destinationdirectory", "dark green"),
-            ("Cloud Storage Name", "RemoteDrive", "RemoteName", None),  # No special color for this field
-            ("Cloud Storage Folder", "RemoteDrive", "BasePath", None),  # No special color for this field
-            ("Patterns File", "Settings", "patterns_file", None),  # New field for patterns file
-            ("Log Search Directory", "Settings", "log_directory", None)  # New field for log search directory
+            ("Source Directory", "Directories", "sourcedirectory", "red4", self.browse_directory),
+            ("Destination Directory", "Directories", "destinationdirectory", "dark green", self.browse_directory),
+            ("Cloud Storage Name", "RemoteDrive", "RemoteName", None, None),  # No special color or browse button
+            ("Cloud Storage Folder", "RemoteDrive", "BasePath", None, None),  # No special color or browse button
+            ("Patterns File", "Settings", "patterns_file", None, self.browse_file),  # New field for patterns file
+            ("Log Search Directory", "Settings", "log_directory", None, self.browse_directory)  # New field for log search directory
         ]
         
         self.entries = {}  # Dictionary to store entry widgets
         
-        for i, (label_text, section, option, bg_color) in enumerate(config_fields, start=1):
+        for i, (label_text, section, option, bg_color, browse_command) in enumerate(config_fields, start=1):
             label = tk.Label(self, text=label_text, font=text_font, bg='steelblue4', fg='white')
             entry_var = tk.StringVar(value=self.config.get(section, option, fallback=""))
             entry = tk.Entry(self, textvariable=entry_var, font=text_font, width=40, bg=bg_color if bg_color else 'white')
             
             self.canvas.create_window(640, 160 + i*60, window=label)
             self.canvas.create_window(640, 190 + i*60, window=entry)
+            
+            if browse_command:
+                browse_button = tk.Button(self, text="Browse", command=lambda e=entry_var, c=browse_command: c(e))
+                self.canvas.create_window(920, 190 + i*60, window=browse_button)
             
             self.entries[(section, option)] = entry_var  # Store the entry variable for saving
 
@@ -52,6 +56,16 @@ class ConfigPage(tk.Frame):
         exit_btn = tk.Button(self, text="Exit", font=text_font, bg='steelblue4', fg='white', command=self.quit_app)
         self.canvas.create_window(120, 760, window=back_btn)
         self.canvas.create_window(1160, 760, window=exit_btn)
+
+    def browse_directory(self, entry_var):
+        directory = filedialog.askdirectory()
+        if directory:
+            entry_var.set(directory)
+
+    def browse_file(self, entry_var):
+        filename = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
+        if filename:
+            entry_var.set(filename)
 
     def save_config(self):
         for (section, option), entry_var in self.entries.items():
