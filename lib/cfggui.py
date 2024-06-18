@@ -52,7 +52,7 @@ class ConfigPage(tk.Frame):
         save_btn = tk.Button(self, text="Save Config", font=text_font, bg='steelblue4', fg='white', command=self.save_config)
         self.canvas.create_window(640, 600, window=save_btn)
 
-        back_btn = tk.Button(self, text="← Back", font=text_font, bg='steelblue4', fg='white', command=lambda: self.controller.show_frame("LaundryServicePage"))
+        back_btn = tk.Button(self, text="← Back", font=text_font, bg='steelblue4', fg='white', command=lambda: self.controller.show_frame("StartPage"))
         exit_btn = tk.Button(self, text="Exit", font=text_font, bg='steelblue4', fg='white', command=self.quit_app)
         self.canvas.create_window(120, 760, window=back_btn)
         self.canvas.create_window(1160, 760, window=exit_btn)

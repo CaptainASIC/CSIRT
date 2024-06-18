@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox, simpledialog, filedialog
+from tkinter import messagebox, simpledialog, filedialog, Toplevel, Label, Button
 from PIL import Image, ImageTk
 from tkinter.font import Font
 import configparser
@@ -141,15 +141,18 @@ class LogVoodooPage(tk.Frame):
         most_common_pattern, pattern_match_count = pattern_counter.most_common(1)[0]
 
         self.status_label.config(text="Pattern count completed.")
-        messagebox.showinfo(
-            "Success",
-            f"Pattern count completed. Results saved to {output_file}\n\n"
-            f"Total Pattern Matches: {total_pattern_matches}\n"
-            f"Most common Pattern matched: {most_common_pattern} ({pattern_match_count} hits)\n"            
-            f"Total Unique Pattern Matches: {total_unique_pattern_matches}\n"
-            f"Highest Match Date: {highest_match_date.strftime('%Y-%m-%d')} ({highest_match_count} matches)\n"
-            f"Most common Source: {most_common_source} ({source_count} entries)\n"
-            f"Most common Destination: {most_common_destination} ({destination_count} entries)"
+        self.show_success_dialog(
+            output_file,
+            total_pattern_matches,
+            total_unique_pattern_matches,
+            highest_match_date,
+            highest_match_count,
+            most_common_source,
+            source_count,
+            most_common_destination,
+            destination_count,
+            most_common_pattern,
+            pattern_match_count
         )
 
     def process_log_file(self, file, patterns, results, date_counter, source_counter, destination_counter, pattern_counter, unique_patterns_matched):
@@ -180,6 +183,24 @@ class LogVoodooPage(tk.Frame):
                     source_counter[source_ip] += 1
                     destination_counter[destination_ip] += 1
                     pattern_counter[pattern] += 1
+
+    def show_success_dialog(self, output_file, total_pattern_matches, total_unique_pattern_matches, highest_match_date, highest_match_count, most_common_source, source_count, most_common_destination, destination_count, most_common_pattern, pattern_match_count):
+        success_dialog = Toplevel(self)
+        success_dialog.title("Results")
+        success_dialog.geometry("300x300")
+
+        message = (
+            f"Pattern count completed. Results saved to {output_file}\n\n"
+            f"Total Pattern Matches: {total_pattern_matches}\n"
+            f"Total Unique Pattern Matches: {total_unique_pattern_matches}\n"
+            f"Highest Match Date: {highest_match_date.strftime('%Y-%m-%d')} ({highest_match_count} matches)\n\n"
+            f"Most common Source: {most_common_source} ({source_count} entries)\n"
+            f"Most common Destination: {most_common_destination} ({destination_count} entries)\n\n"
+            f"Most common Pattern matched: {most_common_pattern} ({pattern_match_count} hits)"
+        )
+
+        Label(success_dialog, text=message, wraplength=280, justify="left").pack(pady=20)
+        Button(success_dialog, text="OK", command=success_dialog.destroy).pack(pady=10)
 
     def setup_control_buttons(self):
         text_font = Font(family="Helvetica", size=16)
