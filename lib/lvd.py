@@ -36,7 +36,7 @@ class LogVoodooPage(tk.Frame):
         # Adding legend text
         legend_text = "What do you want the Witch Doctor to Do?"
         text_bg = self.canvas.create_rectangle(100, 100, 1180, 150, fill='black', outline='black')
-        self.canvas.create_text(640, 110, text=legend_text, font=Font(family="Helvetica", size=30, weight="bold"), fill="magenta2")
+        self.canvas.create_text(640, 115, text=legend_text, font=Font(family="Helvetica", size=30, weight="bold"), fill="magenta2")
 
     def setup_pattern_counter_button(self):
         button_font = Font(family="Helvetica", size=16)  # Adjust font size to fit the button
@@ -54,15 +54,29 @@ class LogVoodooPage(tk.Frame):
         self.pattern_file_entry = tk.Entry(self.pattern_counter_window)
         self.pattern_file_entry.grid(row=0, column=1, padx=10, pady=10)
         self.pattern_file_entry.insert(0, "patterns.txt")
+        tk.Button(self.pattern_counter_window, text="Browse", command=self.browse_pattern_file).grid(row=0, column=2, padx=10, pady=10)
 
         # Log directory entry
         tk.Label(self.pattern_counter_window, text="Log Directory:").grid(row=1, column=0, padx=10, pady=10)
         self.log_dir_entry = tk.Entry(self.pattern_counter_window)
         self.log_dir_entry.grid(row=1, column=1, padx=10, pady=10)
+        tk.Button(self.pattern_counter_window, text="Browse", command=self.browse_log_directory).grid(row=1, column=2, padx=10, pady=10)
 
         # Count button
         count_button = tk.Button(self.pattern_counter_window, text="Count", command=self.count_patterns)
-        count_button.grid(row=2, columnspan=2, pady=10)
+        count_button.grid(row=2, columnspan=3, pady=10)
+
+    def browse_pattern_file(self):
+        filename = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
+        if filename:
+            self.pattern_file_entry.delete(0, tk.END)
+            self.pattern_file_entry.insert(0, filename)
+
+    def browse_log_directory(self):
+        directory = filedialog.askdirectory()
+        if directory:
+            self.log_dir_entry.delete(0, tk.END)
+            self.log_dir_entry.insert(0, directory)
 
     def count_patterns(self):
         pattern_file = self.pattern_file_entry.get()
@@ -85,7 +99,7 @@ class LogVoodooPage(tk.Frame):
                     file_path = os.path.join(root, file)
                     with open(file_path, 'r') as f:
                         for line in f:
-                            date_str = line[:10]  # Assuming the date is in the first 10 characters
+                            date_str = line[:13]  # Assuming the date is in the first 13 characters
                             try:
                                 date = datetime.strptime(date_str, "%Y-%m-%d")
                             except ValueError:
