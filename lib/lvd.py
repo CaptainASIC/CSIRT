@@ -53,13 +53,14 @@ class LogVoodooPage(tk.Frame):
         tk.Label(self.pattern_counter_window, text="Pattern File:").grid(row=0, column=0, padx=10, pady=10)
         self.pattern_file_entry = tk.Entry(self.pattern_counter_window)
         self.pattern_file_entry.grid(row=0, column=1, padx=10, pady=10)
-        self.pattern_file_entry.insert(0, "patterns.txt")
+        self.pattern_file_entry.insert(0, self.config.get('Settings', 'patterns_file', fallback='patterns.txt'))
         tk.Button(self.pattern_counter_window, text="Browse", command=self.browse_pattern_file).grid(row=0, column=2, padx=10, pady=10)
 
         # Log directory entry
         tk.Label(self.pattern_counter_window, text="Log Directory:").grid(row=1, column=0, padx=10, pady=10)
         self.log_dir_entry = tk.Entry(self.pattern_counter_window)
         self.log_dir_entry.grid(row=1, column=1, padx=10, pady=10)
+        self.log_dir_entry.insert(0, self.config.get('Settings', 'log_directory', fallback=''))
         tk.Button(self.pattern_counter_window, text="Browse", command=self.browse_log_directory).grid(row=1, column=2, padx=10, pady=10)
 
         # Count button
@@ -128,7 +129,6 @@ class LogVoodooPage(tk.Frame):
 
         self.status_label.config(text="Pattern count completed.")
         messagebox.showinfo("Success", f"Pattern count completed. Results saved to {output_file}")
-        self.pattern_counter_window.destroy()
 
     def process_log_file(self, file, patterns, results):
         for line in file:
@@ -164,16 +164,27 @@ class LogVoodooPage(tk.Frame):
         self.canvas.create_window(1160, 760, window=exit_btn)
 
         # "Configure" button
-        configure_btn = tk.Button(self, text="Configure", font=text_font, bg='steelblue4', fg='white', command=self.configure_service)
+        configure_btn = tk.Button(self, text="Configure", font=text_font, bg='steelblue4', fg='white', command=lambda: self.controller.show_frame("ConfigPage"))
         self.canvas.create_window(640, 700, window=configure_btn)  # Adjusted position
-
-    def configure_service(self):
-        # Placeholder for configure service logic
-        messagebox.showinfo("Configure", "Configuration window would appear here.")
 
 # Main application setup for testing purposes
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Log Voodoo")
-    LogVoodooPage(root, None).pack(fill="both", expand=True)
+
+    # Define and configure the controller
+    controller = root
+    controller.frames = {}
+
+    for F in (LogVoodooPage, ConfigPage):
+        page_name = F.__name__
+        frame = F(parent=controller, controller=controller)
+        controller.frames[page_name] = frame
+        frame.grid(row=0, column=0, sticky="nsew")
+
+    controller.show_frame = lambda name: controller.frames[name].tkraise()
+
+    # Show the initial frame
+    controller.show_frame("LogVoodooPage")
+
     root.mainloop()
