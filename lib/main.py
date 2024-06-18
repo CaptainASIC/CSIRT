@@ -64,7 +64,7 @@ class StartPage(tk.Frame):
 
         # Create a Laundry Service button
         laundry_service_button = tk.Button(self, text="Laundry Service", font=button_font, command=lambda: controller.show_frame("LaundryServicePage"))
-        self.canvas.create_window(540, 700, window=laundry_service_button)
+        self.canvas.create_window(500, 700, window=laundry_service_button)
         
         # Create a Log Voodoo button
         log_voodoo_button = tk.Button(self, text="Log Voodoo", font=button_font, command=lambda: controller.show_frame("LogVoodooPage"))
@@ -72,7 +72,7 @@ class StartPage(tk.Frame):
 
         # Create a Wifi Shark button
         wifi_shark_button = tk.Button(self, text="WiFi Shark", font=button_font, command=lambda: controller.show_frame("WifiSharkPage"))
-        self.canvas.create_window(740, 700, window=wifi_shark_button)
+        self.canvas.create_window(780, 700, window=wifi_shark_button)
 
 
         # Create a Quit button with bold text
