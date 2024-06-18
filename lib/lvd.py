@@ -114,8 +114,8 @@ class LogVoodooPage(tk.Frame):
 
         # Write results to CSV
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_file = f"outputs/voodoo_{timestamp}.csv"
-        os.makedirs("outputs", exist_ok=True)
+        output_file = f"log/voodoo_{timestamp}.csv"
+        os.makedirs("log", exist_ok=True)
         with open(output_file, 'w', newline='') as csvfile:
             fieldnames = ['Pattern', 'Date', 'Count']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
