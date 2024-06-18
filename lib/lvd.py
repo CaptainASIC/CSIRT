@@ -6,6 +6,7 @@ import configparser
 import csv
 import os
 from datetime import datetime
+from collections import Counter
 
 class LogVoodooPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -96,6 +97,10 @@ class LogVoodooPage(tk.Frame):
 
         results = {pattern: {} for pattern in patterns}
         total_matches = 0
+        date_counter = Counter()
+        source_counter = Counter()
+        destination_counter = Counter()
+        pattern_counter = Counter()
 
         # Process log files
         for root, _, files in os.walk(log_dir):
@@ -106,10 +111,10 @@ class LogVoodooPage(tk.Frame):
                     self.pattern_counter_window.update_idletasks()
                     try:
                         with open(file_path, 'r', encoding='utf-8') as f:
-                            self.process_log_file(f, patterns, results)
+                            self.process_log_file(f, patterns, results, date_counter, source_counter, destination_counter, pattern_counter)
                     except UnicodeDecodeError:
                         with open(file_path, 'r', encoding='latin-1') as f:
-                            self.process_log_file(f, patterns, results)
+                            self.process_log_file(f, patterns, results, date_counter, source_counter, destination_counter, pattern_counter)
                     self.status_label.config(text=f"Completed {file}")
                     self.pattern_counter_window.update_idletasks()
 
@@ -125,12 +130,26 @@ class LogVoodooPage(tk.Frame):
                 for date, ips in dates.items():
                     for ip, count in ips.items():
                         writer.writerow({'Pattern': pattern, 'Date': date.strftime("%Y-%m-%d"), 'Source IP': ip[0], 'Destination IP': ip[1], 'Count': count})
-            writer.writerow({'Pattern': 'Total', 'Date': '', 'Source IP': '', 'Destination IP': '', 'Count': total_matches})
+
+        # Analyze the results
+        total_pattern_matches = sum(pattern_counter.values())
+        highest_match_date, highest_match_count = date_counter.most_common(1)[0]
+        most_common_source, source_count = source_counter.most_common(1)[0]
+        most_common_destination, destination_count = destination_counter.most_common(1)[0]
+        most_common_pattern, pattern_match_count = pattern_counter.most_common(1)[0]
 
         self.status_label.config(text="Pattern count completed.")
-        messagebox.showinfo("Success", f"Pattern count completed. Results saved to {output_file}")
+        messagebox.showinfo(
+            "Success",
+            f"Pattern count completed. Results saved to {output_file}\n\n"
+            f"Total Pattern Matches: {total_pattern_matches}\n"
+            f"Highest Match Date: {highest_match_date.strftime('%Y-%m-%d')} ({highest_match_count} matches)\n"
+            f"Most common Source: {most_common_source} ({source_count} entries)\n"
+            f"Most common Destination: {most_common_destination} ({destination_count} entries)\n"
+            f"Most common Pattern matched: {most_common_pattern} ({pattern_match_count} hits)"
+        )
 
-    def process_log_file(self, file, patterns, results):
+    def process_log_file(self, file, patterns, results, date_counter, source_counter, destination_counter, pattern_counter):
         for line in file:
             date_str = line[1:12]  # Assuming the date is in the format [dd/Mon/yyyy]
             try:
@@ -152,6 +171,12 @@ class LogVoodooPage(tk.Frame):
                     if (source_ip, destination_ip) not in results[pattern][date]:
                         results[pattern][date][(source_ip, destination_ip)] = 0
                     results[pattern][date][(source_ip, destination_ip)] += 1
+                    total_matches = results[pattern][date][(source_ip, destination_ip)]
+
+                    date_counter[date] += 1
+                    source_counter[source_ip] += 1
+                    destination_counter[destination_ip] += 1
+                    pattern_counter[pattern] += 1
 
     def setup_control_buttons(self):
         text_font = Font(family="Helvetica", size=16)
