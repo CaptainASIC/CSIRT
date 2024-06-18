@@ -14,6 +14,11 @@ Provides various functions to clean, sanitize, and manage data on drives.
 - **Fold:** Uploads data to a configured remote storage using rclone.
 - **Tidy Up:** Compresses destination folders and deletes the original folders.
 
+### Log Voodoo
+A set of tools for scrubbing and coorelating logs, providing detailed statistics about the matches.
+
+- **Pattern Counter:** Counts the number of matches of each pattern per day from logs with timestamps. Provides statistics including total pattern matches, total unique pattern matches, highest match date, most common source IP, most common destination IP, and most common pattern matched.
+
 ### Wifi Shark
 A network monitoring and analysis tool for observing data flows and detecting anomalies in network traffic.
 
@@ -92,6 +97,8 @@ The `config.ini` file in the `cfg` directory allows you to configure the followi
 - RemoteName: This should match the name of the remote as configured in rclone.
 - BasePath: This is the path within your remote storage where files will be uploaded. This path should already exist unless your rclone configuration allows for dynamic creation of directories. This could be set to a path like "MyFolder/SubFolder" or even left blank to copy directly into the root of the remote.
 - WLAN Interface: The interface you want to use for WiFi Shark tools.
+- Patterns file: The file containing patterns to search for in log files.
+- Log directory: The directory containing the log files to be analyzed.
 
 The `extensions.list`, `prohibited.files`, and `prohibited.dirs` files can also be configured and tailored as necessary based on your own findings, policies, or preferences.
 

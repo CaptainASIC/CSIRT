@@ -13,7 +13,7 @@ import datetime
 import stat
 from tkinter import messagebox, simpledialog
 
-APP_VERSION = "3.0.5"
+APP_VERSION = "3.1.0"
 BUILD_DATE = "Jun 2024"
 
 script_dir = Path(__file__).resolve().parent
