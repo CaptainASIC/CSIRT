@@ -128,6 +128,7 @@ class LogVoodooPage(tk.Frame):
 
         self.status_label.config(text="Pattern count completed.")
         messagebox.showinfo("Success", f"Pattern count completed. Results saved to {output_file}")
+        self.pattern_counter_window.destroy()
 
     def process_log_file(self, file, patterns, results):
         for line in file:
