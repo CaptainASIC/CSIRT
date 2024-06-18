@@ -192,7 +192,7 @@ class LogVoodooPage(tk.Frame):
         message = (
             f"Pattern count completed.\nResults saved to {output_file}\n\n"
             f"Total Pattern Matches: {total_pattern_matches}\n"
-            f"Total Unique Pattern Matches: {total_unique_pattern_matches}\n"
+            f"Total Unique Pattern Matches: {total_unique_pattern_matches}\n\n"
             f"Highest Match Date: {highest_match_date.strftime('%Y-%m-%d')}\n({highest_match_count} matches)\n\n"
             f"Most common Source: {most_common_source} ({source_count} entries)\n"
             f"Most common Destination: {most_common_destination} ({destination_count} entries)\n\n"
