@@ -5,7 +5,7 @@ from lndgui import LaundryServicePage
 from cfggui import ConfigPage
 from wifigui import WifiSharkPage
 from wificfg import WifiConfigPage
-from logVoodoo import LogVoodooPage
+from lvd import LogVoodooPage
 from functions import APP_VERSION
 
 class MainApp(tk.Tk):
