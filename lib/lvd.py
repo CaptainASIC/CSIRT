@@ -187,7 +187,7 @@ class LogVoodooPage(tk.Frame):
     def show_success_dialog(self, output_file, total_pattern_matches, total_unique_pattern_matches, highest_match_date, highest_match_count, most_common_source, source_count, most_common_destination, destination_count, most_common_pattern, pattern_match_count):
         success_dialog = Toplevel(self)
         success_dialog.title("Results")
-        success_dialog.geometry("400x300")
+        success_dialog.geometry("500x300")
 
         message = (
             f"Pattern count completed. Results saved to {output_file}\n\n"
