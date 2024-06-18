@@ -69,6 +69,8 @@ class ConfigPage(tk.Frame):
 
     def save_config(self):
         for (section, option), entry_var in self.entries.items():
+            if not self.config.has_section(section):
+                self.config.add_section(section)
             self.config.set(section, option, entry_var.get())
         
         with open('cfg/config.ini', 'w') as configfile:
