@@ -66,6 +66,10 @@ class LogVoodooPage(tk.Frame):
         count_button = tk.Button(self.pattern_counter_window, text="Count", command=self.count_patterns)
         count_button.grid(row=2, columnspan=3, pady=10)
 
+        # Status label for feedback
+        self.status_label = tk.Label(self.pattern_counter_window, text="")
+        self.status_label.grid(row=3, columnspan=3, pady=10)
+
     def browse_pattern_file(self):
         filename = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
         if filename:
@@ -97,26 +101,32 @@ class LogVoodooPage(tk.Frame):
             for file in files:
                 if file.endswith(".log"):
                     file_path = os.path.join(root, file)
+                    self.status_label.config(text=f"Processing {file}...")
+                    self.pattern_counter_window.update_idletasks()
                     try:
                         with open(file_path, 'r', encoding='utf-8') as f:
                             self.process_log_file(f, patterns, results)
                     except UnicodeDecodeError:
                         with open(file_path, 'r', encoding='latin-1') as f:
                             self.process_log_file(f, patterns, results)
+                    self.status_label.config(text=f"Completed {file}")
+                    self.pattern_counter_window.update_idletasks()
 
         # Write results to CSV
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_file = f"log/voodoo_{timestamp}.csv"
         os.makedirs("log", exist_ok=True)
         with open(output_file, 'w', newline='') as csvfile:
-            fieldnames = ['Pattern', 'Date', 'Count']
+            fieldnames = ['Pattern', 'Date', 'Source IP', 'Destination IP', 'Count']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             for pattern, dates in results.items():
-                for date, count in dates.items():
-                    writer.writerow({'Pattern': pattern, 'Date': date.strftime("%Y-%m-%d"), 'Count': count})
-            writer.writerow({'Pattern': 'Total', 'Date': '', 'Count': total_matches})
+                for date, ips in dates.items():
+                    for ip, count in ips.items():
+                        writer.writerow({'Pattern': pattern, 'Date': date.strftime("%Y-%m-%d"), 'Source IP': ip[0], 'Destination IP': ip[1], 'Count': count})
+            writer.writerow({'Pattern': 'Total', 'Date': '', 'Source IP': '', 'Destination IP': '', 'Count': total_matches})
 
+        self.status_label.config(text="Pattern count completed.")
         messagebox.showinfo("Success", f"Pattern count completed. Results saved to {output_file}")
 
     def process_log_file(self, file, patterns, results):
@@ -127,11 +137,20 @@ class LogVoodooPage(tk.Frame):
             except ValueError:
                 continue
 
+            # Extract source and destination IP addresses
+            parts = line.split()
+            if len(parts) < 3:
+                continue
+            source_ip = parts[2]
+            destination_ip = parts[3]
+
             for pattern in patterns:
                 if pattern in line:
                     if date not in results[pattern]:
-                        results[pattern][date] = 0
-                    results[pattern][date] += 1
+                        results[pattern][date] = {}
+                    if (source_ip, destination_ip) not in results[pattern][date]:
+                        results[pattern][date][(source_ip, destination_ip)] = 0
+                    results[pattern][date][(source_ip, destination_ip)] += 1
 
     def setup_control_buttons(self):
         text_font = Font(family="Helvetica", size=16)
