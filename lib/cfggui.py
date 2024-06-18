@@ -14,7 +14,7 @@ class ConfigPage(tk.Frame):
         self.canvas = tk.Canvas(self, width=1280, height=800)
         self.canvas.pack(fill="both", expand=True)
         
-        image_path = "img/lnd.png"
+        image_path = "img/csirt.png"
         img = Image.open(image_path).resize((1280, 800), Image.Resampling.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(img)
         self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image)
