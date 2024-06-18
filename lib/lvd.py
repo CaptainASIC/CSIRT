@@ -187,16 +187,16 @@ class LogVoodooPage(tk.Frame):
     def show_success_dialog(self, output_file, total_pattern_matches, total_unique_pattern_matches, highest_match_date, highest_match_count, most_common_source, source_count, most_common_destination, destination_count, most_common_pattern, pattern_match_count):
         success_dialog = Toplevel(self)
         success_dialog.title("Results")
-        success_dialog.geometry("500x300")
+        success_dialog.geometry("400x300")
 
         message = (
-            f"Pattern count completed. Results saved to {output_file}\n\n"
+            f"Pattern count completed.\nResults saved to {output_file}\n\n"
             f"Total Pattern Matches: {total_pattern_matches}\n"
             f"Total Unique Pattern Matches: {total_unique_pattern_matches}\n"
-            f"Highest Match Date: {highest_match_date.strftime('%Y-%m-%d')} ({highest_match_count} matches)\n\n"
+            f"Highest Match Date: {highest_match_date.strftime('%Y-%m-%d')}\nOn ({highest_match_count} matches)\n\n"
             f"Most common Source: {most_common_source} ({source_count} entries)\n"
             f"Most common Destination: {most_common_destination} ({destination_count} entries)\n\n"
-            f"Most common Pattern matched: {most_common_pattern} ({pattern_match_count} hits)"
+            f"Most common Pattern matched: {most_common_pattern}\n({pattern_match_count} hits)"
         )
 
         Label(success_dialog, text=message, wraplength=280, justify="left").pack(pady=20)
