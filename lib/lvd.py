@@ -36,7 +36,7 @@ class LogVoodooPage(tk.Frame):
         # Adding legend text
         legend_text = "What do you want the Witch Doctor to Do?"
         text_bg = self.canvas.create_rectangle(100, 110, 1180, 150, fill='black', outline='black')
-        self.canvas.create_text(640, 110, text=legend_text, font=Font(family="Helvetica", size=60, weight="bold"), fill="magenta2")
+        self.canvas.create_text(640, 110, text=legend_text, font=Font(family="Helvetica", size=30, weight="bold"), fill="magenta2")
 
     def setup_pattern_counter_button(self):
         button_font = Font(family="Helvetica", size=16)  # Adjust font size to fit the button
