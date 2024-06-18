@@ -97,20 +97,12 @@ class LogVoodooPage(tk.Frame):
             for file in files:
                 if file.endswith(".log"):
                     file_path = os.path.join(root, file)
-                    with open(file_path, 'r') as f:
-                        for line in f:
-                            date_str = line[:13]  # Assuming the date is in the first 13 characters
-                            try:
-                                date = datetime.strptime(date_str, "%Y-%m-%d")
-                            except ValueError:
-                                continue
-
-                            for pattern in patterns:
-                                if pattern in line:
-                                    if date not in results[pattern]:
-                                        results[pattern][date] = 0
-                                    results[pattern][date] += 1
-                                    total_matches += 1
+                    try:
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            self.process_log_file(f, patterns, results)
+                    except UnicodeDecodeError:
+                        with open(file_path, 'r', encoding='latin-1') as f:
+                            self.process_log_file(f, patterns, results)
 
         # Write results to CSV
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -126,6 +118,20 @@ class LogVoodooPage(tk.Frame):
             writer.writerow({'Pattern': 'Total', 'Date': '', 'Count': total_matches})
 
         messagebox.showinfo("Success", f"Pattern count completed. Results saved to {output_file}")
+
+    def process_log_file(self, file, patterns, results):
+        for line in file:
+            date_str = line[1:12]  # Assuming the date is in the format [dd/Mon/yyyy]
+            try:
+                date = datetime.strptime(date_str, "%d/%b/%Y")
+            except ValueError:
+                continue
+
+            for pattern in patterns:
+                if pattern in line:
+                    if date not in results[pattern]:
+                        results[pattern][date] = 0
+                    results[pattern][date] += 1
 
     def setup_control_buttons(self):
         text_font = Font(family="Helvetica", size=16)
