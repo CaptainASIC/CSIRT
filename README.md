@@ -138,6 +138,7 @@ Other packages and repositories used:
 - 2.0.5: Tested operational, also added G-Drive installation to the GUI. (Mar 2024)
 - 3.0.0 Beta: Adds Wifi Shark to the GUI (Apr 2024)
 - 3.0.1 Beta: Switched to Rclone to support more cloud storage options. (Apr 2024)
+- 3.1.0: Main Release version, with new Log Voodoo Function, a consolidated config page, and other enhancements. (Jun 2024)
 
 
 ## License
